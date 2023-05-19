@@ -1,0 +1,642 @@
+---
+
+#              ( `   )_
+#             (    )    `)
+#           (_   (_ .  _) _)
+#                                          _
+#                                         (  )
+#          _ .                         ( `  ) . )
+#        (  _ )_                      (_, _(  ,_)_)
+#      (_  _(_ ,)
+#                                                             |
+#               _  _                                        \ _ /
+#              ( `   )_                                   -= (_) =-
+#             (    )    `)                                  /   \
+#           (_   (_ .  _) _)                                  |
+#
+#                      _, _ .                         ( `  ) . )
+#                     ( (  _ )_                      (_, _(  ,_)_)
+#                   (_(_  _(_ ,)
+#
+# (cloud.yml)
+#
+# This is a cc-me input file, for generating one or more BOSH cloud-configs.
+# To use it, run `make` from this directory.
+#
+# For more information on using cc-me, check the github page:
+#   https://github.com/jhunt/cc-me
+#
+# If you've been granted an allocation to use, please set up a new environment
+# under the top-level `environments:` key, and identify it as such by naming
+# it after yourself (no need to be modest here).
+#
+# Also, unless you are explicitly testing proto-BOSH deployments, please use
+# the main lab BOSH director (10.200.130.1) to deploy your env BOSH director.
+# It makes life easier on people trying to manage the lab.
+#
+
+meta:
+  lab:
+    range:   10.168.0.0/16
+    gateway: 10.168.0.1
+    azs:     [z1,z2,z3]
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    cloud_properties:
+      name: DSwitch-VM Network
+
+  shared:
+    azs:
+      - name: z1
+        cloud_properties:
+          datacenters:
+            - name: Datacenter
+              clusters:
+                - Cluster1: {}
+      - name: z2
+        cloud_properties:
+          datacenters:
+            - name: Datacenter
+              clusters:
+                - Cluster1: {}
+      - name: z3
+        cloud_properties:
+          datacenters:
+            - name: Datacenter
+              clusters:
+                - Cluster1: {}
+
+    disk_types:
+      - { name: default,    disk_size:    2048 } #   2G
+      - { name: consul,     disk_size:    2048 } #   2G
+      - { name: concourse,  disk_size:   10240 } #  20G
+      - { name: postgres,   disk_size:    4096 } #   4G
+      - { name: blobstore,  disk_size:    4096 } #   4G
+      - { name: vault,      disk_size:    1024 } #   1G
+      - { name: bosh,       disk_size:   65536 } #  64G
+      - { name: bosh-large, disk_size:  131072 } # 128G
+      - { name: shield,     disk_size:    2048 } #   2G
+      - { name: jumpbox,    disk_size:   51200 } #  50G
+      - { name: prometheus, disk_size:   51200 } #  50G
+      - { name: rabbitmq,   disk_size:    4096 } #   4G
+      - { name: 5GB,        disk_size:    5120 } #   5G
+      - { name: 10GB,       disk_size:   10240 } #  10G
+      - { name: 100GB,      disk_size:  100240 } # 100G
+      - { name: minio,      disk_size:   10240 } #  10G
+
+    vm_types:
+      - { name: default,           cloud_properties: { cpu: 1, ram: 2048, disk:  8192 }}
+      - { name: compilation,       cloud_properties: { cpu: 2, ram: 2048, disk: 32768 }}
+
+      - { name: small,             cloud_properties: { cpu: 1, ram: 1024, disk:  8192 }}
+      - { name: medium,            cloud_properties: { cpu: 1, ram: 2048, disk: 16384 }}
+      - { name: large,             cloud_properties: { cpu: 2, ram: 2048, disk: 32768 }}
+
+      - { name: haproxy,           cloud_properties: { cpu: 1, ram: 2048, disk:  8192 }}
+
+      - { name: api,               cloud_properties: { cpu: 2, ram: 2048, disk: 32768 }}
+      - { name: bbs,               cloud_properties: { cpu: 1, ram: 1024, disk:  8192 }}
+      - { name: blobstore,         cloud_properties: { cpu: 1, ram: 2048, disk: 16384 }}
+      - { name: cell,              cloud_properties: { cpu: 4, ram: 4096, disk: 40960 }}
+      - { name: diego,             cloud_properties: { cpu: 1, ram: 2048, disk: 36384 }}
+      - { name: doppler,           cloud_properties: { cpu: 1, ram: 1024, disk:  8192 }}
+      - { name: errand,            cloud_properties: { cpu: 1, ram: 2048, disk:  8192 }}
+      - { name: loggregator,       cloud_properties: { cpu: 1, ram: 2048, disk: 16384 }}
+      - { name: nats,              cloud_properties: { cpu: 1, ram: 1024, disk:  8192 }}
+      - { name: postgres,          cloud_properties: { cpu: 2, ram: 2048, disk: 32768 }}
+      - { name: router,            cloud_properties: { cpu: 1, ram: 1024, disk:  8192 }}
+      - { name: syslogger,         cloud_properties: { cpu: 1, ram: 1024, disk:  8192 }}
+      - { name: uaa,               cloud_properties: { cpu: 1, ram: 2048, disk: 16384 }}
+
+      - { name: minimal,           cloud_properties: { cpu: 1, ram: 4096, disk: 10240 }}
+      - { name: small-cf,          cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+      - { name: small-highmem,     cloud_properties: { cpu: 4, ram: 8192, disk: 24576 }} # Should be 32768 ram for proper cf-deployment
+
+      - { name: blacksmith,        cloud_properties: { cpu: 1, ram: 2048, disk: 10240 }}
+      - { name: jumpbox,           cloud_properties: { cpu: 2, ram: 4096, disk: 10240 }}
+      - { name: concourse-worker,  cloud_properties: { cpu: 2, ram: 4096, disk: 65536 }}
+      - { name: thunder-dome,      cloud_properties: { cpu: 4, ram: 8192, disk: 81920 }}
+      - { name: bosh,              cloud_properties: { cpu: 2, ram: 6144, disk: 24576 }}
+
+      - { name: as-api,            cloud_properties: { cpu: 1, ram: 2048, disk: 16384 }}
+      - { name: as-broker,         cloud_properties: { cpu: 1, ram: 2048, disk: 16384 }}
+      - { name: as-scheduler,      cloud_properties: { cpu: 1, ram: 2048, disk: 16384 }}
+      - { name: as-collector,      cloud_properties: { cpu: 1, ram: 2048, disk: 16384 }}
+      - { name: as-scaler,         cloud_properties: { cpu: 1, ram: 2048, disk: 16384 }}
+      - { name: as-engine,         cloud_properties: { cpu: 1, ram: 2048, disk: 16384 }}
+      - { name: as-operator,       cloud_properties: { cpu: 1, ram: 2048, disk: 16384 }}
+
+
+    vm_extensions:
+      # for CF
+      - name: cf-elb
+      - name: ssh-elb
+      - name: cf-load-balanced
+      - name: 100GB_ephemeral_disk
+      - name: 50GB_ephemeral_disk
+      - name: cf-router-network-properties
+      - name: cf-tcp-router-network-properties
+      - name: diego-ssh-proxy-network-properties
+      - name: rmq-loadbalancer
+
+      # for lab-k8s
+      - name: kubelet
+        cloud_properties:
+          vmx_options:
+            disk.enableUUID: "1"
+
+    compilation:
+      workers: 5
+      reuse_compilation_vms: true
+      az: z1
+      vm_type: large
+      network: compilation
+
+environments:
+  - name: lab
+    .: (( inject meta.shared ))
+
+    disk_types:
+      - { name: minio,      disk_size:  20480 } # 20G
+      - { name: concourse,  disk_size:  20480 } # 20G
+
+    # Overridden 'vm_types' for lab scale
+    vm_types:
+      - { name: concourse-worker,  cloud_properties: { cpu: 4, ram: 8192, disk: 262144 }}
+      - { name: bosh-more-disk,   cloud_properties: {cpu: 2, ram: 6144, disk: 16384 }}
+
+    networking:
+      ##
+      ## Sandbox / Default Network
+      ##
+      ## This network exists for just random stuff.
+      ## Please don't put anything important here.
+      ##
+      - .: (( inject meta.lab ))
+        limit: 10.168.3.0/24
+        layout: bestfit
+        networks:
+          - { name: default, net: /24, static: 20% }
+
+
+      ##
+      ## Fixed Lab Infrastructure
+      ##
+      ## These ranges are dedicated to certain fixed bits of
+      ## infrastructure that we run to support the lab itself,
+      ## including the lab Vault, a SHIELD for data protection,
+      ## a Concourse for CI/CD/RE activities, etc.
+      ##
+      - .: (( inject meta.lab ))
+        limit: 10.168.4.0/22
+        layout: strict
+        networks:
+          - { name: SKIP,        net: /30 } # reserved for proto-bosh
+          - { name: vault,       net: /30, static: 3 }
+          - { name: jumpbox,     net: /30, static: 2 }
+          - { name: shield,      net: /30, static: 1 }
+          - { name: dns,         net: /30, static: 2 }
+          - { name: k8s,         net: /28, static: 1 }  # use static for VRRP IP
+          - { name: concourse,   net: /26, static: 10 }
+          - { name: minio,       net: /30, static: 4 }
+          - { name: compilation, net: /28 }
+          - { name: cf-db,       net: /26, static: 1 }
+          - { name: cf-core,     net: /25, static: 10 }
+          - { name: cf-edge,     net: /25, static: 10 }
+          - { name: cf-runtime,  net: /24, static: 100 }
+          - { name: blacksmith,  net: /24, static: 1 }
+
+#############################################################
+#############################################################
+
+      ##
+      ## 10.168.15.0/24 is reserved for DHCP addresses
+      ##
+
+#############################################################
+#############################################################
+
+      ##
+      ## Individual Ranges
+      ##
+      ## Reserved /21 ranges for individual experimentation
+      ## To get one of these, contact Ioannis or Wayne
+      ##
+      - .: (( inject meta.lab ))
+        limit: 10.168.0.0/16
+        layout: strict # it's all /21s
+        networks:
+          - { name: SKIP,         net: /21 } # RESERVED   10.168.0.0 - 10.168.7.255 (lab-infra)
+          - { name: shared,       net: /21, static: 1 } # 10.168.8.0 - 10.168.15.255
+          - { name: itsouvalas,   net: /21, static: 1 } # 10.168.16.0 - 10.168.23.255
+          - { name: wayneeseguin, net: /21, static: 1 } # 10.168.24.0 - 10.168.31.255
+          - { name: drgao,        net: /21, static: 1 } # 10.168.32.0 - 10.168.39.255
+          - { name: drhu,         net: /21, static: 1 } # 10.168.40.0 - 10.168.47.255
+          - { name: dbell,        net: /21, static: 1 } # 10.168.48.0 - 10.168.55.255
+          - { name: krutten,      net: /21, static: 1 } # 10.168.56.0 - 10.168.63.255
+          - { name: erichardson,  net: /21, static: 1 } # 10.168.64.0 - 10.168.71.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.72.0 - 10.168.79.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.80.0 - 10.168.87.255 NOT BOSH, NO CLOUD CONFIG
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.88.0 - 10.168.95.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.96.0 - 10.168.103.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.104.0 - 10.168.111.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.112.0 - 10.168.119.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.120.0 - 10.168.127.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.128.0 - 10.168.135.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.136.0 - 10.168.143.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.144.0 - 10.168.151.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.152.0 - 10.168.159.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.160.0 - 10.168.167.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.168.0 - 10.168.175.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.176.0 - 10.168.183.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.184.0 - 10.168.191.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.192.0 - 10.168.199.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.200.0 - 10.168.207.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.208.0 - 10.168.215.255
+          - { name: SKIP,         net: /21, static: 1 } # free 10.168.216.0 - 10.168.223.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.224.0 - 10.168.224.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.225.0 - 10.168.225.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.226.0 - 10.168.226.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.227.0 - 10.168.227.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.228.0 - 10.168.228.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.229.0 - 10.168.229.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.230.0 - 10.168.230.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.231.0 - 10.168.231.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.232.0 - 10.168.232.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.233.0 - 10.168.233.255
+          - { name: SKIP,         net: /24, static: 2 } # free 10.168.234.0 - 10.168.234.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.235.0 - 10.168.235.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.236.0 - 10.168.236.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.237.0 - 10.168.237.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.238.0 - 10.168.238.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.239.0 - 10.168.239.255
+          - { name: SKIP,         net: /24, static: 1 } # free 10.168.240.0 - 10.168.240.255
+
+#############################################################
+#############################################################
+
+  - name: lab-itsouvalas
+    .: (( inject meta.shared ))
+    networking:
+      - .: (( inject meta.lab ))
+        limit: 10.168.16.0/21
+        layout: strict
+        networks:
+          - { name: bosh,         net: /30, static: 0 }
+          - { name: cf-db,        net: /30, static: 1 }
+          - { name: shield,       net: /30, static: 1 }
+          - { name: vault,        net: /30, static: 3 }
+          - { name: cf-autoscaler, net: /29, static: 0 }
+          - { name: cf-edge,      net: /29, static: 1 }
+          - { name: compilation,  net: /29 }
+          - { name: concourse,    net: /29, static: 2 }
+          - { name: cf-core,      net: /27, static: 5% }
+          - { name: cf-runtime,   net: /27, static: 5% }
+          - { name: default,      net: /26, static: 5% }
+          - { name: nfs,          net: /30, static: 1}
+          - { name: nfs-broker,   net: /30, static: 1}
+          - { name: prometheus,   net: /30, static: 1}
+          - { name: doomsday,     net: /30, static: 1}
+          - { name: rabbitmq,     net: /29, static: 2}
+          - { name: haproxy,      net: /30, static: 1}
+    disk_types:
+      - disk_size: 5120
+        name: 5GB
+      - disk_size: 10240
+        name: 10GB
+      - disk_size: 100240
+        name: 100GB
+      - disk_size: 10240
+        name: rabbitmq
+    vm_types:
+      - { name: minimal,       cloud_properties: { cpu: 1, ram: 4096, disk: 10240 }}
+      - { name: small,         cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+      - { name: small-highmem, cloud_properties: { cpu: 4, ram: 8192, disk: 10240 }} # Should be 32768 ram for proper cf-deployment
+      - { name: rabbitmq,      cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+    vm_extensions:
+      # for CF deployment
+      - name: 100GB_ephemeral_disk
+        cloud_properties:
+          disk: 102400
+      - name: 50GB_ephemeral_disk
+        cloud_properties:
+          disk: 51200
+      - name: cf-router-network-properties
+      - name: cf-tcp-router-network-properties
+      - name: diego-ssh-proxy-network-properties
+      - name: concourse-loadbalancer
+      - name: rmq-loadbalancer
+
+  - name: lab-wayneeseguin
+    .: (( inject meta.shared ))
+    networking:
+      - .: (( inject meta.lab ))
+        limit: 10.168.24.0/21
+        layout: strict
+        networks:
+          - { name: bosh,          net: /30, static: 0 }
+          - { name: cf-db,         net: /30, static: 1 }
+          - { name: shield,        net: /30, static: 1 }
+          - { name: vault,         net: /30, static: 3 }
+          - { name: cf-autoscaler, net: /29, static: 0 }
+          - { name: cf-edge,       net: /29, static: 1 }
+          - { name: compilation,   net: /29 }
+          - { name: concourse,     net: /29, static: 2 }
+          - { name: cf-core,       net: /27, static: 5% }
+          - { name: cf-runtime,    net: /27, static: 5% }
+          - { name: default,       net: /26, static: 5% }
+          - { name: nfs,           net: /30, static: 1}
+          - { name: nfs-broker,    net: /30, static: 1}
+          - { name: prometheus,    net: /30, static: 1}
+          - { name: doomsday,      net: /30, static: 1}
+          - { name: rabbitmq,      net: /29, static: 2}
+          - { name: haproxy,       net: /30, static: 1}
+    disk_types:
+      - disk_size: 5120
+        name: 5GB
+      - disk_size: 10240
+        name: 10GB
+      - disk_size: 100240
+        name: 100GB
+      - disk_size: 10240
+        name: rabbitmq
+    vm_types:
+      - { name: minimal,       cloud_properties: { cpu: 1, ram: 4096, disk: 10240 }}
+      - { name: small,         cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+      - { name: small-highmem, cloud_properties: { cpu: 4, ram: 8192, disk: 10240 }} # Should be 32768 ram for proper cf-deployment
+      - { name: rabbitmq,      cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+    vm_extensions:
+      # for CF deployment
+      - name: 100GB_ephemeral_disk
+        cloud_properties:
+          disk: 102400
+      - name: 50GB_ephemeral_disk
+        cloud_properties:
+          disk: 51200
+      - name: cf-router-network-properties
+      - name: cf-tcp-router-network-properties
+      - name: diego-ssh-proxy-network-properties
+      - name: concourse-loadbalancer
+      - name: rmq-loadbalancer
+
+  - name: lab-drgao
+    .: (( inject meta.shared ))
+    networking:
+      - .: (( inject meta.lab ))
+        limit: 10.168.32.0/21
+        layout: strict
+        networks:
+          - { name: bosh,          net: /30, static: 0 }
+          - { name: cf-db,         net: /30, static: 1 }
+          - { name: shield,        net: /30, static: 1 }
+          - { name: vault,         net: /30, static: 3 }
+          - { name: cf-autoscaler, net: /29, static: 0 }
+          - { name: cf-edge,       net: /29, static: 1 }
+          - { name: compilation,   net: /29 }
+          - { name: concourse,     net: /29, static: 2 }
+          - { name: cf-core,       net: /27, static: 5% }
+          - { name: cf-runtime,    net: /27, static: 5% }
+          - { name: default,       net: /26, static: 5% }
+          - { name: nfs,           net: /30, static: 1}
+          - { name: nfs-broker,    net: /30, static: 1}
+          - { name: prometheus,    net: /30, static: 1}
+          - { name: doomsday,      net: /30, static: 1}
+          - { name: rabbitmq,      net: /29, static: 2}
+          - { name: haproxy,       net: /30, static: 1}
+    disk_types:
+      - disk_size: 5120
+        name: 5GB
+      - disk_size: 10240
+        name: 10GB
+      - disk_size: 100240
+        name: 100GB
+      - disk_size: 10240
+        name: rabbitmq
+    vm_types:
+      - { name: minimal,       cloud_properties: { cpu: 1, ram: 4096, disk: 10240 }}
+      - { name: small,         cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+      - { name: small-highmem, cloud_properties: { cpu: 4, ram: 8192, disk: 10240 }} # Should be 32768 ram for proper cf-deployment
+      - { name: rabbitmq,      cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+    vm_extensions:
+      # for CF deployment
+      - name: 100GB_ephemeral_disk
+        cloud_properties:
+          disk: 102400
+      - name: 50GB_ephemeral_disk
+        cloud_properties:
+          disk: 51200
+      - name: cf-router-network-properties
+      - name: cf-tcp-router-network-properties
+      - name: diego-ssh-proxy-network-properties
+      - name: concourse-loadbalancer
+      - name: rmq-loadbalancer
+
+  - name: lab-drhu
+    .: (( inject meta.shared ))
+    networking:
+      - .: (( inject meta.lab ))
+        limit: 10.168.40.0/21
+        layout: strict
+        networks:
+          - { name: bosh,          net: /30, static: 0 }
+          - { name: cf-db,         net: /30, static: 1 }
+          - { name: shield,        net: /30, static: 1 }
+          - { name: vault,         net: /30, static: 3 }
+          - { name: cf-autoscaler, net: /29, static: 0 }
+          - { name: cf-edge,       net: /29, static: 1 }
+          - { name: compilation,   net: /29 }
+          - { name: concourse,     net: /29, static: 2 }
+          - { name: cf-core,       net: /27, static: 5% }
+          - { name: cf-runtime,    net: /27, static: 5% }
+          - { name: default,       net: /26, static: 5% }
+          - { name: nfs,           net: /30, static: 1}
+          - { name: nfs-broker,    net: /30, static: 1}
+          - { name: prometheus,    net: /30, static: 1}
+          - { name: doomsday,      net: /30, static: 1}
+          - { name: rabbitmq,      net: /29, static: 2}
+          - { name: haproxy,       net: /30, static: 1}
+    disk_types:
+      - disk_size: 5120
+        name: 5GB
+      - disk_size: 10240
+        name: 10GB
+      - disk_size: 100240
+        name: 100GB
+      - disk_size: 10240
+        name: rabbitmq
+    vm_types:
+      - { name: minimal,       cloud_properties: { cpu: 1, ram: 4096, disk: 10240 }}
+      - { name: small,         cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+      - { name: small-highmem, cloud_properties: { cpu: 4, ram: 8192, disk: 10240 }} # Should be 32768 ram for proper cf-deployment
+      - { name: rabbitmq,      cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+    vm_extensions:
+      # for CF deployment
+      - name: 100GB_ephemeral_disk
+        cloud_properties:
+          disk: 102400
+      - name: 50GB_ephemeral_disk
+        cloud_properties:
+          disk: 51200
+      - name: cf-router-network-properties
+      - name: cf-tcp-router-network-properties
+      - name: diego-ssh-proxy-network-properties
+      - name: concourse-loadbalancer
+      - name: rmq-loadbalancer
+
+  - name: lab-dbell
+    .: (( inject meta.shared ))
+    networking:
+      - .: (( inject meta.lab ))
+        limit: 10.168.48.0/21
+        layout: strict
+        networks:
+          - { name: bosh,          net: /30, static: 0 }
+          - { name: cf-db,         net: /30, static: 1 }
+          - { name: shield,        net: /30, static: 1 }
+          - { name: vault,         net: /30, static: 3 }
+          - { name: cf-autoscaler, net: /29, static: 0 }
+          - { name: cf-edge,       net: /29, static: 1 }
+          - { name: compilation,   net: /29 }
+          - { name: concourse,     net: /29, static: 2 }
+          - { name: cf-core,       net: /27, static: 5% }
+          - { name: cf-runtime,    net: /27, static: 5% }
+          - { name: default,       net: /26, static: 5% }
+          - { name: nfs,           net: /30, static: 1}
+          - { name: nfs-broker,    net: /30, static: 1}
+          - { name: prometheus,    net: /30, static: 1}
+          - { name: doomsday,      net: /30, static: 1}
+          - { name: rabbitmq,      net: /29, static: 2}
+          - { name: haproxy,       net: /30, static: 1}
+    disk_types:
+      - disk_size: 5120
+        name: 5GB
+      - disk_size: 10240
+        name: 10GB
+      - disk_size: 100240
+        name: 100GB
+      - disk_size: 10240
+        name: rabbitmq
+    vm_types:
+      - { name: minimal,       cloud_properties: { cpu: 1, ram: 4096, disk: 10240 }}
+      - { name: small,         cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+      - { name: small-highmem, cloud_properties: { cpu: 4, ram: 8192, disk: 10240 }} # Should be 32768 ram for proper cf-deployment
+      - { name: rabbitmq,      cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+    vm_extensions:
+      # for CF deployment
+      - name: 100GB_ephemeral_disk
+        cloud_properties:
+          disk: 102400
+      - name: 50GB_ephemeral_disk
+        cloud_properties:
+          disk: 51200
+      - name: cf-router-network-properties
+      - name: cf-tcp-router-network-properties
+      - name: diego-ssh-proxy-network-properties
+      - name: concourse-loadbalancer
+      - name: rmq-loadbalancer
+
+  - name: lab-krutten
+    .: (( inject meta.shared ))
+    networking:
+      - .: (( inject meta.lab ))
+        limit: 10.168.56.0/21
+        layout: strict
+        networks:
+          - { name: bosh,          net: /30, static: 0 }
+          - { name: cf-db,         net: /30, static: 1 }
+          - { name: shield,        net: /30, static: 1 }
+          - { name: vault,         net: /30, static: 3 }
+          - { name: cf-autoscaler, net: /29, static: 0 }
+          - { name: cf-edge,       net: /29, static: 1 }
+          - { name: compilation,   net: /29 }
+          - { name: concourse,     net: /29, static: 2 }
+          - { name: cf-core,       net: /27, static: 5% }
+          - { name: cf-runtime,    net: /27, static: 5% }
+          - { name: default,       net: /26, static: 5% }
+          - { name: nfs,           net: /30, static: 1}
+          - { name: nfs-broker,    net: /30, static: 1}
+          - { name: prometheus,    net: /30, static: 1}
+          - { name: doomsday,      net: /30, static: 1}
+          - { name: rabbitmq,      net: /29, static: 2}
+          - { name: haproxy,       net: /30, static: 1}
+    disk_types:
+      - disk_size: 5120
+        name: 5GB
+      - disk_size: 10240
+        name: 10GB
+      - disk_size: 100240
+        name: 100GB
+      - disk_size: 10240
+        name: rabbitmq
+    vm_types:
+      - { name: minimal,       cloud_properties: { cpu: 1, ram: 4096, disk: 10240 }}
+      - { name: small,         cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+      - { name: small-highmem, cloud_properties: { cpu: 4, ram: 8192, disk: 10240 }} # Should be 32768 ram for proper cf-deployment
+      - { name: rabbitmq,      cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+    vm_extensions:
+      # for CF deployment
+      - name: 100GB_ephemeral_disk
+        cloud_properties:
+          disk: 102400
+      - name: 50GB_ephemeral_disk
+        cloud_properties:
+          disk: 51200
+      - name: cf-router-network-properties
+      - name: cf-tcp-router-network-properties
+      - name: diego-ssh-proxy-network-properties
+      - name: concourse-loadbalancer
+      - name: rmq-loadbalancer
+
+  - name: lab-erichardson
+    .: (( inject meta.shared ))
+    networking:
+      - .: (( inject meta.lab ))
+        limit: 10.168.64.0/21
+        layout: strict
+        networks:
+          - { name: bosh,          net: /30, static: 0 }
+          - { name: cf-db,         net: /30, static: 1 }
+          - { name: shield,        net: /30, static: 1 }
+          - { name: vault,         net: /30, static: 3 }
+          - { name: cf-autoscaler, net: /29, static: 0 }
+          - { name: cf-edge,       net: /29, static: 1 }
+          - { name: compilation,   net: /29 }
+          - { name: concourse,     net: /29, static: 2 }
+          - { name: cf-core,       net: /27, static: 5% }
+          - { name: cf-runtime,    net: /27, static: 5% }
+          - { name: default,       net: /26, static: 5% }
+          - { name: nfs,           net: /30, static: 1}
+          - { name: nfs-broker,    net: /30, static: 1}
+          - { name: prometheus,    net: /30, static: 1}
+          - { name: doomsday,      net: /30, static: 1}
+          - { name: rabbitmq,      net: /29, static: 2}
+          - { name: haproxy,       net: /30, static: 1}
+    disk_types:
+      - disk_size: 5120
+        name: 5GB
+      - disk_size: 10240
+        name: 10GB
+      - disk_size: 100240
+        name: 100GB
+      - disk_size: 10240
+        name: rabbitmq
+    vm_types:
+      - { name: minimal,       cloud_properties: { cpu: 1, ram: 4096, disk: 10240 }}
+      - { name: small,         cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+      - { name: small-highmem, cloud_properties: { cpu: 4, ram: 8192, disk: 10240 }} # Should be 32768 ram for proper cf-deployment
+      - { name: rabbitmq,      cloud_properties: { cpu: 2, ram: 8192, disk: 10240 }}
+    vm_extensions:
+      # for CF deployment
+      - name: 100GB_ephemeral_disk
+        cloud_properties:
+          disk: 102400
+      - name: 50GB_ephemeral_disk
+        cloud_properties:
+          disk: 51200
+      - name: cf-router-network-properties
+      - name: cf-tcp-router-network-properties
+      - name: diego-ssh-proxy-network-properties
+      - name: concourse-loadbalancer
+      - name: rmq-loadbalancer
+

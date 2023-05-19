@@ -1,0 +1,118 @@
+---
+networks:
+  # (2 hosts)    10.168.0.19 - 10.168.0.20
+  - name: bosh
+    type: manual
+    subnets:
+      - range:   10.168.0.16/26
+        gateway: 10.168.0.1
+        azs: [z1]
+        dns: ["8.8.8.8"]
+        cloud_properties: {"name":"DSwitch-VM Network"}
+        reserved:
+          - 10.168.0.1 - 10.168.0.18
+          - 10.168.0.21 - 10.168.0.62
+        static: # 1 (1)
+          - 10.168.0.19
+
+  # (4 hosts)    10.168.0.21 - 10.168.0.24
+  - name: vault
+    type: manual
+    subnets:
+      - range:   10.168.0.16/26
+        gateway: 10.168.0.1
+        azs: [z1]
+        dns: ["8.8.8.8"]
+        cloud_properties: {"name":"DSwitch-VM Network"}
+        reserved:
+          - 10.168.0.1 - 10.168.0.20
+          - 10.168.0.25 - 10.168.0.62
+        static: # 3 (3)
+          - 10.168.0.21 - 10.168.0.23
+
+  # (16 hosts)    10.168.0.25 - 10.168.0.40
+  - name: concourse
+    type: manual
+    subnets:
+      - range:   10.168.0.16/26
+        gateway: 10.168.0.1
+        azs: [z1]
+        dns: ["8.8.8.8"]
+        cloud_properties: {"name":"DSwitch-VM Network"}
+        reserved:
+          - 10.168.0.1 - 10.168.0.24
+          - 10.168.0.41 - 10.168.0.62
+        static: # 3 (3)
+          - 10.168.0.25 - 10.168.0.27
+
+  # (8 hosts)    10.168.0.41 - 10.168.0.48
+  - name: shield
+    type: manual
+    subnets:
+      - range:   10.168.0.16/26
+        gateway: 10.168.0.1
+        azs: [z1]
+        dns: ["8.8.8.8"]
+        cloud_properties: {"name":"DSwitch-VM Network"}
+        reserved:
+          - 10.168.0.1 - 10.168.0.40
+          - 10.168.0.49 - 10.168.0.62
+        static: # 1 (1)
+          - 10.168.0.41
+
+  # (8 hosts)    10.168.0.49 - 10.168.0.56
+  - name: compilation
+    type: manual
+    subnets:
+      - range:   10.168.0.16/26
+        gateway: 10.168.0.1
+        azs: [z1]
+        dns: ["8.8.8.8"]
+        cloud_properties: {"name":"DSwitch-VM Network"}
+        reserved:
+          - 10.168.0.1 - 10.168.0.48
+          - 10.168.0.57 - 10.168.0.62
+
+  - name: jumpbox
+    type: manual
+    subnets:
+      - range:   10.168.0.16/26
+        gateway: 10.168.0.1
+        azs: [z1]
+        dns: ["8.8.8.8"]
+        cloud_properties: {"name":"DSwitch-VM Network"}
+        reserved:
+          - 10.168.0.1 - 10.168.0.57
+          - 10.168.0.59 - 10.168.0.62
+        static: # 1 (1)
+          - 10.168.0.58
+
+disk_types:
+  - {"name": "default","disk_size": 2048}
+  - {"name": "consul","disk_size": 2048}
+  - {"name": "concourse","disk_size": 10240}
+  - {"name": "postgres","disk_size": 4096}
+  - {"name": "blobstore","disk_size": 4096}
+  - {"name": "vault","disk_size": 1024}
+  - {"name": "bosh","disk_size": 16384}
+  - {"name": "shield","disk_size": 2048}
+  - {"name": "jumpbox","disk_size": 81920}
+
+vm_types:
+  - {"name": "default","cloud_properties": {"cpu": 2,"disk": 4096,"ram": 4096}}
+  - {"name": "small","cloud_properties": {"cpu": 1,"disk": 2048,"ram": 1024}}
+  - {"name": "medium","cloud_properties": {"cpu": 2,"disk": 4096,"ram": 4096}}
+  - {"name": "large","cloud_properties": {"cpu": 4,"disk": 8192,"ram": 8192}}
+  - {"name": "runtime","cloud_properties": {"cpu": 4,"disk": 40960,"ram": 4096}}
+  - {"name": "blacksmith","cloud_properties": {"cpu": 2,"disk": 10240,"ram": 2048}}
+  - {"name": "jumpbox","cloud_properties": {"cpu": 16,"disk": 81920,"ram": 16384}}
+
+azs:
+  - {"name": "z1","cloud_properties": {"data_centers": [{"name": "datacenter","clusters": [{"cluster1": {}}]}]}}
+
+compilation:
+  workers: 5
+  reuse_compilation_vms: true
+  az: z1
+  vm_type: large
+  network: compilation

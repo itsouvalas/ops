@@ -1,0 +1,25 @@
+Authenticating against lab-mgmt at https://10.168.0.22
+
+[33mVerifying availability of vault 'lab-mgmt' (https://10.168.0.22)...[0m[1;32mok[0m
+
+Running [1;32mcerts[0m addon for [1;36mlab-proto[0m [1;35mjumpbox[0m deployment
+Renewing OpenVPN user '' certificate.
+
+[33mVerifying availability of vault 'lab-mgmt' (https://10.168.0.22)...[0m[1;32mok[0m
+
+Running [1;32mrenew-cert[0m addon for [1;36mlab-proto[0m [1;35mjumpbox[0m deployment
+USAGE: genesis do <env> -- renew-cert user@email.addr.ess
+Generating OpenVPN user 'drgao' config:
+	=> /u/wseguin/ops/vpn/certs/drgao.ovpn
+
+[33mVerifying availability of vault 'lab-mgmt' (https://10.168.0.22)...[0m[1;32mok[0m
+
+Running [1;32mgenerate-vpn-config[0m addon for [1;36mlab-proto[0m [1;35mjumpbox[0m deployment
+Generating new openvpn client certificate for drgao
+Storing users ovpn config file and sha256 in Vault at credentials/vpn/drgao:ovpn and :sha256
+sha256: c42603200f12b3c8259ab173dc8f41a68047f8c3b53fa39d881afe4109aefa90  /u/wseguin/ops/vpn/certs/drgao.ovpn
+!! no secret exists at path `credentials/vpn/drgao`
+ovpn: </u/wseguin/ops/vpn/certs/drgao.ovpn
+!! no secret exists at path `credentials/vpn/drgao`
+Removing generated file from disk...
+Generated certificates for users: drgao

@@ -1,0 +1,59 @@
+kit:
+  name:    bosh
+  version: 3.0.0
+  features:
+    - vsphere
+    - proto
+    - bosh-dns-healthcheck
+    - netop-access
+    - sysop-access
+
+genesis:
+  env:            lab-proto
+  bosh_env:       ((prune))
+  min_version:    2.8.4
+
+
+params:
+  # These properties definte the host-level networking for a proto-BOSH.
+  # Environmental BOSHes can depend on their parent BOSH cloud-config,
+  # but for proto- environments, we have to specify these.
+  #
+  static_ip:       10.168.0.18
+  subnet_addr:     10.168.0.16/26
+  default_gateway: 10.168.0.1
+  dns:
+    - 8.8.8.8
+
+  # BOSH on vSphere (vCenter) needs to know which vCenter data
+  # center and cluster to deploy to by default.
+  #
+  # vCenter credentials are stored in the Vault at
+  #   /secret/lab/proto/bosh/vsphere
+  #
+  vsphere_datacenter: Datacenter
+  vsphere_clusters:
+    - Cluster1
+
+  # BOSH will store ephemeral disks, which house the operating system,
+  # and temporary work areas, on any of theses data stores
+  #
+  vsphere_ephemeral_datastores:
+    - ephemeral
+
+  # BOSH will store persistent disks, which contain the important
+  # data of your various deployments (databases, blobstores, etc.)
+  # on any of theses data stores
+  #
+  vsphere_persistent_datastores:
+    - persistent
+
+  # The following configuration is only necessary for proto-BOSH
+  # deployments, since environment BOSHes will derive their networking
+  # configuration from their parent BOSH cloud-config.
+  #
+  vsphere_network:    'DSwitch-VM Network'
+
+  # DNS Caching (for runtime config)
+  dns_cache: true
+

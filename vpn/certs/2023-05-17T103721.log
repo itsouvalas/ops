@@ -1,0 +1,33 @@
+Authenticating against lab-mgmt at https://10.168.0.22
+/u/wseguin/bin/scripts/vpn-users: line 122: git::update: command not found
+[1;31mGENESIS PRE-REQUISITES CHECKS FAILED!![0m
+
+Encountered the following errors:
+  - [1;31mMissing `vault`[0m -- install from [1;34mhttps://www.vaultproject.io/downloads.html[0m
+  - [1;31mMissing `bosh`[0m - install the BOSH (v2) CLI from [1;34mhttps://github.com/cloudfoundry/bosh-cli/releases[0m
+
+
+Renewing OpenVPN user '' certificate.
+[1;31mGENESIS PRE-REQUISITES CHECKS FAILED!![0m
+
+Encountered the following errors:
+  - [1;31mMissing `vault`[0m -- install from [1;34mhttps://www.vaultproject.io/downloads.html[0m
+  - [1;31mMissing `bosh`[0m - install the BOSH (v2) CLI from [1;34mhttps://github.com/cloudfoundry/bosh-cli/releases[0m
+
+
+Generating OpenVPN user 'drgao' config:
+	=> /u/wseguin/ops/vpn/certs/drgao.ovpn
+[1;31mGENESIS PRE-REQUISITES CHECKS FAILED!![0m
+
+Encountered the following errors:
+  - [1;31mMissing `vault`[0m -- install from [1;34mhttps://www.vaultproject.io/downloads.html[0m
+  - [1;31mMissing `bosh`[0m - install the BOSH (v2) CLI from [1;34mhttps://github.com/cloudfoundry/bosh-cli/releases[0m
+
+
+Storing users ovpn config file and sha256 in Vault at credentials/vpn/drgao:ovpn and :sha256
+sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /u/wseguin/ops/vpn/certs/drgao.ovpn
+!! no secret exists at path `credentials/vpn/drgao`
+ovpn: </u/wseguin/ops/vpn/certs/drgao.ovpn
+!! no secret exists at path `credentials/vpn/drgao`
+Removing generated file from disk...
+Generated certificates for users: drgao

@@ -1,0 +1,884 @@
+azs:
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster1: {}
+      name: Datacenter
+  name: z1
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster1: {}
+      name: Datacenter
+  name: z2
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster1: {}
+      name: Datacenter
+  name: z3
+compilation:
+  az: z1
+  network: compilation
+  reuse_compilation_vms: true
+  vm_type: large
+  workers: 5
+disk_types:
+- disk_size: 2048
+  name: default
+- disk_size: 2048
+  name: consul
+- disk_size: 20480
+  name: concourse
+- disk_size: 4096
+  name: postgres
+- disk_size: 4096
+  name: blobstore
+- disk_size: 1024
+  name: vault
+- disk_size: 65536
+  name: bosh
+- disk_size: 131072
+  name: bosh-large
+- disk_size: 2048
+  name: shield
+- disk_size: 51200
+  name: jumpbox
+- disk_size: 51200
+  name: prometheus
+- disk_size: 4096
+  name: rabbitmq
+- disk_size: 5120
+  name: 5GB
+- disk_size: 10240
+  name: 10GB
+- disk_size: 100240
+  name: 100GB
+- disk_size: 20480
+  name: minio
+exodus:
+  bosh: lab-proto
+  dated: 2023-05-18 11:09:22 +0000
+  deployer: ulabuser
+  features: openvpn
+  is_director: false
+  kit_is_dev: false
+  kit_name: jumpbox
+  kit_version: 1.3.4
+  use_create_env: false
+  vault_base: /secret/lab/proto/jumpbox
+  version: 2.8.9
+genesis:
+  ci_mount: /secret/ci/
+  env: lab-proto
+  exodus_base: /secret/exodus/lab-proto/jumpbox
+  exodus_mount: /secret/exodus/
+  exodus_path: lab-proto/jumpbox
+  min_version: 2.7.11
+  secrets_base: /secret/lab/proto/jumpbox/
+  secrets_mount: /secret/
+  secrets_path: lab/proto/jumpbox
+  vault_env: lab/proto
+instance_groups:
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - name: jumpbox
+    properties:
+      jumpbox:
+        banner: null
+        bashrc: null
+        env:
+          TMPDIR: /var/vcap/data/root_tmp
+        hostname: lab-proto-jumpbox
+        hosts: []
+        users:
+        - name: itsouvalas
+          shell: /bin/bash
+          ssh_keys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnI8rLrH4uWbK/+E/juHiqaJ7Zx+2mFfp/GRHaqEkHUshzLfUAsbBV+8LXNzEdEfM7SQlp8eCow5I0QfblHUeMt7n0GanFNddgqBGAKPROLWYKTDjTLkcdaO2w0SVxtlelD/odx+skCXR21bVwPsde+jSH5Se7PtqUrvT0Kp2rSRlGub3gVQ8ZlF98Ma9RckUBxT3N10dGIjfRBKzuC0B6xP/ZAjyYxv5dxfJ7arsYKMzuyJgaIFvF3xmUVYlB+c8eEX3V4wp+/ggkYQ3OQL4ojNZCycGt1Vk6EXU2M1qj85My/RbdLSYOn/QSMNzlvyuQlMWXg7LqFtMswIbs36jDQ==
+        - name: wseguin
+          shell: /bin/bash
+          ssh_keys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA3Qmi6EPCQZe3A8rvFgD4sS+SA9LaclLHauqCFNG+HqEbPuBS01z+HxCa7QjoQ3/Fj9FRDPdtGJdwxbpAx1aObXxa6xz8HwK52FRw5j4LJX9oFWLxF43QkjIF4KUpdPNR5FM/Uj2G3d/0mDbryptr76kkg287CLi/Mhzzr/IM6NnIoye+N0P7xu/5MfMsDYg+ePd6GOGbltSE6T199wPetxbIOl7orshyOAYd2MlD9BLop/b1fwdWEV403eEnfNIT/qoQs7MKb4+K0LD2QXuUO/Rng1yp5vos5OtmgeUQcppW5SoT1k5BqFlkyufDx6Am4GUEOdlowxJa3A8xXf6Zlw==
+        - name: krutten
+          shell: /bin/bash
+          ssh_keys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEApkygWPQG95wROkkbl6kmkdYqdPqa1Afp3PbDjumzLmfcBGqteaiNdCcAFR3ewCOoJ2OcLdhSTpoHRhr6W9Dpbn4tMcLF8wqvIumNS54DLL3s2TBcBeFZLH34J+TbtG6a8nMX3gTa5r6OoMsTcaN7oJCjCJEoCOHtvNdPWGBCMyJazLlcx0kN1apqQgx4Zbqj79ZpfkS4ZzDEI1J/yphsoQdzx+Vzo2aJ5s2knOr4+G7GCnII1yvnWECLhvZ5XivhnglMfNNDctwhu5eN/av9H7IcDfHIixtWN0BSBeDFM6xTLEClsbbXE2GC4+yDbmFaYoetxzwPq51tOgX2HPdPEw==
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMLz4MPMOAQ0mRD5gDbfmEorJel/wbCeVLS2VERSlivC3KHN9gNEAoemD1sy84LFzHkt0NIru+o0rozVpnl+aVcZQyL5Q8qcTN8eRuwJRqh0fLLM35ZdaGZ29gIbu2tohMWPESvzMJQ5Q2tJQg9oBAOsYwkzx9P2zTTV+rATT6wjaTt8u/3VmQN/7iLLfTZydSMrl8QwC1p817VO1fCGIPp0JRZWU/FFk0VJsDDlADOeGUvZ9IMjj7gCjH6Qor77QU5zSc+zR/zA8KeW9elyM+YZJTi+4GMOtZBePIm5/EzPfvauYoj5U62XzwRIlB3mppgFEow+yEQi6Bihr6aKRd
+        - name: drgao
+          shell: /bin/bash
+          ssh_keys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDo6cNr/gyuCOBqdAo08l/lVk+JhG1tYRBDj3MG6DX0TIIN6PcxmCtMc4db7Zdb2ewA9OEJ/7CFhuIcxMMeZlkiOoIuAygP/0NSveUxVPZItdcN8COUc1Npd4XthfC3JB5DzP2ddxOaICVE+F8u+XHmduGMTNxgdggF6qUgrymXecvzXeo9hOS5zT5Aac/Lm6iIDiIxdex1YJIojbwt9aT9WCPpHo//A7vw+v4zvJY7yAQ89CLcg4am0QwdV7eSFq/OS6RZpwK3iGsHaUbzVOdwgNbpGSp79Cm24J7Mo7o/Aahfne5jAnSENFf/bkDFjKdskb22mr6jL31ssK7UHNY391y/WNBuPQ5zdB26D5rellzc1Lch2Skfa+EZ1kCGS9E0HTdXMCtNuWlSgx35PjIcQlzglaqLpWcY9IGOLaFZLfU/7fcYVWTLY+997CritS0xL5xvOoqD6GQSZ7VOXG7cuoRy8Z27CFY4L2u+HEYi6eW3F/c/xnyZwe32GduxIUFIhbA6i6kWw10Gi5uCef9FC/2uR0KbGd60neAEGW3B+ykNTk+42qbAjZZNkkPFVuXEX3xCUrxEZu3jKxtwYOS6pCKJ1SaVYddoYY3G5QAeE/qF0znauLX12AYDxmdWWmm/FkhYs/NJmXtrRymXALNT+X6ZWA7CaSycf1XOKeY2DQ==
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDIUeiwOSzMaNj7d05ze9CORwKonpE5ChkLpujWLqmn2dRpgqhhaTaRLTGUOV5k4pHINqiC3kvwCC6DoHPdkmEtMHmnHbnW6JgoynYwyDw5Y0DZay80QSBHuctVD2B0r7q95G077+eu32z9XXSjL0rEb6lNHUmdFQUzzyg2u9LncILTin7ZaG8Mo9EF4ymrwnUJEqu+MSKjWM5AnAhAoIJxrVkOinCZTG6A8oICxrzNx3sVMIuMasGOAQvED2DNLcLvlFUZRhGVSF8ufc0UurdlAd89BZOqRCmd8hsnTCe6m7Q8HS7vSkhCYGFWAYiSNWPiwaxGTghR+wa+XKnU6iVbRa1cLend8TQ1wOhNC/b+1th7HniHlq08qg5bsEaoaNK+EqUoqUazUIc1dRquU1O5TcQweMM5vA2BRH7ytyoAHxoRZg1wk2OtVuuCw5PpRuCd8mfd711gLTaNqPu/3ga+aTXtaoarayd9RTfeSX5fX8iEaiaRwtsEnapIWAlOoWZPOhTCYxtWyO74+jNm4DYZ2QUfKIjUdqIMvreIv30Jp4XBlz6Nh5q7JlKlUf7bdtGK50Lf66l7xAf5rshCTyE7bwP6RgQzGIsqc9gmehycT3DQx86xkL0+S+b/NEvJdozOuX8iMvAAwI+bxHytTuiTpGcjX4XU887L/686xR8YLQ==
+        - name: drhu
+          shell: /bin/bash
+          ssh_keys:
+          - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMHG676wfVV4LfkRRs/BS4GSWfBdYSvys2b9hJ5XyiQ6
+        - name: erichardson
+          shell: /bin/bash
+          ssh_keys:
+          - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBc4CMDw8MX5CgUE99Vpz+/KIkGQJoT2m9S/+rljmOfx
+          - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH4fbBr0nwB4j808z1aVscEqXdKGN71g+zwzjzd5/UfI
+        - name: dbell
+          shell: /bin/bash
+          ssh_keys:
+          - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEKeqghZQldYq6ZoruVVuWVmLIQRC6ueEBT8Eb0+xCD8
+          - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGk6X82M6dGWqirPQ+XKYAVNMJqFNOxV32xP56Jhh0Sl
+    release: jumpbox
+  - name: inventory
+    release: jumpbox
+  - name: toolbelt
+    release: toolbelt
+  - name: toolbelt-quick
+    release: toolbelt
+  - name: openvpn
+    properties:
+      cipher: AES-256-CBC
+      compress: auto
+      dh_pem: REDACTED
+      extra_configs: []
+      port: 443
+      protocol: tcp
+      push_dns:
+      - 8.8.8.8
+      push_dns_search_domains:
+      - instantpc.support
+      push_routes:
+      - 10.168.0.16 255.255.255.192
+      server: 172.31.255.0 255.255.255.0
+      tls_crl: REDACTED
+      tls_server:
+        ca: REDACTED
+        certificate: REDACTED
+        private_key: REDACTED
+      tls_version_min: "1.2"
+    release: openvpn
+  - name: iptables
+    properties:
+      iptables:
+        filter:
+          FORWARD:
+          - -s 172.31.255.0/24 -d 10.168.0.16/16 -m conntrack --ctstate NEW -j ACCEPT
+            -m comment --comment 'vpn -> lan'
+          - -s 10.168.0.16/16 -d 172.31.255.0/24 -m conntrack --ctstate NEW -j ACCEPT
+            -m comment --comment 'lan -> vpn'
+          - -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+        nat:
+          POSTROUTING:
+          - -s 172.31.255.0/255.255.255.0 -d 0/0 -j MASQUERADE
+    release: networking
+  name: jumpbox
+  networks:
+  - name: jumpbox
+    static_ips:
+    - 10.168.4.8
+  persistent_disk_type: jumpbox
+  stemcell: default
+  vm_type: jumpbox
+kit:
+  features:
+  - openvpn
+  name: jumpbox
+  version: 1.3.4
+meta:
+  default:
+    azs:
+    - z1
+  vault: /secret/lab/proto/jumpbox
+name: lab-proto-jumpbox
+networks:
+- name: default
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.2.255
+    - 10.168.4.0 - 10.168.255.254
+    static:
+    - 10.168.3.0 - 10.168.3.50
+  type: manual
+- name: vault
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.3
+    - 10.168.4.8 - 10.168.255.254
+    static:
+    - 10.168.4.4 - 10.168.4.6
+  type: manual
+- name: jumpbox
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.7
+    - 10.168.4.12 - 10.168.255.254
+    static:
+    - 10.168.4.8 - 10.168.4.9
+  type: manual
+- name: shield
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.11
+    - 10.168.4.16 - 10.168.255.254
+    static:
+    - 10.168.4.12
+  type: manual
+- name: dns
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.15
+    - 10.168.4.20 - 10.168.255.254
+    static:
+    - 10.168.4.16 - 10.168.4.17
+  type: manual
+- name: k8s
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.31
+    - 10.168.4.48 - 10.168.255.254
+    static:
+    - 10.168.4.32
+  type: manual
+- name: concourse
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.63
+    - 10.168.4.128 - 10.168.255.254
+    static:
+    - 10.168.4.64 - 10.168.4.73
+  type: manual
+- name: minio
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.127
+    - 10.168.4.132 - 10.168.255.254
+    static:
+    - 10.168.4.128 - 10.168.4.131
+  type: manual
+- name: compilation
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.143
+    - 10.168.4.160 - 10.168.255.254
+    static: []
+  type: manual
+- name: cf-db
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.191
+    - 10.168.5.0 - 10.168.255.254
+    static:
+    - 10.168.4.192
+  type: manual
+- name: cf-core
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.255
+    - 10.168.5.128 - 10.168.255.254
+    static:
+    - 10.168.5.0 - 10.168.5.9
+  type: manual
+- name: cf-edge
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.5.127
+    - 10.168.6.0 - 10.168.255.254
+    static:
+    - 10.168.5.128 - 10.168.5.137
+  type: manual
+- name: cf-runtime
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.5.255
+    - 10.168.7.0 - 10.168.255.254
+    static:
+    - 10.168.6.0 - 10.168.6.99
+  type: manual
+- name: blacksmith
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.6.255
+    - 10.168.8.0 - 10.168.255.254
+    static:
+    - 10.168.7.0
+  type: manual
+- name: shared
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.7.255
+    - 10.168.16.0 - 10.168.255.254
+    static:
+    - 10.168.8.0
+  type: manual
+- name: itsouvalas
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.15.255
+    - 10.168.24.0 - 10.168.255.254
+    static:
+    - 10.168.16.0
+  type: manual
+- name: wayneeseguin
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.23.255
+    - 10.168.32.0 - 10.168.255.254
+    static:
+    - 10.168.24.0
+  type: manual
+- name: drgao
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.31.255
+    - 10.168.40.0 - 10.168.255.254
+    static:
+    - 10.168.32.0
+  type: manual
+- name: drhu
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.39.255
+    - 10.168.48.0 - 10.168.255.254
+    static:
+    - 10.168.40.0
+  type: manual
+- name: dbell
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.47.255
+    - 10.168.56.0 - 10.168.255.254
+    static:
+    - 10.168.48.0
+  type: manual
+- name: krutten
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.55.255
+    - 10.168.64.0 - 10.168.255.254
+    static:
+    - 10.168.56.0
+  type: manual
+- name: erichardson
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.63.255
+    - 10.168.72.0 - 10.168.255.254
+    static:
+    - 10.168.64.0
+  type: manual
+params:
+  banner: null
+  bashrc: null
+  ca_validity_period: 1y
+  cert_validity_period: 180d
+  env_vars: {}
+  hostname: lab-proto-jumpbox
+  hosts: []
+  users:
+  - name: itsouvalas
+    shell: /bin/bash
+    ssh_keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnI8rLrH4uWbK/+E/juHiqaJ7Zx+2mFfp/GRHaqEkHUshzLfUAsbBV+8LXNzEdEfM7SQlp8eCow5I0QfblHUeMt7n0GanFNddgqBGAKPROLWYKTDjTLkcdaO2w0SVxtlelD/odx+skCXR21bVwPsde+jSH5Se7PtqUrvT0Kp2rSRlGub3gVQ8ZlF98Ma9RckUBxT3N10dGIjfRBKzuC0B6xP/ZAjyYxv5dxfJ7arsYKMzuyJgaIFvF3xmUVYlB+c8eEX3V4wp+/ggkYQ3OQL4ojNZCycGt1Vk6EXU2M1qj85My/RbdLSYOn/QSMNzlvyuQlMWXg7LqFtMswIbs36jDQ==
+  - name: wseguin
+    shell: /bin/bash
+    ssh_keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA3Qmi6EPCQZe3A8rvFgD4sS+SA9LaclLHauqCFNG+HqEbPuBS01z+HxCa7QjoQ3/Fj9FRDPdtGJdwxbpAx1aObXxa6xz8HwK52FRw5j4LJX9oFWLxF43QkjIF4KUpdPNR5FM/Uj2G3d/0mDbryptr76kkg287CLi/Mhzzr/IM6NnIoye+N0P7xu/5MfMsDYg+ePd6GOGbltSE6T199wPetxbIOl7orshyOAYd2MlD9BLop/b1fwdWEV403eEnfNIT/qoQs7MKb4+K0LD2QXuUO/Rng1yp5vos5OtmgeUQcppW5SoT1k5BqFlkyufDx6Am4GUEOdlowxJa3A8xXf6Zlw==
+  - name: krutten
+    shell: /bin/bash
+    ssh_keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEApkygWPQG95wROkkbl6kmkdYqdPqa1Afp3PbDjumzLmfcBGqteaiNdCcAFR3ewCOoJ2OcLdhSTpoHRhr6W9Dpbn4tMcLF8wqvIumNS54DLL3s2TBcBeFZLH34J+TbtG6a8nMX3gTa5r6OoMsTcaN7oJCjCJEoCOHtvNdPWGBCMyJazLlcx0kN1apqQgx4Zbqj79ZpfkS4ZzDEI1J/yphsoQdzx+Vzo2aJ5s2knOr4+G7GCnII1yvnWECLhvZ5XivhnglMfNNDctwhu5eN/av9H7IcDfHIixtWN0BSBeDFM6xTLEClsbbXE2GC4+yDbmFaYoetxzwPq51tOgX2HPdPEw==
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMLz4MPMOAQ0mRD5gDbfmEorJel/wbCeVLS2VERSlivC3KHN9gNEAoemD1sy84LFzHkt0NIru+o0rozVpnl+aVcZQyL5Q8qcTN8eRuwJRqh0fLLM35ZdaGZ29gIbu2tohMWPESvzMJQ5Q2tJQg9oBAOsYwkzx9P2zTTV+rATT6wjaTt8u/3VmQN/7iLLfTZydSMrl8QwC1p817VO1fCGIPp0JRZWU/FFk0VJsDDlADOeGUvZ9IMjj7gCjH6Qor77QU5zSc+zR/zA8KeW9elyM+YZJTi+4GMOtZBePIm5/EzPfvauYoj5U62XzwRIlB3mppgFEow+yEQi6Bihr6aKRd
+  - name: drgao
+    shell: /bin/bash
+    ssh_keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDo6cNr/gyuCOBqdAo08l/lVk+JhG1tYRBDj3MG6DX0TIIN6PcxmCtMc4db7Zdb2ewA9OEJ/7CFhuIcxMMeZlkiOoIuAygP/0NSveUxVPZItdcN8COUc1Npd4XthfC3JB5DzP2ddxOaICVE+F8u+XHmduGMTNxgdggF6qUgrymXecvzXeo9hOS5zT5Aac/Lm6iIDiIxdex1YJIojbwt9aT9WCPpHo//A7vw+v4zvJY7yAQ89CLcg4am0QwdV7eSFq/OS6RZpwK3iGsHaUbzVOdwgNbpGSp79Cm24J7Mo7o/Aahfne5jAnSENFf/bkDFjKdskb22mr6jL31ssK7UHNY391y/WNBuPQ5zdB26D5rellzc1Lch2Skfa+EZ1kCGS9E0HTdXMCtNuWlSgx35PjIcQlzglaqLpWcY9IGOLaFZLfU/7fcYVWTLY+997CritS0xL5xvOoqD6GQSZ7VOXG7cuoRy8Z27CFY4L2u+HEYi6eW3F/c/xnyZwe32GduxIUFIhbA6i6kWw10Gi5uCef9FC/2uR0KbGd60neAEGW3B+ykNTk+42qbAjZZNkkPFVuXEX3xCUrxEZu3jKxtwYOS6pCKJ1SaVYddoYY3G5QAeE/qF0znauLX12AYDxmdWWmm/FkhYs/NJmXtrRymXALNT+X6ZWA7CaSycf1XOKeY2DQ==
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDIUeiwOSzMaNj7d05ze9CORwKonpE5ChkLpujWLqmn2dRpgqhhaTaRLTGUOV5k4pHINqiC3kvwCC6DoHPdkmEtMHmnHbnW6JgoynYwyDw5Y0DZay80QSBHuctVD2B0r7q95G077+eu32z9XXSjL0rEb6lNHUmdFQUzzyg2u9LncILTin7ZaG8Mo9EF4ymrwnUJEqu+MSKjWM5AnAhAoIJxrVkOinCZTG6A8oICxrzNx3sVMIuMasGOAQvED2DNLcLvlFUZRhGVSF8ufc0UurdlAd89BZOqRCmd8hsnTCe6m7Q8HS7vSkhCYGFWAYiSNWPiwaxGTghR+wa+XKnU6iVbRa1cLend8TQ1wOhNC/b+1th7HniHlq08qg5bsEaoaNK+EqUoqUazUIc1dRquU1O5TcQweMM5vA2BRH7ytyoAHxoRZg1wk2OtVuuCw5PpRuCd8mfd711gLTaNqPu/3ga+aTXtaoarayd9RTfeSX5fX8iEaiaRwtsEnapIWAlOoWZPOhTCYxtWyO74+jNm4DYZ2QUfKIjUdqIMvreIv30Jp4XBlz6Nh5q7JlKlUf7bdtGK50Lf66l7xAf5rshCTyE7bwP6RgQzGIsqc9gmehycT3DQx86xkL0+S+b/NEvJdozOuX8iMvAAwI+bxHytTuiTpGcjX4XU887L/686xR8YLQ==
+  - name: drhu
+    shell: /bin/bash
+    ssh_keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMHG676wfVV4LfkRRs/BS4GSWfBdYSvys2b9hJ5XyiQ6
+  - name: erichardson
+    shell: /bin/bash
+    ssh_keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBc4CMDw8MX5CgUE99Vpz+/KIkGQJoT2m9S/+rljmOfx
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH4fbBr0nwB4j808z1aVscEqXdKGN71g+zwzjzd5/UfI
+  - name: dbell
+    shell: /bin/bash
+    ssh_keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEKeqghZQldYq6ZoruVVuWVmLIQRC6ueEBT8Eb0+xCD8
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGk6X82M6dGWqirPQ+XKYAVNMJqFNOxV32xP56Jhh0Sl
+  vpn_client_netmask: 255.255.255.0
+  vpn_client_network: 172.31.255.0
+  vpn_client_routes:
+  - 10.168.0.16 255.255.255.192
+  vpn_compress: auto
+  vpn_dns_search_domains:
+  - instantpc.support
+  vpn_dns_servers:
+  - 8.8.8.8
+  vpn_extra_client_configs: []
+  vpn_extra_configs: []
+  vpn_iptables_forward:
+  - -s 172.31.255.0/24 -d 10.168.0.16/16 -m conntrack --ctstate NEW -j ACCEPT -m comment
+    --comment 'vpn -> lan'
+  - -s 10.168.0.16/16 -d 172.31.255.0/24 -m conntrack --ctstate NEW -j ACCEPT -m comment
+    --comment 'lan -> vpn'
+  - -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+  vpn_protocol: tcp
+releases:
+- name: jumpbox
+  sha1: 02783618aa313b9b1c2bafd402ffc019ab75cfda
+  url: https://github.com/cloudfoundry-community/jumpbox-boshrelease/releases/download/v4.11.1/jumpbox-4.11.1.tgz
+  version: 4.11.1
+- name: toolbelt
+  sha1: 377b390b7f5d358a2dae463109350250a769eb3f
+  url: https://bosh.io/d/github.com/cloudfoundry-community/toolbelt-boshrelease?v=3.7.0
+  version: 3.7.0
+- name: openvpn
+  sha1: 3e202404b9140c3eeccfb7456c038cbe95241e8d
+  url: https://github.com/starkandwayne/openvpn-bosh-release/releases/download/v5.8.4/openvpn-boshrelease-5.8.4.tar.gz
+  version: 5.8.4
+- name: networking
+  sha1: 9b5f9d27917c3754e492470ac6c9af80d62963db
+  url: http://bosh.io/d/github.com/cloudfoundry/networking-release?v=9
+  version: 9
+stemcells:
+- alias: default
+  os: ubuntu-bionic
+  version: latest
+update:
+  canaries: 1
+  canary_watch_time: 1000-60000
+  max_in_flight: 4
+  serial: false
+  update_watch_time: 1000-60000
+vm_extensions:
+- name: cf-elb
+- name: ssh-elb
+- name: cf-load-balanced
+- name: 100GB_ephemeral_disk
+- name: 50GB_ephemeral_disk
+- name: cf-router-network-properties
+- name: cf-tcp-router-network-properties
+- name: diego-ssh-proxy-network-properties
+- name: rmq-loadbalancer
+- cloud_properties:
+    vmx_options:
+      disk.enableUUID: "1"
+  name: kubelet
+vm_types:
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 2048
+  name: default
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: compilation
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: small
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: medium
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: large
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 2048
+  name: haproxy
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: api
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: bbs
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: blobstore
+- cloud_properties:
+    cpu: 4
+    disk: 40960
+    ram: 4096
+  name: cell
+- cloud_properties:
+    cpu: 1
+    disk: 36384
+    ram: 2048
+  name: diego
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: doppler
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 2048
+  name: errand
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: loggregator
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: nats
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: postgres
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: router
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: syslogger
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: uaa
+- cloud_properties:
+    cpu: 1
+    disk: 10240
+    ram: 4096
+  name: minimal
+- cloud_properties:
+    cpu: 2
+    disk: 10240
+    ram: 8192
+  name: small-cf
+- cloud_properties:
+    cpu: 4
+    disk: 24576
+    ram: 8192
+  name: small-highmem
+- cloud_properties:
+    cpu: 1
+    disk: 10240
+    ram: 2048
+  name: blacksmith
+- cloud_properties:
+    cpu: 2
+    disk: 10240
+    ram: 4096
+  name: jumpbox
+- cloud_properties:
+    cpu: 4
+    disk: 262144
+    ram: 8192
+  name: concourse-worker
+- cloud_properties:
+    cpu: 4
+    disk: 81920
+    ram: 8192
+  name: thunder-dome
+- cloud_properties:
+    cpu: 2
+    disk: 24576
+    ram: 6144
+  name: bosh
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-api
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-broker
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-scheduler
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-collector
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-scaler
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-engine
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-operator
+- cloud_properties:
+    cpu: 2
+    disk: 16384
+    ram: 6144
+  name: bosh-more-disk

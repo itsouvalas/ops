@@ -1,0 +1,86 @@
+Authenticating against lab-mgmt at https://10.168.0.22
+[38;5;9m[ERROR][0m Unrecognized command, path or file 'lab-mgmt'
+
+genesis v2.8.9 (614c9727d4) build 20221221.064230
+USAGE: genesis [OPTIONS] COMMAND [MORE OPTIONS]
+
+OPTIONS
+  -h, --help        Show this help screen.
+
+      --[no]-color  Enable [or disable] color output
+
+  -q, --quiet       Suppress informative output (errors will still be displayed)
+
+  -D, --debug       Enable debugging, printing helpful message about what
+                    Genesis is doing, to standard error.
+
+  -T, --trace       Even more debugging, including debugging inside called
+                    tools (like spruce and bosh).  Any trace commands within
+                    the Genesis codebase will be printed, along with identifying
+                    the line they were encountered.
+
+  -S, --show-stack  Will show stack trace when displaying fatal error due to
+                    runtime conditions or bugs.  When -T|--trace is also
+                    specified, each trace will contain the full stack of where
+                    it was encountered.
+
+[3m[38;5;8mEach command may support further options.[0m
+
+[4mBASIC ENVIRONMENT MANAGEMENT COMMANDS:[0m
+  [38;5;14minit[0m              Initialize a new Genesis deployment.
+  [38;5;10mnew[0m               Create a new Genesis deployment environment.
+  [38;5;10mcheck[0m             Check a deployment manifest for errors, without deploying it.
+  kit-provider      Check or set the kit provider for the Genesis deployment.
+  secrets-provider  Check or set the secrets provider for the Genesis deployment.
+  [38;5;10mcheck-secrets[0m     Check for missing credentials (passwords, keys, etc.).
+  [38;5;10madd-secrets[0m       Generate missing credentials (passwords, keys, etc.).
+  [38;5;10mrotate-secrets[0m    Rotate or renew credentials (passwords, keys, etc.).
+  [38;5;10mremove-secrets[0m    Remove credentials (passwords, keys, etc.).
+  [38;5;10mmanifest[0m          Generate a redacted BOSH deployment manifest for an environment.
+  [38;5;10mdeploy[0m            Generate a real manifest using Vault + Cloud Config, and deploy it to BOSH.
+  [38;5;10mbosh[0m              Run a BOSH cli for the specific environment.
+  [38;5;10mdo[0m                Run an addon script provided by the Kit.  Try `do list`
+  embed             Embed this version of Genesis into the current Genesis deployment repository.
+  [38;5;14mupdate[0m            Downloads a newer version of Genesis or checks if one is available.
+
+[4mINFORMATIVE COMMANDS:[0m
+  [38;5;14mping[0m              See if the genesis binary is a real thing.
+  [38;5;14mversion[0m           Print the version of genesis
+  [38;5;14mhelp[0m              As you can guess, prints this out.
+  [38;5;10minfo[0m              Prints out kit-specific information for a given environment.
+  [38;5;10mlookup[0m            Find a key set in environment manifests.
+  [38;5;10myamls[0m             Print a list of the YAML files used for a single environment.
+  [38;5;10mman[0m               Print the manual for the specified environment or kit name/version.
+
+[4mPIPELINE MANAGEMENT COMMANDS:[0m
+  repipe            Configure a Concourse pipeline for automating deployments.
+  describe          Describe a Concourse pipeline, in words.
+  graph             Draw a Concourse pipeline.
+
+[4mKIT MANAGEMENT COMMANDS:[0m
+  [38;5;14mcreate-kit[0m        Create a new kit with default scaffolding.
+  [38;5;14mcompile-kit[0m       Create a distributable kit archive from dev.
+  [38;5;10mdecompile-kit[0m     Unpack a kit archive to dev.
+  [38;5;14mlist-kits[0m         List local or remote Genesis kits.
+  [38;5;10mfetch-kit[0m         Download one or more Genesis kits from the Internet.
+
+Those commands listed in [38;5;10mgreen[0m operate on a single specified environment.  Those that
+are in [38;5;14mcyan[0m can (or in some cases must) be run outside a Genesis repository.
+See `genesis COMMAND -h' for more specific, per-command usage information.
+
+Renewing OpenVPN user '' certificate.
+
+[3m[38;5;3mVerifying availability of vault 'lab-mgmt' (https://10.168.0.22)...[0m[38;5;10mok[0m
+
+[38;5;9m[ERROR][0m Environment file [38;5;14mlab-mgmt.yml[0m does not exist
+Generating OpenVPN user 'dbell' config:
+	=> /u/wseguin/ops/vpn/certs/dbell.ovpn
+
+[3m[38;5;3mVerifying availability of vault 'lab-mgmt' (https://10.168.0.22)...[0m[38;5;10mok[0m
+
+[38;5;9m[ERROR][0m Environment file [38;5;14mlab-mgmt.yml[0m does not exist
+Storing users ovpn config file and sha256 in Vault at credentials/vpn/dbell:ovpn and :sha256
+sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /u/wseguin/ops/vpn/certs/dbell.ovpn
+ovpn: </u/wseguin/ops/vpn/certs/dbell.ovpn
+Removing generated file from disk...
+Generated certificates for users: dbell

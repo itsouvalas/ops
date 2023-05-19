@@ -1,0 +1,92 @@
+---
+# cloud-config for hunt-lab-prod
+# this cloud-config proudly generated with cc-me!
+# (https://github.com/jhunt/cc-me)
+
+networks:
+  # 10.128.8.0/29    (8 hosts)    10.128.8.0 - 10.128.8.7
+  - name: cf-edge
+    type: manual
+    subnets:
+      - range:   10.128.0.0/10
+        gateway: 10.128.0.1
+        azs: ["z1"]
+        dns: []
+        cloud_properties: {"name":"VM Network"}
+        reserved:
+          - 10.128.0.2
+          - 10.128.0.3
+          - 10.128.0.1 - 10.128.7.255
+          - 10.128.8.8 - 10.191.255.254
+        static: # 4 (4)
+          - 10.128.8.0 - 10.128.8.3
+
+  # 10.128.9.0/24    (256 hosts)    10.128.9.0 - 10.128.9.255
+  - name: cf-core
+    type: manual
+    subnets:
+      - range:   10.128.0.0/10
+        gateway: 10.128.0.1
+        azs: ["z1"]
+        dns: []
+        cloud_properties: {"name":"VM Network"}
+        reserved:
+          - 10.128.0.2
+          - 10.128.0.3
+          - 10.128.0.1 - 10.128.8.255
+          - 10.128.10.0 - 10.191.255.254
+        static: # 5% (13)
+          - 10.128.9.0 - 10.128.9.12
+
+  # 10.128.10.0/29    (8 hosts)    10.128.10.0 - 10.128.10.7
+  - name: cf-db
+    type: manual
+    subnets:
+      - range:   10.128.0.0/10
+        gateway: 10.128.0.1
+        azs: ["z1"]
+        dns: []
+        cloud_properties: {"name":"VM Network"}
+        reserved:
+          - 10.128.0.2
+          - 10.128.0.3
+          - 10.128.0.1 - 10.128.9.255
+          - 10.128.10.8 - 10.191.255.254
+        static: # 4 (4)
+          - 10.128.10.0 - 10.128.10.3
+
+
+azs:
+  - {"name": "z1","cloud_properties": {"data_centers": [{"name": "Buffalo-Lab","clusters": [{"cluster1": {}}]}]}}
+
+compilation:
+   az: "z1"
+   network: "compilation"
+   reuse_compilation_vms: true
+   vm_type: "large"
+   workers: 5
+
+disk_types:
+  - {"name": "default","disk_size": 2048}
+  - {"name": "consul","disk_size": 2048}
+  - {"name": "concourse","disk_size": 10240}
+  - {"name": "postgres","disk_size": 4096}
+  - {"name": "blobstore","disk_size": 4096}
+  - {"name": "vault","disk_size": 1024}
+  - {"name": "bosh","disk_size": 16384}
+  - {"name": "shield","disk_size": 2048}
+
+vm_extensions:
+  - {"name": "cf-elb"}
+  - {"name": "ssh-elb"}
+  - {"name": "100GB_ephemeral_disk"}
+  - {"name": "50GB_ephemeral_disk"}
+
+vm_types:
+  - {"name": "default","cloud_properties": {"cpu": 1,"disk": 2048,"ram": 2048}}
+  - {"name": "small","cloud_properties": {"cpu": 1,"disk": 2048,"ram": 1024}}
+  - {"name": "medium","cloud_properties": {"cpu": 1,"disk": 4096,"ram": 2048}}
+  - {"name": "large","cloud_properties": {"cpu": 1,"disk": 8192,"ram": 2048}}
+  - {"name": "runtime","cloud_properties": {"cpu": 1,"disk": 40960,"ram": 4096}}
+  - {"name": "blacksmith","cloud_properties": {"cpu": 1,"disk": 10240,"ram": 2048}}
+

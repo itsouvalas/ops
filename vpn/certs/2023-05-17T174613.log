@@ -1,0 +1,23 @@
+Authenticating against lab-mgmt at https://10.168.0.22
+
+[3m[38;5;3mVerifying availability of vault 'lab-mgmt' (https://10.168.0.22)...[0m[38;5;10mok[0m
+
+Running [38;5;10mcerts[0m addon for [38;5;14mlab-proto[0m [38;5;13mjumpbox[0m deployment
+Renewing OpenVPN user '' certificate.
+
+[3m[38;5;3mVerifying availability of vault 'lab-mgmt' (https://10.168.0.22)...[0m[38;5;10mok[0m
+
+Running [38;5;10mrenew-cert[0m addon for [38;5;14mlab-proto[0m [38;5;13mjumpbox[0m deployment
+USAGE: genesis do <env> -- renew-cert user@email.addr.ess
+Generating OpenVPN user 'dbell' config:
+	=> /u/wseguin/ops/vpn/certs/dbell.ovpn
+
+[3m[38;5;3mVerifying availability of vault 'lab-mgmt' (https://10.168.0.22)...[0m[38;5;10mok[0m
+
+Running [38;5;10mgenerate-vpn-config[0m addon for [38;5;14mlab-proto[0m [38;5;13mjumpbox[0m deployment
+Generating new openvpn client certificate for dbell
+Storing users ovpn config file and sha256 in Vault at credentials/vpn/dbell:ovpn and :sha256
+sha256: 809fa8be7ef87121fbad8cb2668d7ce4c34bc64a28ed4663049a48741594a5db  /u/wseguin/ops/vpn/certs/dbell.ovpn
+ovpn: </u/wseguin/ops/vpn/certs/dbell.ovpn
+Removing generated file from disk...
+Generated certificates for users: dbell

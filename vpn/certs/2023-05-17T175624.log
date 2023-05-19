@@ -1,0 +1,23 @@
+Authenticating against lab-mgmt at https://10.168.0.22
+
+[3m[38;5;3mVerifying availability of vault 'lab-mgmt' (https://10.168.0.22)...[0m[38;5;10mok[0m
+
+Running [38;5;10mcerts[0m addon for [38;5;14mlab-proto[0m [38;5;13mjumpbox[0m deployment
+Renewing OpenVPN user '' certificate.
+
+[3m[38;5;3mVerifying availability of vault 'lab-mgmt' (https://10.168.0.22)...[0m[38;5;10mok[0m
+
+Running [38;5;10mrenew-cert[0m addon for [38;5;14mlab-proto[0m [38;5;13mjumpbox[0m deployment
+USAGE: genesis do <env> -- renew-cert user@email.addr.ess
+Generating OpenVPN user 'krutten' config:
+	=> /u/wseguin/ops/vpn/certs/krutten.ovpn
+
+[3m[38;5;3mVerifying availability of vault 'lab-mgmt' (https://10.168.0.22)...[0m[38;5;10mok[0m
+
+Running [38;5;10mgenerate-vpn-config[0m addon for [38;5;14mlab-proto[0m [38;5;13mjumpbox[0m deployment
+Generating new openvpn client certificate for krutten
+Storing users ovpn config file and sha256 in Vault at credentials/vpn/krutten:ovpn and :sha256
+sha256: 1cbc1cbc9a9e2d192df59ef008364e5401b3c9009e7bf5239750bd30b11ddc13  /u/wseguin/ops/vpn/certs/krutten.ovpn
+ovpn: </u/wseguin/ops/vpn/certs/krutten.ovpn
+Removing generated file from disk...
+Generated certificates for users: krutten

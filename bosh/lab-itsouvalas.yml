@@ -1,0 +1,18 @@
+kit:
+  name:    bosh
+  version: 3.0.0
+  features:
+    - 
+
+genesis:
+  env:            lab-itsouvalas
+  bosh_env:       lab-proto
+  min_version:    2.8.4
+
+
+params:
+  # These parameters are all that we need to specify for an Environment
+  # BOSH, since networking and VM type configuration comes from that cloud-config
+  #
+  static_ip: 
+

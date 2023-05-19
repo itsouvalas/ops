@@ -1,0 +1,152 @@
+Authenticating against lab-mgmt at https://10.168.0.22
+/u/wseguin/bin/scripts/vpn-users: line 122: git::update: command not found
+genesis v2.8.9 (614c9727d4) build 20221221.064230
+USAGE: genesis do <options> env-name[.yml] action [args ...]
+
+OPTIONS
+  -h, --help        Show this help screen.
+
+      --[no]-color  Enable [or disable] color output
+
+  -q, --quiet       Suppress informative output (errors will still be displayed)
+
+  -D, --debug       Enable debugging, printing helpful message about what
+                    Genesis is doing, to standard error.
+
+  -T, --trace       Even more debugging, including debugging inside called
+                    tools (like spruce and bosh).  Any trace commands within
+                    the Genesis codebase will be printed, along with identifying
+                    the line they were encountered.
+
+  -S, --show-stack  Will show stack trace when displaying fatal error due to
+                    runtime conditions or bugs.  When -T|--trace is also
+                    specified, each trace will contain the full stack of where
+                    it was encountered.
+
+  -C, --cwd         Effective working directory.  You can also specify the
+                    environment YAML file to use, in which case the working
+                    directory is the one containing the specified file.
+                    Defaults to '.'
+
+  -e, --bosh-env    Which BOSH environment (aka director) to use.  If not
+                    specified, it will use the value in genesis.bosh or
+                    genesis.env in that order.  Can also be provided using
+                    either $GENESIS_BOSH_ENVIRONMENT env variables.
+
+                    As of v2.8.0, the BOSH director information is read from
+                    Exodus data instead of the local .bosh/config, and as such,
+                    expect the deployment type of the bosh director to be
+                    'bosh'.  If this is not the case, you can specify the
+                    deployment type after the deployment name, separated by a
+                    '/' (ie c-aws-myenv/new-bosh).  This will inform the system
+                    where to find the Exodus data.
+
+  -c, --config <s>  Specify a YAML file to be used as a config instead of
+                    fetching it from the BOSH director.  This option can be
+                    specified multiple times for different configurations.
+                    The syntax for specifying the config is:
+
+                    [<type>[@<name>]=]<path>
+
+                    The type defaults to 'cloud', and name defaults to 'default'
+                    if not given.  In this way, it maintains its backwards
+                    compatibility of the original `-c` option for specifying
+                    the cloud config file.
+
+  --cloud-config    Specify a local YAML file to use at the cloud config.  If
+                    not specified but needed, it will be fetched from the BOSH
+                    director. (Shortform: --cc)
+
+                    This is deprecated: use -c|--config <path> instead.
+
+  --runtime-config  Specify a local YAML file to use at the runtime config.  If
+                    not specified but needed, it will be fetched from the BOSH
+                    director. (Shortform: --rc)
+
+                    This is deprecated: use -c|--config runtime=<path> instead.
+
+
+
+
+Renewing OpenVPN user '' certificate.
+genesis v2.8.9 (614c9727d4) build 20221221.064230
+USAGE: genesis do <options> env-name[.yml] action [args ...]
+
+OPTIONS
+  -h, --help        Show this help screen.
+
+      --[no]-color  Enable [or disable] color output
+
+  -q, --quiet       Suppress informative output (errors will still be displayed)
+
+  -D, --debug       Enable debugging, printing helpful message about what
+                    Genesis is doing, to standard error.
+
+  -T, --trace       Even more debugging, including debugging inside called
+                    tools (like spruce and bosh).  Any trace commands within
+                    the Genesis codebase will be printed, along with identifying
+                    the line they were encountered.
+
+  -S, --show-stack  Will show stack trace when displaying fatal error due to
+                    runtime conditions or bugs.  When -T|--trace is also
+                    specified, each trace will contain the full stack of where
+                    it was encountered.
+
+  -C, --cwd         Effective working directory.  You can also specify the
+                    environment YAML file to use, in which case the working
+                    directory is the one containing the specified file.
+                    Defaults to '.'
+
+  -e, --bosh-env    Which BOSH environment (aka director) to use.  If not
+                    specified, it will use the value in genesis.bosh or
+                    genesis.env in that order.  Can also be provided using
+                    either $GENESIS_BOSH_ENVIRONMENT env variables.
+
+                    As of v2.8.0, the BOSH director information is read from
+                    Exodus data instead of the local .bosh/config, and as such,
+                    expect the deployment type of the bosh director to be
+                    'bosh'.  If this is not the case, you can specify the
+                    deployment type after the deployment name, separated by a
+                    '/' (ie c-aws-myenv/new-bosh).  This will inform the system
+                    where to find the Exodus data.
+
+  -c, --config <s>  Specify a YAML file to be used as a config instead of
+                    fetching it from the BOSH director.  This option can be
+                    specified multiple times for different configurations.
+                    The syntax for specifying the config is:
+
+                    [<type>[@<name>]=]<path>
+
+                    The type defaults to 'cloud', and name defaults to 'default'
+                    if not given.  In this way, it maintains its backwards
+                    compatibility of the original `-c` option for specifying
+                    the cloud config file.
+
+  --cloud-config    Specify a local YAML file to use at the cloud config.  If
+                    not specified but needed, it will be fetched from the BOSH
+                    director. (Shortform: --cc)
+
+                    This is deprecated: use -c|--config <path> instead.
+
+  --runtime-config  Specify a local YAML file to use at the runtime config.  If
+                    not specified but needed, it will be fetched from the BOSH
+                    director. (Shortform: --rc)
+
+                    This is deprecated: use -c|--config runtime=<path> instead.
+
+
+
+
+Generating OpenVPN user 'drgao' config:
+	=> /u/wseguin/ops/vpn/certs/drgao.ovpn
+
+[33mVerifying availability of vault 'lab-mgmt' (https://10.168.0.22)...[0m[1;32mok[0m
+
+[1;31m[ERROR][0m Environment file [1;36mgenerate-vpn-config.yml[0m does not exist
+Storing users ovpn config file and sha256 in Vault at credentials/vpn/drgao:ovpn and :sha256
+sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /u/wseguin/ops/vpn/certs/drgao.ovpn
+!! no secret exists at path `credentials/vpn/drgao`
+ovpn: </u/wseguin/ops/vpn/certs/drgao.ovpn
+!! no secret exists at path `credentials/vpn/drgao`
+Removing generated file from disk...
+Generated certificates for users: drgao
