@@ -2,7 +2,10 @@ kit:
   name:    bosh
   version: 3.0.0
   features:
-    - 
+    - vsphere
+    - bosh-dns-healthcheck
+    - netop-access
+    - sysop-access
 
 genesis:
   env:            lab-itsouvalas
@@ -14,5 +17,32 @@ params:
   # These parameters are all that we need to specify for an Environment
   # BOSH, since networking and VM type configuration comes from that cloud-config
   #
-  static_ip: 
+  static_ip: 10.168.16.0
+  bosh_network: itsouvalas
+
+  # BOSH on vSphere (vCenter) needs to know which vCenter data
+  # center and cluster to deploy to by default.
+  #
+  # vCenter credentials are stored in the Vault at
+  #   /secret/lab/itsouvalas/bosh/vsphere
+  #
+  vsphere_datacenter: Datacenter
+  vsphere_clusters:
+    - Cluster1
+
+  # BOSH will store ephemeral disks, which house the operating system,
+  # and temporary work areas, on any of theses data stores
+  #
+  vsphere_ephemeral_datastores:
+    - ephemeral
+
+  # BOSH will store persistent disks, which contain the important
+  # data of your various deployments (databases, blobstores, etc.)
+  # on any of theses data stores
+  #
+  vsphere_persistent_datastores:
+    - persistent
+
+  # DNS Caching (for runtime config)
+  dns_cache: true
 

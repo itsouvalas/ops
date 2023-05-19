@@ -1,0 +1,11 @@
+---
+kit:
+  name:    vault
+  version: 2.0.0-rc.7
+
+
+genesis:
+  env:            lab-itsouvalas
+  min_version:    2.7.0
+
+params: {}
