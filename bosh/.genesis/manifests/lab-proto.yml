@@ -99,6 +99,7 @@ cloud_provider:
         persistent_datastore_pattern: ^(persistent)$
         template_folder: ((vcenter_templates))
         vm_folder: ((vcenter_vms))
+      default_disk_type: thin
       password: ((vcenter_password))
       user: ((vcenter_user))
   template:
@@ -106,7 +107,7 @@ cloud_provider:
     release: bosh-vsphere-cpi
 disk_pools:
 - cloud_properties:
-    type: preallocated
+    type: thin
   disk_size: ((disk_size))
   name: disks
 exodus:
@@ -121,7 +122,7 @@ exodus:
   credhub_password: ((credhub_cli_user_password))
   credhub_url: https://10.168.0.18:8844
   credhub_username: credhub_cli_user
-  dated: 2023-05-16 13:07:53 +0000
+  dated: 2023-05-20 18:37:22 +0000
   deployer: ulabuser
   features: vsphere,proto,bosh-dns-healthcheck,netop-access,sysop-access
   is_director: true
@@ -568,7 +569,7 @@ params:
   vsphere_cpu: 2
   vsphere_datacenter: Datacenter
   vsphere_disk: 40960
-  vsphere_disk_type: preallocated
+  vsphere_disk_type: thin
   vsphere_ephemeral_datastores:
   - ephemeral
   vsphere_network: DSwitch-VM Network

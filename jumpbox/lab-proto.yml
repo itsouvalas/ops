@@ -1,6 +1,6 @@
 kit:
-  name:    jumpbox
-  version: 1.3.4
+  name:    dev #jumpbox
+  version: latest #1.3.4
   features:
     - openvpn
 
@@ -10,6 +10,7 @@ genesis:
   min_version:    2.7.11
 
 params:
+  stemcell_os: ubuntu-jammy
   vpn_client_routes:
     - 10.168.0.16 255.255.255.192
   vpn_iptables_forward:
