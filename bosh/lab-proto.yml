@@ -57,3 +57,4 @@ params:
   # DNS Caching (for runtime config)
   dns_cache: true
 
+  vsphere_disk_type: thin

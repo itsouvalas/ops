@@ -134,7 +134,7 @@ exodus:
   credhub_password: ((credhub_cli_user_password))
   credhub_url: https://10.168.16.0:8844
   credhub_username: credhub_cli_user
-  dated: 2023-05-19 15:40:20 +0000
+  dated: 2023-05-20 10:14:20 +0000
   deployer: itsouvalas
   features: vsphere,bosh-dns-healthcheck,netop-access,sysop-access
   is_director: true
@@ -979,6 +979,7 @@ params:
   vsphere_clusters:
   - Cluster1
   vsphere_datacenter: Datacenter
+  vsphere_disk_type: thin
   vsphere_ephemeral_datastores:
   - ephemeral
   vsphere_persistent_datastores:

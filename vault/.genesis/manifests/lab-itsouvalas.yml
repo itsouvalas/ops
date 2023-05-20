@@ -58,7 +58,7 @@ disk_types:
   name: minio
 exodus:
   bosh: lab-itsouvalas
-  dated: 2023-05-19 16:14:08 +0000
+  dated: 2023-05-20 10:35:43 +0000
   deployer: itsouvalas
   domain: vault.bosh
   features: ""
