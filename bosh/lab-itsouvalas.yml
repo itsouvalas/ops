@@ -45,5 +45,15 @@ params:
 
   # DNS Caching (for runtime config)
   dns_cache: true
-
   vsphere_disk_type: thin
+
+
+cloud_provider:
+  properties:
+    vcenter:
+      default_disk_type: thin
+
+instance_groups:
+- properties:
+    vcenter:
+      default_disk_type: thin

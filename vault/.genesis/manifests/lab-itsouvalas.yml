@@ -24,41 +24,73 @@ compilation:
   vm_type: large
   workers: 5
 disk_types:
-- disk_size: 2048
+- cloud_properties:
+    type: thin
+  disk_size: 2048
   name: default
-- disk_size: 2048
+- cloud_properties:
+    type: thin
+  disk_size: 2048
   name: consul
-- disk_size: 10240
+- cloud_properties:
+    type: thin
+  disk_size: 20480
   name: concourse
-- disk_size: 4096
+- cloud_properties:
+    type: thin
+  disk_size: 4096
   name: postgres
-- disk_size: 4096
+- cloud_properties:
+    type: thin
+  disk_size: 4096
   name: blobstore
-- disk_size: 1024
+- cloud_properties:
+    type: thin
+  disk_size: 1024
   name: vault
-- disk_size: 65536
+- cloud_properties:
+    type: thin
+  disk_size: 65536
   name: bosh
-- disk_size: 131072
+- cloud_properties:
+    type: thin
+  disk_size: 131072
   name: bosh-large
-- disk_size: 2048
+- cloud_properties:
+    type: thin
+  disk_size: 2048
   name: shield
-- disk_size: 51200
+- cloud_properties:
+    type: thin
+  disk_size: 51200
   name: jumpbox
-- disk_size: 51200
+- cloud_properties:
+    type: thin
+  disk_size: 51200
   name: prometheus
-- disk_size: 10240
+- cloud_properties:
+    type: thin
+  disk_size: 4096
   name: rabbitmq
-- disk_size: 5120
+- cloud_properties:
+    type: thin
+  disk_size: 5120
   name: 5GB
-- disk_size: 10240
+- cloud_properties:
+    type: thin
+  disk_size: 10240
   name: 10GB
-- disk_size: 100240
+- cloud_properties:
+    type: thin
+  disk_size: 100240
   name: 100GB
-- disk_size: 10240
+- cloud_properties:
+    type: thin
+  disk_size: 20480
   name: minio
 exodus:
   bosh: lab-itsouvalas
-  dated: 2023-05-20 10:35:43 +0000
+  dated: 2023-05-22 10:07:08 +0000
   deployer: itsouvalas
   domain: vault.bosh
   features: ""

@@ -11,7 +11,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.2.255
@@ -26,7 +26,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.4.3
@@ -35,49 +35,64 @@ networks:
           - 10.168.4.4 - 10.168.4.6
 
   # 10.168.4.8/30    (4 hosts)    10.168.4.8 - 10.168.4.11
+  - name: jumpbox
+    type: manual
+    subnets:
+      - range:   10.168.0.0/16
+        gateway: 10.168.0.1
+        azs: ["z1","z2","z3"]
+        dns: ["8.8.8.8","8.8.4.4"]
+        cloud_properties: {"name":"DSwitch-VM Network"}
+        reserved:
+          - 10.168.0.1 - 10.168.4.7
+          - 10.168.4.12 - 10.168.255.254
+        static: # 2 (2)
+          - 10.168.4.8 - 10.168.4.9
+
+  # 10.168.4.12/30    (4 hosts)    10.168.4.12 - 10.168.4.15
   - name: shield
     type: manual
     subnets:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
-          - 10.168.0.1 - 10.168.4.7
-          - 10.168.4.12 - 10.168.255.254
+          - 10.168.0.1 - 10.168.4.11
+          - 10.168.4.16 - 10.168.255.254
         static: # 1 (1)
-          - 10.168.4.8
+          - 10.168.4.12
 
-  # 10.168.4.12/30    (4 hosts)    10.168.4.12 - 10.168.4.15
+  # 10.168.4.16/30    (4 hosts)    10.168.4.16 - 10.168.4.19
   - name: dns
     type: manual
     subnets:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
-          - 10.168.0.1 - 10.168.4.11
-          - 10.168.4.16 - 10.168.255.254
+          - 10.168.0.1 - 10.168.4.15
+          - 10.168.4.20 - 10.168.255.254
         static: # 2 (2)
-          - 10.168.4.12 - 10.168.4.13
+          - 10.168.4.16 - 10.168.4.17
 
-  # 10.168.4.16/28    (16 hosts)    10.168.4.16 - 10.168.4.31
+  # 10.168.4.32/28    (16 hosts)    10.168.4.32 - 10.168.4.47
   - name: k8s
     type: manual
     subnets:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
-          - 10.168.0.1 - 10.168.4.15
-          - 10.168.4.32 - 10.168.255.254
+          - 10.168.0.1 - 10.168.4.31
+          - 10.168.4.48 - 10.168.255.254
         static: # 1 (1)
-          - 10.168.4.16
+          - 10.168.4.32
 
   # 10.168.4.64/26    (64 hosts)    10.168.4.64 - 10.168.4.127
   - name: concourse
@@ -86,7 +101,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.4.63
@@ -101,7 +116,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.4.127
@@ -116,7 +131,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.4.143
@@ -130,7 +145,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.4.191
@@ -145,7 +160,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.4.255
@@ -160,7 +175,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.5.127
@@ -175,7 +190,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.5.255
@@ -190,7 +205,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.6.255
@@ -205,7 +220,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.7.255
@@ -220,7 +235,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.15.255
@@ -235,7 +250,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.23.255
@@ -250,7 +265,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.31.255
@@ -265,7 +280,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.39.255
@@ -280,7 +295,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.47.255
@@ -295,7 +310,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.55.255
@@ -310,7 +325,7 @@ networks:
       - range:   10.168.0.0/16
         gateway: 10.168.0.1
         azs: ["z1","z2","z3"]
-        dns: ["10.168.4.12","10.168.4.13"]
+        dns: ["8.8.8.8","8.8.4.4"]
         cloud_properties: {"name":"DSwitch-VM Network"}
         reserved:
           - 10.168.0.1 - 10.168.63.255
@@ -332,22 +347,22 @@ compilation:
    workers: 5
 
 disk_types:
-  - {"name": "default","disk_size": 2048}
-  - {"name": "consul","disk_size": 2048}
-  - {"name": "concourse","disk_size": 20480}
-  - {"name": "postgres","disk_size": 4096}
-  - {"name": "blobstore","disk_size": 4096}
-  - {"name": "vault","disk_size": 1024}
-  - {"name": "bosh","disk_size": 65536}
-  - {"name": "bosh-large","disk_size": 131072}
-  - {"name": "shield","disk_size": 2048}
-  - {"name": "jumpbox","disk_size": 51200}
-  - {"name": "prometheus","disk_size": 51200}
-  - {"name": "rabbitmq","disk_size": 4096}
-  - {"name": "5GB","disk_size": 5120}
-  - {"name": "10GB","disk_size": 10240}
-  - {"name": "100GB","disk_size": 100240}
-  - {"name": "minio","disk_size": 20480}
+  - {"name": "default","disk_size": 2048,"cloud_properties": {"type": thin}}
+  - {"name": "consul","disk_size": 2048,"cloud_properties": {"type": thin}}
+  - {"name": "concourse","disk_size": 20480,"cloud_properties": {"type": thin}}
+  - {"name": "postgres","disk_size": 4096,"cloud_properties": {"type": thin}}
+  - {"name": "blobstore","disk_size": 4096,"cloud_properties": {"type": thin}}
+  - {"name": "vault","disk_size": 1024,"cloud_properties": {"type": thin}}
+  - {"name": "bosh","disk_size": 65536,"cloud_properties": {"type": thin}}
+  - {"name": "bosh-large","disk_size": 131072,"cloud_properties": {"type": thin}}
+  - {"name": "shield","disk_size": 2048,"cloud_properties": {"type": thin}}
+  - {"name": "jumpbox","disk_size": 51200,"cloud_properties": {"type": thin}}
+  - {"name": "prometheus","disk_size": 51200,"cloud_properties": {"type": thin}}
+  - {"name": "rabbitmq","disk_size": 4096,"cloud_properties": {"type": thin}}
+  - {"name": "5GB","disk_size": 5120,"cloud_properties": {"type": thin}}
+  - {"name": "10GB","disk_size": 10240,"cloud_properties": {"type": thin}}
+  - {"name": "100GB","disk_size": 100240,"cloud_properties": {"type": thin}}
+  - {"name": "minio","disk_size": 20480,"cloud_properties": {"type": thin}}
 
 vm_extensions:
   - {"name": "cf-elb"}
