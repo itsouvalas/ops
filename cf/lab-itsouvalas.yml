@@ -1,0 +1,33 @@
+---
+kit:
+  name:    dev #cf
+  version: latest #2.2.1
+  features:
+    - tls
+    - haproxy
+    - self-signed
+    - local-postgres-db
+    - small-footprint
+    - nfs-volume-services
+    - enable-service-discovery
+    - app-autoscaler-integration
+    - prometheus-integration
+
+genesis:
+  env:            lab-itsouvalas
+  min_version:    2.8.6
+
+params:
+  # Cloud Foundry base domain
+  base_domain: it-lab.instantpc.support
+  system_domain: system.it-lab.instantpc.support
+  apps_domains:
+  - run.it-lab.instantpc.support
+  # Skip SSL validation since we use self-signed certs
+  skip_ssl_validation: true
+  haproxy_ips: 10.168.16.24
+
+stemcells:
+  - alias: default
+    os: ubuntu-bionic
+    version: latest
