@@ -378,7 +378,7 @@ disk_types:
   name: consul
 - cloud_properties:
     type: thin
-  disk_size: 20480
+  disk_size: 10240
   name: concourse
 - cloud_properties:
     type: thin
@@ -414,7 +414,7 @@ disk_types:
   name: prometheus
 - cloud_properties:
     type: thin
-  disk_size: 4096
+  disk_size: 10240
   name: rabbitmq
 - cloud_properties:
     type: thin
@@ -430,7 +430,7 @@ disk_types:
   name: 100GB
 - cloud_properties:
     type: thin
-  disk_size: 20480
+  disk_size: 10240
   name: minio
 exodus:
   admin_password: ((cf_admin_password))
@@ -451,7 +451,7 @@ exodus:
   cf-deployment-version: 29.0.0
   cf_exporter_secret: ((uaa_clients_cf_exporter_secret))
   core_network: cf-core
-  dated: 2023-05-24 15:25:01 +0000
+  dated: 2023-05-25 11:11:52 +0000
   db_network: cf-core
   deployer: itsouvalas
   edge_network: cf-edge
@@ -2830,6 +2830,25 @@ networks:
     - 10.168.16.220 - 10.168.255.254
     static:
     - 10.168.16.216
+  type: manual
+- name: blacksmith
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.255
+    - 10.168.18.0 - 10.168.255.254
+    static:
+    - 10.168.17.0
   type: manual
 params:
   app_domains:

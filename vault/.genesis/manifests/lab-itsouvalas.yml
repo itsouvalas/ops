@@ -34,7 +34,7 @@ disk_types:
   name: consul
 - cloud_properties:
     type: thin
-  disk_size: 20480
+  disk_size: 10240
   name: concourse
 - cloud_properties:
     type: thin
@@ -70,7 +70,7 @@ disk_types:
   name: prometheus
 - cloud_properties:
     type: thin
-  disk_size: 4096
+  disk_size: 10240
   name: rabbitmq
 - cloud_properties:
     type: thin
@@ -86,11 +86,11 @@ disk_types:
   name: 100GB
 - cloud_properties:
     type: thin
-  disk_size: 20480
+  disk_size: 10240
   name: minio
 exodus:
   bosh: lab-itsouvalas
-  dated: 2023-05-22 10:07:08 +0000
+  dated: 2023-05-25 10:56:27 +0000
   deployer: itsouvalas
   domain: vault.bosh
   features: ""
@@ -169,8 +169,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -187,8 +187,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -206,8 +206,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -225,8 +225,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -244,8 +244,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -262,8 +262,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -281,8 +281,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -299,8 +299,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -318,8 +318,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -337,8 +337,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -356,8 +356,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -375,8 +375,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -394,8 +394,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -413,8 +413,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -432,8 +432,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -451,8 +451,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -470,8 +470,8 @@ networks:
     cloud_properties:
       name: DSwitch-VM Network
     dns:
-    - 10.168.4.12
-    - 10.168.4.13
+    - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
     range: 10.168.0.0/16
     reserved:
@@ -479,6 +479,25 @@ networks:
     - 10.168.16.220 - 10.168.255.254
     static:
     - 10.168.16.216
+  type: manual
+- name: blacksmith
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.255
+    - 10.168.18.0 - 10.168.255.254
+    static:
+    - 10.168.17.0
   type: manual
 params: {}
 releases:
