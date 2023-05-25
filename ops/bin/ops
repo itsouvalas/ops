@@ -1,3 +1,86 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:bf5d3a707e0fdc581291a4710eedc79d1b1e525c3ec065171be2ef35bb8caea0
-size 1885
+#!/usr/bin/env bash
+
+################################################################################
+# Functions
+################################################################################
+usage() {
+  echo -e "
+Usage: $0 <option> [args...]
+
+Where <option> is one of
+
+  backup-vault
+    Creates a timestamped safe backupfile of Vault
+
+  check-domain-cert <name>
+    Checks the cert for the given domain name
+
+  check-cert <name>
+    NIY - Check the provided certificate bundle 
+
+  fetch-repos
+    Fetches all of the operations repositories into \`~/ops\` and sets up \`~/bin\`
+
+  fetch-clis
+    Fetches/Updates clis into the ops repository (\`~/bin/\`)
+
+  generate-vpn-users <name> [<name>...]
+    Generate .ovpn files for specified usernames
+
+  install-tig
+    Installs the git \`tig\` cli
+
+  install-nvim
+    Not functional yet, needs Jammy stemcell.
+
+  load-certs
+    Sanitize, validate, and load pem/bundle cert files.
+"
+}
+
+args::parse() {
+  while [[ $# > 0 ]]
+  do
+    case ${1} in
+      (-h|help)
+        action="usage"
+        ;;
+      (*)
+        if [[ -z ${action} ]] 
+        then action="$1"
+        else args+=(${1})
+        fi
+        ;;
+    esac
+    shift
+  done
+}
+
+################################################################################
+# Init
+################################################################################
+declare -a args
+declare action scripts_path
+
+scripts_path="$(dirname $0)/scripts"
+
+################################################################################
+# Main
+################################################################################
+args::parse "$@"
+
+case ${action} in
+  (usage|-h|--help)
+    usage
+    ;;
+  (*)
+    if [[ -x "${scripts_path}/${action}" ]]
+    then
+      exec "${scripts_path}/${action}" "${args[@]}"
+    else
+      echo -e "Unknown Action: ${action}"
+      usage
+      exit 1
+    fi
+    ;;
+esac

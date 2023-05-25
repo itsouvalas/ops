@@ -1,3 +1,109 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f79566e52e6bde11d1ec26fa5194fc0653b7b594de55f6e00c280702c2fb642b
-size 4011
+#!/bin/bash
+
+################################################################################
+# Authors:
+#   Wayne E. Seguin <wayneeseguin@gmail.com>
+################################################################################
+
+################################################################################
+# Functions
+################################################################################
+error() { echo -e "\n\e[31mERROR:\e[0m $*\n" >&2 ; exit 1 ; }
+
+info() { echo -e "\e[33mINFO:\e[0m $*" >&2 ; }
+
+fail() { error "$*" ; exit 1 ; }
+
+################################################################################
+# Init
+################################################################################
+export GPG_TTY=$(tty) # Fix 'Inappropriate ioctl for device' error
+declare backup_path timestamp
+declare -a mounts
+
+backup_path="${HOME}/backups/vault"
+timestamp=$(date +"%Y-%m-%dT%H%M%S")
+mounts=($(
+  safe get sys/mounts | awk -F: '!/sys|cubbyhole|identity/{print $1}'
+)) # TODO: Check if needed: cubbyhole/, identity/, secret/
+
+mkdir -p "${backup_path}/${timestamp}/mounts"
+
+cd "${backup_path}/${timestamp}"
+
+exec &> >(tee -a "${backup_path}/${timestamp}/README") # Log to README
+
+################################################################################
+# Main
+################################################################################
+echo "${timestamp}"
+echo -e "\n========================================"
+echo -e "= Vault Backup & Encryption (log)"
+echo -e "========================================"
+
+for mount in ${mounts[@]}
+do
+  info "Exporting Vault mount ${mount} via safe..."
+  safe export ${mount} --all > ./mounts/${mount%/}.safe.json
+done
+
+info "Archiving..."
+tar zcf vault.safe.tar.gz ./mounts/*.json
+
+info "Encrypting archive..."
+gpg --symmetric --cipher-algo AES256 -c \
+  --output "vault.safe.tar.gz.gpg"  \
+  "vault.safe.tar.gz"
+
+info "Writing archive shasum file..."
+shasum -a 256 "vault.safe.tar.gz.gpg" \
+  > "vault.safe.tar.gz.gpg.sha256"
+
+info "Removing intermediate files..."
+rm -rf vault.safe.tar.gz ./mounts
+
+info "Vault mounts (${mounts[*]}) backed up into ${backup_path}/${timestamp}/"
+
+cd ${backup_path}
+info "Archiving Vault encrypted backup files to ${backup_path}/${timestamp}.tar.gz"
+tar zcf "${timestamp}.tar.gz" ${timestamp}/*
+
+echo -e "========================================"
+echo -e "= NOTES"
+echo -e "========================================"
+echo -e "= - Save the encryption password in a"
+echo -e "=     secure team location !!!"
+echo -e "= - Copy the backup archive offsite:"
+echo -e "=     '${timestamp}.tar.gz'"
+echo -e "========================================"
+echo -e "= Timestamp:"
+echo -e "========================================"
+echo -e "${timestamp}"
+echo -e "========================================"
+echo -e "= Path:"
+echo -e "========================================"
+echo -e "${backup_path}"
+echo -e "========================================"
+echo -e "= Files:"
+echo -e "========================================"
+echo -e "${backup_path}/${timestamp}/vault.safe.tar.gz.gpg"
+echo -e "${backup_path}/${timestamp}/vault.safe.tar.gz.gpg.sha256"
+echo -e "${backup_path}/${timestamp}/README"
+echo -e "${backup_path}/${timestamp}.tar.gz"
+echo -e "========================================"
+echo -e "\n========================================"
+echo -e "= Vault Decrypt & Restore (Instructions)"
+echo -e "========================================"
+echo -e "\n1. Extract the backup archive:\n"
+echo -e "   tar zxvf vault.safe.tar.gz"
+echo -e "\n1. Validate the shasum (should see 'OK'):\n"
+echo -e "   shasum -a 256 -c vault.safe.tar.gz.gpg.sha256"
+echo -e "\n2. Decrypt the file:\n"
+echo -e "   gpg --decrypt vault.safe.tar.gz.gpg > vault.safe.tar.gz"
+echo -e "\n3. Extract the vault archive:\n"
+echo -e "   tar zxvf vault.safe.tar.gz"
+echo -e "\n4. Import each vault mount export:\n"
+for mount in ${mounts[@]}
+do echo -e "   safe import < ./mounts/${mount%/}.safe.json"
+done
+echo -e "\n4. Remove unencrypted sensitive files:\n"

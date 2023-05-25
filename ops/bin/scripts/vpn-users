@@ -1,3 +1,130 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e2ee69e142ffc476fc9856de230ccf706b177fc35ebfbd7f6b4c61e6e7237430
-size 3487
+#!/usr/bin/env bash
+#
+# Author: Wayne E. Seguin <wayneeseguin@gmail.com>
+#
+# NOTE: Idea is to add 2 remotes to ovpn file... this needs some investigation not sure it works as intended
+#
+
+################################################################################
+# Utility Functions
+################################################################################
+
+fail() { echo -e "\n\e[31mERROR:\e[0m $*\n" >&2 ; exit 1 ; }
+
+info()  { echo -e "\n\e[33mINFO:\e[0m $*\n" >&2 ; exit 1 ; }
+
+################################################################################
+# Functions
+################################################################################
+
+usage() {
+  cat <<-"EOF"
+
+Usage: $0 <generate|revoke> <nt|ot> <{users...}>
+
+Examples:
+
+  $0 g itsouvalas dbell krutten wseguin erichardson drgao drhu
+  $0 r jarjar
+
+Notes:
+
+- Short form for 'generate' is 'g' and for 'remove' is 'r'.
+
+EOF
+}
+
+safe::auth::check() {
+  local status=$(safe auth status --json | jq -r '.valid')
+
+  [[ ${status} == "true" ]] ||
+    fail "safe auth status is not valid, please safe auth and try again."
+}
+
+vpn::certs::generate() {
+  local vpn_user
+
+  mkdir -p "${OPS_PATH}/vpn/certs"
+
+  cd ${OPS_PATH}/jumpbox
+
+  current_vpn_users=$(genesis ${env_name} do certs | awk -F= '/cn=/&&!/openvpn/{print $2}' 2>/dev/null | sort | uniq)
+  if [[ ${current_vpn_users[*]} =~ "${vpn_user}" ]]
+  then
+    echo -e "Renewing OpenVPN user '${vpn_user}' certificate."
+    genesis do ${env_name} renew-cert ${vpn_user}
+  fi
+
+  for vpn_user in "${vpn_users[@]}"
+  do
+    echo -e "Generating OpenVPN user '${vpn_user}' config:\n\t=> ${OPS_PATH}/vpn/certs/${vpn_user}.ovpn"
+    genesis do ${env_name} generate-vpn-config ${vpn_user} \
+      | sed 's/remote .*$/remote srv1.instantpc.support 50443/g' \
+      > "${OPS_PATH}/vpn/certs/${vpn_user}.ovpn"
+
+    echo -e "Storing users ovpn config file and sha256 in Vault at credentials/vpn/${vpn_user}:ovpn and :sha256"
+    safe set "credentials/vpn/${vpn_user}" sha256="$(sha256sum "${OPS_PATH}/vpn/certs/${vpn_user}.ovpn")"
+    safe set "credentials/vpn/${vpn_user}" ovpn@"${OPS_PATH}/vpn/certs/${vpn_user}.ovpn"
+
+    echo -e "Removing generated file from disk..."
+    rm -f "${OPS_PATH}/vpn/certs/${vpn_user}.ovpn"
+  done
+
+  echo -e "Generated certificates for users: ${vpn_users[*]}"
+}
+
+vpn::certs::revoke() {
+  local vpn_user
+
+  cd ${OPS_PATH}/jumpbox
+
+  for vpn_user in "${vpn_users[@]}"
+  do
+    echo -e "Revoking user ${vpn_user}..."
+    genesis do ${env_name} revoke-cert ${vpn_user}
+
+    echo -e "Ensuring user ${vpn_user} is removed from Vault..."
+    safe rm "credentials/vpn/${vpn_user}"
+  done
+}
+
+git::update() {
+  cd ${OPS_PATH}/jumpbox
+
+  env_name=${OCF_ENV_NAME:-lab-mgmt}
+  branch="master"
+  if [[ $(git branch --show-current) != ${branch} ]]
+  then git checkout -t origin/${branch}
+  fi
+}
+
+################################################################################
+# Main
+################################################################################
+declare action env_name branch timestamp
+declare -x OPS_PATH
+declare -a vpn_users
+
+action=$1 ; if ! shift ; then usage ; exit 1 ; fi
+
+vpn_users=("$@")
+
+export OPS_PATH=${OPS_PATH:-$HOME/ops}
+
+timestamp=$(date +"%Y-%m-%dT%H%M%S")
+
+mkdir -p "${OPS_PATH}/vpn/certs"
+
+exec &> >(tee -a "${OPS_PATH}/vpn/certs/${timestamp}.log")
+
+safe::auth::check
+
+git::update
+
+case "${action:-}" in
+  (generate|g) vpn::certs::generate ;;
+  (revoke|r)   vpn::certs::revoke ;;
+  (*)          usage ;;
+esac
+
+exit 0

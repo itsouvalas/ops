@@ -1,3 +1,169 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:eadbdc59a3ed350aa3ae2c37d5230d95cd491ea53a31be09702e97b1329c6ba6
-size 4826
+#!/usr/bin/env bash
+################################################################################
+# Author: Wayne E. Seguin <wayneeseguin@gmail.com>
+################################################################################
+# Expectations
+# - Arguments are a list of domains for certificates that are being renewed.
+# - Cert files are located at `~/ops/certs/<domain-name>/<domain>.{pem,bundle}`
+# - Directory and filename will be the cert's primary base domain name. 
+#
+# Example: 
+#   First we prepare the .pem and .trust files, trust is the intermediate.
+#
+#   $ DOMAIN=asp.firstcommand.com
+#   $ cd ~/ops/certs/${DOMAIN}/
+#   $ cp ${DOMAIN}.crt ${DOMAIN}.pem
+#   $ cp DigiCertCA.crt ${DOMAIN}.trust # This example happens to use DigiCert
+#
+#   Now we build the bundle:
+#
+#   $ safe get secret/db/eastus/prod/cf/haproxy/${DOMAIN}:key > ${DOMAIN}.bundle
+#   $ cat ${DOMAIN}.pem >> ${DOMAIN}.bundle
+#   $ cat ${DOMAIN}.trust >> ${DOMAIN}.bundle
+#
+#   $ dbops load-certs -e db-eastus-prod ${DOMAIN}
+#
+#   Don't forget to validate afterwards with the related command when possible:
+#
+#   $ dbops check-domain-cert ${DOMAIN}
+#
+################################################################################
+# Functions
+################################################################################
+
+fail() { echo -e "\n\e[31mERROR:\e[0m $*\n" >&2 ; exit 1 ; }
+
+info() { echo -e "\n\e[33mINFO:\e[0m $*\n" >&2  ; }
+
+debug() { [[ -z ${DEBUG:-} ]] || echo -e "\e[93mDEBUG\e[0m: $*" >&2 ; }
+
+usage() {
+  echo -e "Usage:\n  ${0//*\/} -e <name> [-d|--deploy] <domain> [<domain>...]" >&2
+}
+
+args::parse() {
+  debug "${FUNCNAME[0]}: $*"
+
+  domains=()
+  deploy=false
+  local _arg
+
+  while [[ $# > 0 ]]
+  do
+    _arg="${1}" ; shift
+    case ${_arg} in
+      (-d|--deploy)
+        deploy=true
+        ;;
+      (-e|--env)
+        OCFP_ENV=${1}
+        shift || fail "$(usage)"
+        ;;
+      (-h|--help|?)
+        usage
+        exit 0
+        ;;
+      (*)
+        domains+=(${_arg})
+        ;;
+    esac
+  done
+
+  [[ ${#domains[@]} > 0 ]] || 
+    fail "At least one (base) domain (file) name is expected."
+
+  [[ -n ${OCFP_ENV} ]] || 
+    fail "Env name must be given: -e <name> (ex: -e db-eastus-dev)"
+
+  export OCFP_ENV_PATH="${OCFP_ENV//-/\/}"
+  export OPS_PATH="${OPS_PATH:-$HOME/ops}"
+
+  certs_path="${OPS_PATH}/certs"
+}
+
+pem::sanitize() {
+  debug "${FUNCNAME[0]}: $*"
+  local _domain
+  info "Sanitizing the pem & bundle files"
+  _domain=${1}
+
+  info "Ensuring linux style line feeds (\\\\n) not CRLF (^M eg. \\\\r\\\\n)"
+  cd ${certs_path}/${_domain}
+  for _s in pem bundle
+  do
+    [[ -s ${domain}.${_s} ]] ||
+      fail "Certificate file '${domain}.${_s}' is missing or empty."
+
+    mv ${_domain}.${_s} ${_domain}.${_s}.orig
+
+    tr -d '\r' < ${_domain}.${_s}.orig > ${_domain}.${_s}
+  done
+}
+
+pem::validate() {
+  debug "${FUNCNAME[0]}: $*"
+
+  local _domain="${1}"
+  local _safe_path="secret/${OCFP_ENV_PATH}/cf/haproxy/${_domain}"
+
+  local _bundle_modulus=$(
+  echo -e "$(safe get ${_safe_path}:key)\n$(cat ${_domain}.bundle)" | 
+    openssl rsa -noout -modulus| md5sum | awk '{print $1}'
+  )
+
+  local _safe_modulus=$(
+    echo -e "$(safe get ${_safe_path}:key)\n$(safe get ${_safe_path}:combined)" | 
+    openssl rsa -noout -modulus | md5sum | awk '{print $1}'
+  )
+
+  # NOTE: HAProxy configuration expects each `:combined` contains:
+  #<private-key>\n<certificate>\n<intermediate-trust-chain>
+
+  info "Validating the bundle modulus against vault combined modulus"
+  if diff -s -q <(echo ${_bundle_modulus}) <(echo ${_safe_modulus})
+  then # Identical
+    info "Modulus for file ${_domain}.bundle and ${_safe_path}:combined are identical.\nProceeding..."
+  else # Different
+    fail "Modulus for file ${_domain}.bundle and ${_safe_path}:combined Differ!!!\n\nPlease fix the bundle and retry. \nExiting."
+  fi
+}
+
+pem::vault() {
+  debug "${FUNCNAME[0]}: $*"
+
+  local _domain="${1}"
+  local _safe_path="secret/${OCFP_ENV_PATH}/cf/haproxy/${_domain}"
+
+  safe set ${_safe_path} combined@${_domain}.pem
+
+  info "Loaded '${_domain}.pem' into Vault at '${_safe_path}'\n"
+}
+
+################################################################################
+# Variables
+################################################################################
+declare -a domains
+
+declare deploy certs_path
+
+declare -x OPS_PATH OCFP_ENV OCFP_ENV_PATH
+################################################################################
+# Main
+################################################################################
+
+args::parse "$@"
+
+for domain in ${domains[@]}
+do
+  pem::sanitize "${domain}"
+  pem::validate "${domain}"
+  pem::vault    "${domain}"
+done
+
+if [[ ${deploy} == true ]]
+then
+  cd "${OPS_PATH}/cf"
+  info "Deploying ${OCFP_ENV} env's HAProxy to update the certificates:\n  ${domains[*]}."
+  genesis deploy -y ${OCFP_ENV}
+fi
+

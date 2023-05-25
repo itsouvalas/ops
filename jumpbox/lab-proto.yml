@@ -12,10 +12,10 @@ genesis:
 params:
   stemcell_os: ubuntu-jammy
   vpn_client_routes:
-    - 10.168.0.16 255.255.255.192
+    - 10.168.0.0 255.255.0.0
   vpn_iptables_forward:
-    - -s 172.31.255.0/24 -d 10.168.0.16/16 -m conntrack --ctstate NEW -j ACCEPT -m comment --comment 'vpn -> lan'
-    - -s 10.168.0.16/16 -d 172.31.255.0/24 -m conntrack --ctstate NEW -j ACCEPT -m comment --comment 'lan -> vpn'
+    - -s 172.31.255.0/24 -d 10.168.0.0/16 -m conntrack --ctstate NEW -j ACCEPT -m comment --comment 'vpn -> lan'
+    - -s 10.168.0.0/16 -d 172.31.255.0/24 -m conntrack --ctstate NEW -j ACCEPT -m comment --comment 'lan -> vpn'
     - -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
   vpn_dns_servers:
     - 8.8.8.8

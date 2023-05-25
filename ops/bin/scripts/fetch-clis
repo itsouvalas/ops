@@ -1,3 +1,113 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:7a6e1b3c56e0f8c6a9cf3e0dd6f727c304ee76af546d5c3a5fa58b2d8e3dc5a0
-size 4385
+#!/usr/bin/env bash
+#
+# Author: Wayne E. Seguin <wayneeseguin@gmail.com>
+#
+
+info() {
+  echo -e "[INFO] $*"
+}
+
+# TODO: Make this an update script that checks for latest version
+BOSH_VERSION=${BOSH_VERSION:-7.2.3}
+CERTSTRAP_VERSION=${CERTSTRAP_VERSION:-1.3.0}
+CF_7_VERSION=${CF_7_VERSION:-7.6.0}
+CF_8_VERSION=${CF_8_VERSION:-8.6.1}
+CREDHUB_VERSION=${CREDHUB_VERSION:-2.9.15}
+GENESIS_VERSION=${GENESIS_VERSION:-2.8.9}
+GOTCHA_VERSION=${GOTCHA_VERSION:-0.2.0}
+GO_VERSION=${GO_VERSION:-1.20.4}
+HUGO_VERSION=${HUGO_VERSION:-0.36}
+JQ_VERSION=${JQ_VERSION:-1.6}
+SAFE_VERSION=${SAFE_VERSION:-1.8.0}
+SHIELD_VERSION=${SHIELD_VERSION:-8.8.4}
+SPRUCE_VERSION=${SPRUCE_VERSION:-1.30.2}
+VAULT_VERSION=${VAULT_VERSION:-1.13.2}
+HUB_VERSION=${HUB_VERSION:-2.14.2}
+
+mkdir -p ${HOME}/{bin,tmp} ; cd ~/tmp
+
+set -v
+info Vault
+curl -sOL "https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip" \
+    && unzip vault_${VAULT_VERSION}_linux_amd64.zip \
+    && mv vault ${HOME}/bin/vault \
+    && chmod 0755 ${HOME}/bin/vault \
+    && rm vault_${VAULT_VERSION}_linux_amd64.zip
+
+info safe
+curl -sOL "https://github.com/starkandwayne/safe/releases/download/v${SAFE_VERSION}/safe-linux-amd64" \
+    && mv safe-linux-amd64 ${HOME}/bin/safe \
+    && chmod 0755 ${HOME}/bin/safe
+
+info Spruce
+curl -sOL "https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce-linux-amd64" \
+    && mv spruce-linux-amd64 ${HOME}/bin/spruce \
+    && chmod 0755 ${HOME}/bin/spruce
+
+info bosh
+curl -sOL "https://github.com/cloudfoundry/bosh-cli/releases/download/v${BOSH_VERSION}/bosh-cli-${BOSH_VERSION}-linux-amd64" \
+    && mv bosh-cli-${BOSH_VERSION}-linux-amd64 ${HOME}/bin/bosh \
+    && chmod 0755 ${HOME}/bin/bosh
+
+info credhub-cli
+curl -sOL "https://github.com/cloudfoundry/credhub-cli/releases/download/${CREDHUB_VERSION}/credhub-linux-${CREDHUB_VERSION}.tgz" \
+    && tar zxvf credhub-linux-${CREDHUB_VERSION}.tgz \
+    && mv credhub ${HOME}/bin/credhub \
+    && chmod 0755 ${HOME}/bin/credhub
+
+info genesis
+curl -sOL "https://github.com/genesis-community/genesis/releases/download/v${GENESIS_VERSION}/genesis" \
+    && mv genesis ${HOME}/bin/genesis \
+    && chmod 0755 ${HOME}/bin/genesis
+
+info certstrap
+curl -sOL "https://github.com/square/certstrap/releases/download/v${CERTSTRAP_VERSION}/certstrap-linux-amd64" \
+    && mv certstrap-linux-amd64 ${HOME}/bin/certstrap \
+    && chmod 0755 ${HOME}/bin/certstrap
+
+info gotcha
+curl -sOL "https://github.com/starkandwayne/gotcha/releases/download/v${GOTCHA_VERSION}/gotcha-linux-amd64" \
+    && mv gotcha-linux-amd64 ${HOME}/bin/gotcha \
+    && chmod 0755 ${HOME}/bin/gotcha
+
+info shield
+curl -fsSLo shield "https://github.com/shieldproject/shield/releases/download/v${SHIELD_VERSION}/shield-linux-amd64" \
+    && mv shield ${HOME}/bin/shield \
+    && chmod 0755 ${HOME}/bin/shield
+
+info hugo
+curl -L >hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz" \
+    && tar -xzvf hugo.tar.gz -C ${HOME}/bin hugo \
+    && rm hugo.tar.gz
+
+info jq
+curl -sOL "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64" \
+    && mv jq-linux64 ${HOME}/bin/jq \
+    && chmod 0755 ${HOME}/bin/jq
+
+# kubectl
+v=$(curl -L -s https://dl.k8s.io/release/stable.txt) ; \
+    curl -LO "https://dl.k8s.io/release/${v}/bin/linux/amd64/kubectl" \
+    && mv kubectl ${HOME}/bin/kubectl \
+    && chmod 0755 ${HOME}/bin/kubectl
+
+# hub
+curl -sOL "https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-linux-amd64-${HUB_VERSION}.tgz" \
+    && tar -xvzf hub-linux-amd64-${HUB_VERSION}.tgz hub-linux-amd64-2.14.2/bin/hub \
+    && mv hub-linux-amd64-2.14.2/bin/hub ${HOME}/bin/hub \
+    && chmod 0755 ${HOME}/bin/hub
+
+# cf v7
+curl -sL "https://packages.cloudfoundry.org/stable?release=linux64-binary&version=${CF_7_VERSION}&source=github-rel" -o cf-cli_${CF_7_VERSION}_linux_x86-64.tgz  \
+    && tar -xvzf cf-cli_${CF_7_VERSION}_linux_x86-64.tgz \
+    && mv cf7 ${HOME}/bin/cf7 \
+    && chmod 0755 ${HOME}/bin/cf7
+
+# cf v8
+curl -sL "https://packages.cloudfoundry.org/stable?release=linux64-binary&version=${CF_8_VERSION}&source=github-rel" -o cf-cli_${CF_8_VERSION}_linux_x86-64.tgz \
+    && tar -xvzf cf-cli_${CF_8_VERSION}_linux_x86-64.tgz \
+    && mv cf8 ${HOME}/bin/cf8 \
+    && mv cf ${HOME}/bin/cf \
+    && chmod 0755 ${HOME}/bin/cf8
+
+exit 0

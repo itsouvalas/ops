@@ -1,3 +1,141 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:d9538428d1dac3f4a79170d6eea8d1f7554c6be7096c193d5f759d189e7768d4
-size 3032
+#/usr/bin/env bash
+#
+# Author: Wayne E. Seguin <wayneeseguin@gmail.com>
+#
+
+################################################################################
+# Init
+################################################################################
+declare -a repos
+declare DEPLOYMENTS_PATH token line
+
+DEPLOYMENTS_PATH=${DEPLOYMENTS_PATH:-$HOME/ops}
+token="="
+line="$(printf "${token}%.0s" {1..80})"
+
+repos=(
+  ops
+  terraform-configs
+  blacksmith-deployments
+  bosh-deployments
+  cf-deployments
+  configs
+  concourse-deployments
+  dns-deployments
+  jumpbox-deployments
+  #load-balancer-deployments
+  prometheus-deployments
+  shield-deployments
+  vault-deployments
+  vault-policies
+  "git@github.com:doomsday-project/doomsday.git"
+  "git@github.com:thomasmmitchell/safe_complete.git"
+)
+
+mkdir -p "${DEPLOYMENTS_PATH}"
+
+################################################################################
+# Functions
+################################################################################
+header() {
+  echo -e "\e[1m${line}\n${token} ${*}\n${line}\e[0m"
+}
+
+fetch::repo() {
+  local _repo=${1} _name
+
+  case ${_repo} in # Normalize
+    (terraform-configs) _name=terraform ;;
+    (*github*)          _name=$(echo "${_repo}" | sed -e 's#^.*/##' -e 's#.git##') ;;
+    (*)                 _name=${_repo/-deployments} ;;
+  esac
+
+  case ${_repo} in
+    (*github*) true ;;
+    (*)        _repo="git@github.com:itsouvalas/${_repo}.git" ;;
+  esac
+
+  cd ${DEPLOYMENTS_PATH}
+
+  header "${_name}"
+
+  if [[ -d ${DEPLOYMENTS_PATH}/${_name} ]]
+  then
+    cd ${_name}
+    git fetch --all
+    git pull --all
+  else
+    git clone ${_repo} ${_name}
+  fi
+
+  case $HOSTNAME in
+    (*proto*)
+      true # main/master branch
+    ;;
+    (*mgmt*|*)
+      git checkout -t origin/new_tenant
+    ;;
+  esac
+}
+
+fetch::repos() {
+  local _repo
+  for _repo in ${repos[@]}
+  do fetch::repo ${_repo}
+  done
+}
+################################################################################
+# Main
+################################################################################
+
+fetch::repos
+
+echo "Setting up ~/bin and ~/docs"
+
+if [[ -d "${HOME}/bin" ]]
+then mv "${HOME}/bin" "${HOME}/bin-backup"
+fi
+
+for d in bin docs
+do
+  if ! [[ -L "${HOME}/bin" ]]
+  then ln -fs "${DEPLOYMENTS_PATH}/ops/${d}" "${HOME}/${d}"
+  fi
+done
+
+header "Configuring shell init files"
+
+if ! grep -q '{HOME}/bin' ~/.bash_profile
+then
+  cat >> ~/.bash_profile <<EOF
+export PATH="\${HOME}/bin:\${PATH}"
+
+EOF
+fi
+
+if ! grep -q safe_complete ~/.bash_profile
+then
+  cat >> ~/.bash_profile <<EOF
+if [[ -s \${HOME}/ops/safe_complete/safe_completion.bash ]]
+then . \${HOME}/ops/safe_complete/safe_completion.bash
+fi
+
+EOF
+fi
+
+#if ! grep 'doomsday dash' ~/.bash_profile
+#then
+#  cat >> ~/.bash_profile <<EOF
+#if [[ -t 0 ]] ; then
+#  if [[ -x \$HOME/bin/doomsday ]]
+#  then
+#    if ! grep -q doomsday <(doomsday targets)
+#    then doomsday target lab https://doomsday-server.run.development.cf.lab.internal:443 -k
+#    fi
+#    doomsday login -u doomsday -p thebellsof && doomsday dash
+#  fi
+#fi
+#
+EOF
+fi
+
