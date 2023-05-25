@@ -347,22 +347,22 @@ compilation:
    workers: 5
 
 disk_types:
-  - {"name": "default","disk_size": 2048,"cloud_properties": {"type": thin}}
-  - {"name": "consul","disk_size": 2048,"cloud_properties": {"type": thin}}
-  - {"name": "concourse","disk_size": 20480,"cloud_properties": {"type": thin}}
-  - {"name": "postgres","disk_size": 4096,"cloud_properties": {"type": thin}}
-  - {"name": "blobstore","disk_size": 4096,"cloud_properties": {"type": thin}}
-  - {"name": "vault","disk_size": 1024,"cloud_properties": {"type": thin}}
-  - {"name": "bosh","disk_size": 65536,"cloud_properties": {"type": thin}}
-  - {"name": "bosh-large","disk_size": 131072,"cloud_properties": {"type": thin}}
-  - {"name": "shield","disk_size": 2048,"cloud_properties": {"type": thin}}
-  - {"name": "jumpbox","disk_size": 51200,"cloud_properties": {"type": thin}}
-  - {"name": "prometheus","disk_size": 51200,"cloud_properties": {"type": thin}}
-  - {"name": "rabbitmq","disk_size": 4096,"cloud_properties": {"type": thin}}
-  - {"name": "5GB","disk_size": 5120,"cloud_properties": {"type": thin}}
-  - {"name": "10GB","disk_size": 10240,"cloud_properties": {"type": thin}}
-  - {"name": "100GB","disk_size": 100240,"cloud_properties": {"type": thin}}
-  - {"name": "minio","disk_size": 20480,"cloud_properties": {"type": thin}}
+  - {"name": "default","cloud_properties": {"type": "thin"},"disk_size": 2048}
+  - {"name": "consul","cloud_properties": {"type": "thin"},"disk_size": 2048}
+  - {"name": "concourse","cloud_properties": {"type": "thin"},"disk_size": 20480}
+  - {"name": "postgres","cloud_properties": {"type": "thin"},"disk_size": 4096}
+  - {"name": "blobstore","cloud_properties": {"type": "thin"},"disk_size": 4096}
+  - {"name": "vault","cloud_properties": {"type": "thin"},"disk_size": 1024}
+  - {"name": "bosh","cloud_properties": {"type": "thin"},"disk_size": 65536}
+  - {"name": "bosh-large","cloud_properties": {"type": "thin"},"disk_size": 131072}
+  - {"name": "shield","cloud_properties": {"type": "thin"},"disk_size": 2048}
+  - {"name": "jumpbox","cloud_properties": {"type": "thin"},"disk_size": 51200}
+  - {"name": "prometheus","cloud_properties": {"type": "thin"},"disk_size": 51200}
+  - {"name": "rabbitmq","cloud_properties": {"type": "thin"},"disk_size": 4096}
+  - {"name": "5GB","cloud_properties": {"type": "thin"},"disk_size": 5120}
+  - {"name": "10GB","cloud_properties": {"type": "thin"},"disk_size": 10240}
+  - {"name": "100GB","cloud_properties": {"type": "thin"},"disk_size": 100240}
+  - {"name": "minio","cloud_properties": {"type": "thin"},"disk_size": 20480}
 
 vm_extensions:
   - {"name": "cf-elb"}
