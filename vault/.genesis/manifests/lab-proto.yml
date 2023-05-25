@@ -1,10 +1,22 @@
 azs:
 - cloud_properties:
-    data_centers:
+    datacenters:
     - clusters:
-      - cluster1: {}
-      name: datacenter
+      - Cluster1: {}
+      name: Datacenter
   name: z1
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster1: {}
+      name: Datacenter
+  name: z2
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster1: {}
+      name: Datacenter
+  name: z3
 compilation:
   az: z1
   network: compilation
@@ -12,32 +24,80 @@ compilation:
   vm_type: large
   workers: 5
 disk_types:
-- disk_size: 2048
+- cloud_properties:
+    type: thin
+  disk_size: 2048
   name: default
-- disk_size: 2048
+- cloud_properties:
+    type: thin
+  disk_size: 2048
   name: consul
-- disk_size: 10240
+- cloud_properties:
+    type: thin
+  disk_size: 20480
   name: concourse
-- disk_size: 4096
+- cloud_properties:
+    type: thin
+  disk_size: 4096
   name: postgres
-- disk_size: 4096
+- cloud_properties:
+    type: thin
+  disk_size: 4096
   name: blobstore
-- disk_size: 1024
+- cloud_properties:
+    type: thin
+  disk_size: 1024
   name: vault
-- disk_size: 16384
+- cloud_properties:
+    type: thin
+  disk_size: 65536
   name: bosh
-- disk_size: 2048
+- cloud_properties:
+    type: thin
+  disk_size: 131072
+  name: bosh-large
+- cloud_properties:
+    type: thin
+  disk_size: 2048
   name: shield
+- cloud_properties:
+    type: thin
+  disk_size: 51200
+  name: jumpbox
+- cloud_properties:
+    type: thin
+  disk_size: 51200
+  name: prometheus
+- cloud_properties:
+    type: thin
+  disk_size: 4096
+  name: rabbitmq
+- cloud_properties:
+    type: thin
+  disk_size: 5120
+  name: 5GB
+- cloud_properties:
+    type: thin
+  disk_size: 10240
+  name: 10GB
+- cloud_properties:
+    type: thin
+  disk_size: 100240
+  name: 100GB
+- cloud_properties:
+    type: thin
+  disk_size: 20480
+  name: minio
 exodus:
   bosh: lab-proto
-  dated: 2023-05-16 15:00:52 +0000
-  deployer: ulabuser
+  dated: 2023-05-25 10:49:34 +0000
+  deployer: itsouvalas
   domain: vault.bosh
   features: ""
   ips:
-  - 10.168.0.21
-  - 10.168.0.22
-  - 10.168.0.23
+  - 10.168.4.4
+  - 10.168.4.5
+  - 10.168.4.6
   is_director: false
   kit_is_dev: false
   kit_name: vault
@@ -78,9 +138,9 @@ instance_groups:
   networks:
   - name: vault
     static_ips:
-    - 10.168.0.21
-    - 10.168.0.22
-    - 10.168.0.23
+    - 10.168.4.4
+    - 10.168.4.5
+    - 10.168.4.6
   persistent_disk_type: default
   stemcell: default
   vm_type: default
@@ -98,83 +158,422 @@ meta:
   vault: /secret/lab/proto/vault
 name: lab-proto-vault
 networks:
-- name: bosh
+- name: default
   subnets:
   - azs:
     - z1
+    - z2
+    - z3
     cloud_properties:
       name: DSwitch-VM Network
     dns:
     - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
-    range: 10.168.0.16/26
+    range: 10.168.0.0/16
     reserved:
-    - 10.168.0.1 - 10.168.0.18
-    - 10.168.0.21 - 10.168.0.62
+    - 10.168.0.1 - 10.168.2.255
+    - 10.168.4.0 - 10.168.255.254
     static:
-    - 10.168.0.19
+    - 10.168.3.0 - 10.168.3.50
   type: manual
 - name: vault
   subnets:
   - azs:
     - z1
+    - z2
+    - z3
     cloud_properties:
       name: DSwitch-VM Network
     dns:
     - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
-    range: 10.168.0.16/26
+    range: 10.168.0.0/16
     reserved:
-    - 10.168.0.1 - 10.168.0.20
-    - 10.168.0.25 - 10.168.0.62
+    - 10.168.0.1 - 10.168.4.3
+    - 10.168.4.8 - 10.168.255.254
     static:
-    - 10.168.0.21 - 10.168.0.23
+    - 10.168.4.4 - 10.168.4.6
   type: manual
-- name: concourse
+- name: jumpbox
   subnets:
   - azs:
     - z1
+    - z2
+    - z3
     cloud_properties:
       name: DSwitch-VM Network
     dns:
     - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
-    range: 10.168.0.16/26
+    range: 10.168.0.0/16
     reserved:
-    - 10.168.0.1 - 10.168.0.24
-    - 10.168.0.41 - 10.168.0.62
+    - 10.168.0.1 - 10.168.4.7
+    - 10.168.4.12 - 10.168.255.254
     static:
-    - 10.168.0.25 - 10.168.0.27
+    - 10.168.4.8 - 10.168.4.9
   type: manual
 - name: shield
   subnets:
   - azs:
     - z1
+    - z2
+    - z3
     cloud_properties:
       name: DSwitch-VM Network
     dns:
     - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
-    range: 10.168.0.16/26
+    range: 10.168.0.0/16
     reserved:
-    - 10.168.0.1 - 10.168.0.40
-    - 10.168.0.49 - 10.168.0.62
+    - 10.168.0.1 - 10.168.4.11
+    - 10.168.4.16 - 10.168.255.254
     static:
-    - 10.168.0.41
+    - 10.168.4.12
+  type: manual
+- name: dns
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.15
+    - 10.168.4.20 - 10.168.255.254
+    static:
+    - 10.168.4.16 - 10.168.4.17
+  type: manual
+- name: k8s
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.31
+    - 10.168.4.48 - 10.168.255.254
+    static:
+    - 10.168.4.32
+  type: manual
+- name: concourse
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.63
+    - 10.168.4.128 - 10.168.255.254
+    static:
+    - 10.168.4.64 - 10.168.4.73
+  type: manual
+- name: minio
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.127
+    - 10.168.4.132 - 10.168.255.254
+    static:
+    - 10.168.4.128 - 10.168.4.131
   type: manual
 - name: compilation
   subnets:
   - azs:
     - z1
+    - z2
+    - z3
     cloud_properties:
       name: DSwitch-VM Network
     dns:
     - 8.8.8.8
+    - 8.8.4.4
     gateway: 10.168.0.1
-    range: 10.168.0.16/26
+    range: 10.168.0.0/16
     reserved:
-    - 10.168.0.1 - 10.168.0.48
-    - 10.168.0.57 - 10.168.0.62
+    - 10.168.0.1 - 10.168.4.143
+    - 10.168.4.160 - 10.168.255.254
+    static: []
+  type: manual
+- name: cf-db
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.191
+    - 10.168.5.0 - 10.168.255.254
+    static:
+    - 10.168.4.192
+  type: manual
+- name: cf-core
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.4.255
+    - 10.168.5.128 - 10.168.255.254
+    static:
+    - 10.168.5.0 - 10.168.5.9
+  type: manual
+- name: cf-edge
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.5.127
+    - 10.168.6.0 - 10.168.255.254
+    static:
+    - 10.168.5.128 - 10.168.5.137
+  type: manual
+- name: cf-runtime
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.5.255
+    - 10.168.7.0 - 10.168.255.254
+    static:
+    - 10.168.6.0 - 10.168.6.99
+  type: manual
+- name: blacksmith
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.6.255
+    - 10.168.8.0 - 10.168.255.254
+    static:
+    - 10.168.7.0
+  type: manual
+- name: shared
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.7.255
+    - 10.168.16.0 - 10.168.255.254
+    static:
+    - 10.168.8.0
+  type: manual
+- name: itsouvalas
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.15.255
+    - 10.168.24.0 - 10.168.255.254
+    static:
+    - 10.168.16.0
+  type: manual
+- name: wayneeseguin
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.23.255
+    - 10.168.32.0 - 10.168.255.254
+    static:
+    - 10.168.24.0
+  type: manual
+- name: drgao
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.31.255
+    - 10.168.40.0 - 10.168.255.254
+    static:
+    - 10.168.32.0
+  type: manual
+- name: drhu
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.39.255
+    - 10.168.48.0 - 10.168.255.254
+    static:
+    - 10.168.40.0
+  type: manual
+- name: dbell
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.47.255
+    - 10.168.56.0 - 10.168.255.254
+    static:
+    - 10.168.48.0
+  type: manual
+- name: krutten
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.55.255
+    - 10.168.64.0 - 10.168.255.254
+    static:
+    - 10.168.56.0
+  type: manual
+- name: erichardson
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.63.255
+    - 10.168.72.0 - 10.168.255.254
+    static:
+    - 10.168.64.0
   type: manual
 params:
   availability_zones:
@@ -195,34 +594,193 @@ update:
   max_in_flight: 1
   serial: true
   update_watch_time: 30000-120000
+vm_extensions:
+- name: cf-elb
+- name: ssh-elb
+- name: cf-load-balanced
+- name: 100GB_ephemeral_disk
+- name: 50GB_ephemeral_disk
+- name: cf-router-network-properties
+- name: cf-tcp-router-network-properties
+- name: diego-ssh-proxy-network-properties
+- name: rmq-loadbalancer
+- cloud_properties:
+    vmx_options:
+      disk.enableUUID: "1"
+  name: kubelet
 vm_types:
 - cloud_properties:
-    cpu: 2
-    disk: 4096
-    ram: 4096
+    cpu: 1
+    disk: 8192
+    ram: 2048
   name: default
 - cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: compilation
+- cloud_properties:
     cpu: 1
-    disk: 2048
+    disk: 8192
     ram: 1024
   name: small
 - cloud_properties:
-    cpu: 2
-    disk: 4096
-    ram: 4096
+    cpu: 1
+    disk: 16384
+    ram: 2048
   name: medium
 - cloud_properties:
-    cpu: 4
-    disk: 8192
-    ram: 8192
+    cpu: 2
+    disk: 32768
+    ram: 2048
   name: large
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 2048
+  name: haproxy
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: api
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: bbs
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: blobstore
 - cloud_properties:
     cpu: 4
     disk: 40960
     ram: 4096
-  name: runtime
+  name: cell
+- cloud_properties:
+    cpu: 1
+    disk: 36384
+    ram: 2048
+  name: diego
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: doppler
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 2048
+  name: errand
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: loggregator
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: nats
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: postgres
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: router
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: syslogger
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: uaa
+- cloud_properties:
+    cpu: 1
+    disk: 10240
+    ram: 4096
+  name: minimal
 - cloud_properties:
     cpu: 2
     disk: 10240
+    ram: 8192
+  name: small-cf
+- cloud_properties:
+    cpu: 4
+    disk: 24576
+    ram: 8192
+  name: small-highmem
+- cloud_properties:
+    cpu: 1
+    disk: 10240
     ram: 2048
   name: blacksmith
+- cloud_properties:
+    cpu: 2
+    disk: 10240
+    ram: 4096
+  name: jumpbox
+- cloud_properties:
+    cpu: 4
+    disk: 262144
+    ram: 8192
+  name: concourse-worker
+- cloud_properties:
+    cpu: 4
+    disk: 81920
+    ram: 8192
+  name: thunder-dome
+- cloud_properties:
+    cpu: 2
+    disk: 24576
+    ram: 6144
+  name: bosh
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-api
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-broker
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-scheduler
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-collector
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-scaler
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-engine
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-operator
+- cloud_properties:
+    cpu: 2
+    disk: 16384
+    ram: 6144
+  name: bosh-more-disk
