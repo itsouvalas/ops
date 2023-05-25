@@ -68,22 +68,22 @@ meta:
                 - Cluster1: {}
 
     disk_types:
-      - { name: default,    disk_size:    2048 } #   2G
-      - { name: consul,     disk_size:    2048 } #   2G
-      - { name: concourse,  disk_size:   10240 } #  20G
-      - { name: postgres,   disk_size:    4096 } #   4G
-      - { name: blobstore,  disk_size:    4096 } #   4G
-      - { name: vault,      disk_size:    1024 } #   1G
-      - { name: bosh,       disk_size:   65536 } #  64G
-      - { name: bosh-large, disk_size:  131072 } # 128G
-      - { name: shield,     disk_size:    2048 } #   2G
-      - { name: jumpbox,    disk_size:   51200 } #  50G
-      - { name: prometheus, disk_size:   51200 } #  50G
-      - { name: rabbitmq,   disk_size:    4096 } #   4G
-      - { name: 5GB,        disk_size:    5120 } #   5G
-      - { name: 10GB,       disk_size:   10240 } #  10G
-      - { name: 100GB,      disk_size:  100240 } # 100G
-      - { name: minio,      disk_size:   10240 } #  10G
+      - { name: default,    disk_size:    2048,   cloud_properties: { type: thin  } } #   2G
+      - { name: consul,     disk_size:    2048,   cloud_properties: { type: thin  } } #   2G
+      - { name: concourse,  disk_size:   10240,   cloud_properties: { type: thin  } } #  20G
+      - { name: postgres,   disk_size:    4096,   cloud_properties: { type: thin  } } #   4G
+      - { name: blobstore,  disk_size:    4096,   cloud_properties: { type: thin  } } #   4G
+      - { name: vault,      disk_size:    1024,   cloud_properties: { type: thin  } } #   1G
+      - { name: bosh,       disk_size:   65536,   cloud_properties: { type: thin  } } #  64G
+      - { name: bosh-large, disk_size:  131072,   cloud_properties: { type: thin  } } # 128G
+      - { name: shield,     disk_size:    2048,   cloud_properties: { type: thin  } } #   2G
+      - { name: jumpbox,    disk_size:   51200,   cloud_properties: { type: thin  } } #  50G
+      - { name: prometheus, disk_size:   51200,   cloud_properties: { type: thin  } } #  50G
+      - { name: rabbitmq,   disk_size:    4096,   cloud_properties: { type: thin  } } #   4G
+      - { name: 5GB,        disk_size:    5120,   cloud_properties: { type: thin  } } #   5G
+      - { name: 10GB,       disk_size:   10240,   cloud_properties: { type: thin  } } #  10G
+      - { name: 100GB,      disk_size:  100240,   cloud_properties: { type: thin  } } # 100G
+      - { name: minio,      disk_size:   10240,   cloud_properties: { type: thin  } } #  10G
 
     vm_types:
       - { name: default,           cloud_properties: { cpu: 1, ram: 2048, disk:  8192 }}
@@ -300,6 +300,7 @@ environments:
           - { name: doomsday,     net: /30, static: 1}
           - { name: rabbitmq,     net: /29, static: 2}
           - { name: haproxy,      net: /30, static: 1}
+          - { name: blacksmith,   net: /24, static: 1}
     disk_types:
       - disk_size: 5120
         name: 5GB
@@ -352,6 +353,7 @@ environments:
           - { name: doomsday,      net: /30, static: 1}
           - { name: rabbitmq,      net: /29, static: 2}
           - { name: haproxy,       net: /30, static: 1}
+          - { name: blacksmith,    net: /24, static: 1}
     disk_types:
       - disk_size: 5120
         name: 5GB
@@ -404,6 +406,7 @@ environments:
           - { name: doomsday,      net: /30, static: 1}
           - { name: rabbitmq,      net: /29, static: 2}
           - { name: haproxy,       net: /30, static: 1}
+          - { name: blacksmith,    net: /24, static: 1}
     disk_types:
       - disk_size: 5120
         name: 5GB
@@ -456,6 +459,7 @@ environments:
           - { name: doomsday,      net: /30, static: 1}
           - { name: rabbitmq,      net: /29, static: 2}
           - { name: haproxy,       net: /30, static: 1}
+          - { name: blacksmith,    net: /24, static: 1}
     disk_types:
       - disk_size: 5120
         name: 5GB
@@ -508,6 +512,7 @@ environments:
           - { name: doomsday,      net: /30, static: 1}
           - { name: rabbitmq,      net: /29, static: 2}
           - { name: haproxy,       net: /30, static: 1}
+          - { name: blacksmith,    net: /24, static: 1}
     disk_types:
       - disk_size: 5120
         name: 5GB
@@ -560,6 +565,7 @@ environments:
           - { name: doomsday,      net: /30, static: 1}
           - { name: rabbitmq,      net: /29, static: 2}
           - { name: haproxy,       net: /30, static: 1}
+          - { name: blacksmith,    net: /24, static: 1}
     disk_types:
       - disk_size: 5120
         name: 5GB
@@ -612,6 +618,7 @@ environments:
           - { name: doomsday,      net: /30, static: 1}
           - { name: rabbitmq,      net: /29, static: 2}
           - { name: haproxy,       net: /30, static: 1}
+          - { name: blacksmith,    net: /24, static: 1}
     disk_types:
       - disk_size: 5120
         name: 5GB
