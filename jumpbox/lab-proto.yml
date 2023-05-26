@@ -21,6 +21,7 @@ params:
     - 8.8.8.8
   vpn_dns_search_domains:
     - instantpc.support
+  vpn_protocol: udp
 
   users:
     - name:  itsouvalas

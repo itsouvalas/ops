@@ -24,42 +24,74 @@ compilation:
   vm_type: large
   workers: 5
 disk_types:
-- disk_size: 2048
+- cloud_properties:
+    type: thin
+  disk_size: 2048
   name: default
-- disk_size: 2048
+- cloud_properties:
+    type: thin
+  disk_size: 2048
   name: consul
-- disk_size: 20480
+- cloud_properties:
+    type: thin
+  disk_size: 20480
   name: concourse
-- disk_size: 4096
+- cloud_properties:
+    type: thin
+  disk_size: 4096
   name: postgres
-- disk_size: 4096
+- cloud_properties:
+    type: thin
+  disk_size: 4096
   name: blobstore
-- disk_size: 1024
+- cloud_properties:
+    type: thin
+  disk_size: 1024
   name: vault
-- disk_size: 65536
+- cloud_properties:
+    type: thin
+  disk_size: 65536
   name: bosh
-- disk_size: 131072
+- cloud_properties:
+    type: thin
+  disk_size: 131072
   name: bosh-large
-- disk_size: 2048
+- cloud_properties:
+    type: thin
+  disk_size: 2048
   name: shield
-- disk_size: 51200
+- cloud_properties:
+    type: thin
+  disk_size: 51200
   name: jumpbox
-- disk_size: 51200
+- cloud_properties:
+    type: thin
+  disk_size: 51200
   name: prometheus
-- disk_size: 4096
+- cloud_properties:
+    type: thin
+  disk_size: 4096
   name: rabbitmq
-- disk_size: 5120
+- cloud_properties:
+    type: thin
+  disk_size: 5120
   name: 5GB
-- disk_size: 10240
+- cloud_properties:
+    type: thin
+  disk_size: 10240
   name: 10GB
-- disk_size: 100240
+- cloud_properties:
+    type: thin
+  disk_size: 100240
   name: 100GB
-- disk_size: 20480
+- cloud_properties:
+    type: thin
+  disk_size: 20480
   name: minio
 exodus:
   bosh: lab-proto
-  dated: 2023-05-20 12:45:59 +0000
-  deployer: ulabuser
+  dated: 2023-05-26 09:12:14 +0000
+  deployer: itsouvalas
   features: openvpn
   is_director: false
   kit_is_dev: true
@@ -140,13 +172,13 @@ instance_groups:
       dh_pem: REDACTED
       extra_configs: []
       port: 443
-      protocol: tcp
+      protocol: udp
       push_dns:
       - 8.8.8.8
       push_dns_search_domains:
       - instantpc.support
       push_routes:
-      - 10.168.0.16 255.255.255.192
+      - 10.168.0.0 255.255.0.0
       server: 172.31.255.0 255.255.255.0
       tls_crl: REDACTED
       tls_server:
@@ -160,9 +192,9 @@ instance_groups:
       iptables:
         filter:
           FORWARD:
-          - -s 172.31.255.0/24 -d 10.168.0.16/16 -m conntrack --ctstate NEW -j ACCEPT
+          - -s 172.31.255.0/24 -d 10.168.0.0/16 -m conntrack --ctstate NEW -j ACCEPT
             -m comment --comment 'vpn -> lan'
-          - -s 10.168.0.16/16 -d 172.31.255.0/24 -m conntrack --ctstate NEW -j ACCEPT
+          - -s 10.168.0.0/16 -d 172.31.255.0/24 -m conntrack --ctstate NEW -j ACCEPT
             -m comment --comment 'lan -> vpn'
           - -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
         nat:
@@ -651,7 +683,7 @@ params:
   vpn_client_netmask: 255.255.255.0
   vpn_client_network: 172.31.255.0
   vpn_client_routes:
-  - 10.168.0.16 255.255.255.192
+  - 10.168.0.0 255.255.0.0
   vpn_compress: auto
   vpn_dns_search_domains:
   - instantpc.support
@@ -660,12 +692,12 @@ params:
   vpn_extra_client_configs: []
   vpn_extra_configs: []
   vpn_iptables_forward:
-  - -s 172.31.255.0/24 -d 10.168.0.16/16 -m conntrack --ctstate NEW -j ACCEPT -m comment
+  - -s 172.31.255.0/24 -d 10.168.0.0/16 -m conntrack --ctstate NEW -j ACCEPT -m comment
     --comment 'vpn -> lan'
-  - -s 10.168.0.16/16 -d 172.31.255.0/24 -m conntrack --ctstate NEW -j ACCEPT -m comment
+  - -s 10.168.0.0/16 -d 172.31.255.0/24 -m conntrack --ctstate NEW -j ACCEPT -m comment
     --comment 'lan -> vpn'
   - -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-  vpn_protocol: tcp
+  vpn_protocol: udp
 releases:
 - name: jumpbox
   sha1: 7ece1417fad641823fe824e0340e4d90c1225c21
