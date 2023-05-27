@@ -95,16 +95,16 @@ disk_types:
 exodus:
   blacksmith_ca: REDACTED
   bosh: lab-itsouvalas
-  bosh_address: https://10.168.17.0:25555
+  bosh_address: REDACTED
   bosh_cacert: REDACTED
   bosh_password: REDACTED
-  bosh_username: blacksmith
+  bosh_username: REDACTED
   broker_password: REDACTED
   broker_url: http://10.168.17.0:3000
   broker_username: blacksmith
-  dated: 2023-05-27 08:28:37 +0000
+  dated: 2023-05-27 10:59:23 +0000
   deployer: itsouvalas
-  features: vsphere,redis,rabbitmq,mariadb,broker-tls,redis-tls,rabbitmq-tls
+  features: external-bosh,redis,rabbitmq,mariadb,broker-tls,redis-tls,rabbitmq-tls
   is_director: false
   kit_is_dev: true
   kit_name: blacksmith
@@ -133,29 +133,13 @@ instance_groups:
         tls:
           ca_cert: REDACTED
       bosh:
-        address: https://10.168.17.0:25555
-        cloud-config: ~/ops/configs/configs/cloud/lab-itsouvalas.yml
+        address: REDACTED
+        cloud-config: []
         network: blacksmith
         password: REDACTED
-        releases:
-        - name: redis-forge
-          sha1: feede84c0f37b7eda4421debd2304cb48da83ff7
-          url: https://github.com/blacksmith-community/redis-forge-boshrelease/releases/download/v0.8.16/redis-forge-0.8.16.tgz
-          version: 0.8.16
-        - name: rabbitmq-forge
-          sha1: 5338da47c6b431bc079dc60ca6e83e85b0c557fe
-          url: https://github.com/blacksmith-community/rabbitmq-forge-boshrelease/releases/download/v1.0.2/rabbitmq-forge-1.0.2.tgz
-          version: 1.0.2
-        - name: mariadb-forge
-          sha1: e332545449e55df5cd28f9d78f83e6df62a4e4ae
-          url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
-          version: 0.5.0
-        stemcells:
-        - name: bosh-vsphere-esxi-ubuntu-bionic-go_agent
-          sha1: 4cf0de2078b94dfdeb01ac6e3af7a32c31df5171
-          url: https://storage.googleapis.com/bosh-core-stemcells/1.36/bosh-stemcell-1.36-vsphere-esxi-ubuntu-bionic-go_agent.tgz
-          version: "1.36"
-        username: blacksmith
+        releases: []
+        stemcells: []
+        username: REDACTED
       broker:
         password: REDACTED
         port: 80
@@ -248,139 +232,17 @@ instance_groups:
         - dedicated
         - mariadb
     release: mariadb-forge
-  - name: bpm
-    release: bpm
-  - name: nats
-    release: bosh
-  - name: postgres-9.4
-    release: bosh
-  - name: blobstore
-    release: bosh
-  - name: director
-    release: bosh
-  - name: health_monitor
-    release: bosh
-  - name: vsphere_cpi
-    release: bosh-vsphere-cpi
   name: blacksmith
   networks:
   - name: blacksmith
     static_ips:
     - 10.168.17.0
   persistent_disk: 20480
-  properties:
-    agent:
-      env:
-        bosh:
-          blobstores:
-          - options:
-              endpoint: http://10.168.17.0:25250
-              password: REDACTED
-              user: agent
-            provider: dav
-      mbus: nats://nats:REDACTED@10.168.17.0:4222
-    blobstore:
-      address: 10.168.17.0
-      agent:
-        password: REDACTED
-        user: agent
-      director:
-        password: REDACTED
-        user: director
-      port: 25250
-      provider: dav
-      tls:
-        cert:
-          ca: REDACTED
-          certificate: REDACTED
-          private_key: REDACTED
-    director:
-      address: 10.168.17.0
-      cpi_job: vsphere_cpi
-      db:
-        adapter: postgres
-        database: bosh
-        host: 127.0.0.1
-        listen_address: 127.0.0.1
-        password: REDACTED
-        user: postgres
-      enable_dedicated_status_worker: true
-      enable_nats_delivered_templates: true
-      enable_post_deploy: true
-      events:
-        record_events: true
-      flush_arp: true
-      generate_vm_passwords: true
-      local_dns:
-        enabled: true
-      name: lab-itsouvalas-blacksmith
-      ssl:
-        cert: REDACTED
-        key: REDACTED
-      user_management:
-        local:
-          users:
-          - name: admin
-            password: REDACTED
-          - name: hm
-            password: REDACTED
-          - name: blacksmith
-            password: REDACTED
-        provider: local
-      workers: 4
-    env:
-      http_proxy: ""
-      https_proxy: ""
-      no_proxy: ""
-    hm:
-      director_account:
-        ca_cert: REDACTED
-        password: REDACTED
-        user: hm
-      resurrector_enabled: true
-    nats:
-      address: 10.168.17.0
-      password: REDACTED
-      tls:
-        ca: REDACTED
-        client_ca:
-          certificate: REDACTED
-          private_key: REDACTED
-        director:
-          certificate: REDACTED
-          private_key: REDACTED
-        health_monitor:
-          certificate: REDACTED
-          private_key: REDACTED
-        server:
-          certificate: REDACTED
-          private_key: REDACTED
-      user: nats
-    postgres:
-      adapter: postgres
-      database: bosh
-      host: 127.0.0.1
-      listen_address: 127.0.0.1
-      password: REDACTED
-      user: postgres
-    vcenter:
-      address: REDACTED
-      datacenters:
-      - clusters:
-        - Cluster1
-        datastore_pattern: ^(ephemeral)$
-        disk_path: lab-itsouvalas-blacksmith/disks
-        name: Datacenter
-        persistent_datastore_pattern: ^(persistent)$
-        template_folder: lab-itsouvalas-blacksmith/templates
-        vm_folder: lab-itsouvalas-blacksmith/vms
-      password: REDACTED
-      user: REDACTED
   stemcell: bionic
   vm_type: blacksmith
 kit:
   features:
-  - vsphere
+  - external-bosh
   - redis
   - rabbitmq
   - mariadb
@@ -395,6 +257,8 @@ meta:
   blacksmith_tls_key: REDACTED
   blacksmith_tls_port: 443
   bosh_env: lab-itsouvalas
+  bosh_exodus_path: lab-itsouvalas/bosh
+  bosh_exodus_src: '/secret/exodus/lab-itsouvalas/bosh:'
   default:
     azs:
     - z1
@@ -440,12 +304,14 @@ meta:
     - dedicated
     - redis
     scheme: http
+  default_bosh_exodus_path: lab-itsouvalas/bosh
   environment: lab-itsouvalas
+  external_bosh_address: REDACTED
+  external_bosh_cacert: REDACTED
+  external_bosh_password: REDACTED
+  external_bosh_username: REDACTED
   scheme: https
   vault: /secret/lab/itsouvalas/blacksmith
-  vsphere:
-    ephemeral: ephemeral
-    persistent: persistent
 name: lab-itsouvalas-blacksmith
 networks:
 - name: bosh
@@ -789,7 +655,7 @@ networks:
   type: manual
 params:
   blacksmith_debug: true
-  cloud_config: ~/ops/configs/configs/cloud/lab-itsouvalas.yml
+  cloud_config: []
   disk_type: 10GB
   env: lab-itsouvalas
   ip: 10.168.17.0
@@ -806,18 +672,7 @@ params:
     sha1: e332545449e55df5cd28f9d78f83e6df62a4e4ae
     url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
     version: 0.5.0
-  stemcells:
-  - name: bosh-vsphere-esxi-ubuntu-bionic-go_agent
-    sha1: 4cf0de2078b94dfdeb01ac6e3af7a32c31df5171
-    url: https://storage.googleapis.com/bosh-core-stemcells/1.36/bosh-stemcell-1.36-vsphere-esxi-ubuntu-bionic-go_agent.tgz
-    version: "1.36"
-  vsphere_clusters:
-  - Cluster1
-  vsphere_datacenter: Datacenter
-  vsphere_ephemeral_datastores:
-  - ephemeral
-  vsphere_persistent_datastores:
-  - persistent
+  stemcells: []
 releases:
 - name: blacksmith
   sha1: 1791f977ac19a06f2550a87dea930418b340313a
@@ -851,10 +706,6 @@ releases:
   sha1: e332545449e55df5cd28f9d78f83e6df62a4e4ae
   url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
   version: 0.5.0
-- name: bosh-vsphere-cpi
-  sha1: 132a1548f244866e09c6ef770b248ad703b844ba
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh-vsphere-cpi-release?v=59
-  version: "59"
 stemcells:
 - alias: bionic
   os: ubuntu-bionic
