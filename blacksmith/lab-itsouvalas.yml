@@ -1,0 +1,19 @@
+---
+kit:
+  name:    dev
+  version: latest
+  features:
+    - external-bosh
+    - redis
+    - rabbitmq
+    - mariadb
+    - broker-tls
+    - redis-tls
+    - rabbitmq-tls
+
+params:
+  env:   lab-itsouvalas
+
+  ip: 10.168.17.0
+  disk_type: 10GB
+  blacksmith_debug: true

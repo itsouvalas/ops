@@ -1,0 +1,1063 @@
+azs:
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster1: {}
+      name: Datacenter
+  name: z1
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster1: {}
+      name: Datacenter
+  name: z2
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster1: {}
+      name: Datacenter
+  name: z3
+compilation:
+  az: z1
+  network: compilation
+  reuse_compilation_vms: true
+  vm_type: large
+  workers: 5
+disk_types:
+- cloud_properties:
+    type: thin
+  disk_size: 2048
+  name: default
+- cloud_properties:
+    type: thin
+  disk_size: 2048
+  name: consul
+- cloud_properties:
+    type: thin
+  disk_size: 10240
+  name: concourse
+- cloud_properties:
+    type: thin
+  disk_size: 4096
+  name: postgres
+- cloud_properties:
+    type: thin
+  disk_size: 4096
+  name: blobstore
+- cloud_properties:
+    type: thin
+  disk_size: 1024
+  name: vault
+- cloud_properties:
+    type: thin
+  disk_size: 65536
+  name: bosh
+- cloud_properties:
+    type: thin
+  disk_size: 131072
+  name: bosh-large
+- cloud_properties:
+    type: thin
+  disk_size: 2048
+  name: shield
+- cloud_properties:
+    type: thin
+  disk_size: 51200
+  name: jumpbox
+- cloud_properties:
+    type: thin
+  disk_size: 51200
+  name: prometheus
+- cloud_properties:
+    type: thin
+  disk_size: 10240
+  name: rabbitmq
+- cloud_properties:
+    type: thin
+  disk_size: 5120
+  name: 5GB
+- cloud_properties:
+    type: thin
+  disk_size: 10240
+  name: 10GB
+- cloud_properties:
+    type: thin
+  disk_size: 100240
+  name: 100GB
+- cloud_properties:
+    type: thin
+  disk_size: 10240
+  name: minio
+- cloud_properties:
+    type: thin
+  disk_size: 20480
+  name: 20GB
+exodus:
+  blacksmith_ca: REDACTED
+  bosh: lab-itsouvalas
+  bosh_address: https://10.168.17.0:25555
+  bosh_cacert: REDACTED
+  bosh_password: REDACTED
+  bosh_username: blacksmith
+  broker_password: REDACTED
+  broker_url: http://10.168.17.0:3000
+  broker_username: blacksmith
+  dated: 2023-05-27 08:28:37 +0000
+  deployer: itsouvalas
+  features: vsphere,redis,rabbitmq,mariadb,broker-tls,redis-tls,rabbitmq-tls
+  is_director: false
+  kit_is_dev: true
+  kit_name: blacksmith
+  kit_version: 0.12.0
+  use_create_env: false
+  vault_base: /secret/lab/itsouvalas/blacksmith
+  version: 2.8.9
+genesis:
+  ci_mount: /secret/ci/
+  env: lab-itsouvalas
+  exodus_base: /secret/exodus/lab-itsouvalas/blacksmith
+  exodus_mount: /secret/exodus/
+  exodus_path: lab-itsouvalas/blacksmith
+  secrets_base: /secret/lab/itsouvalas/blacksmith/
+  secrets_mount: /secret/
+  secrets_path: lab/itsouvalas/blacksmith
+  vault_env: lab/itsouvalas
+instance_groups:
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - name: blacksmith
+    properties:
+      blacksmith_services_ca:
+        tls:
+          ca_cert: REDACTED
+      bosh:
+        address: https://10.168.17.0:25555
+        cloud-config: ~/ops/configs/configs/cloud/lab-itsouvalas.yml
+        network: blacksmith
+        password: REDACTED
+        releases:
+        - name: redis-forge
+          sha1: feede84c0f37b7eda4421debd2304cb48da83ff7
+          url: https://github.com/blacksmith-community/redis-forge-boshrelease/releases/download/v0.8.16/redis-forge-0.8.16.tgz
+          version: 0.8.16
+        - name: rabbitmq-forge
+          sha1: 5338da47c6b431bc079dc60ca6e83e85b0c557fe
+          url: https://github.com/blacksmith-community/rabbitmq-forge-boshrelease/releases/download/v1.0.2/rabbitmq-forge-1.0.2.tgz
+          version: 1.0.2
+        - name: mariadb-forge
+          sha1: e332545449e55df5cd28f9d78f83e6df62a4e4ae
+          url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
+          version: 0.5.0
+        stemcells:
+        - name: bosh-vsphere-esxi-ubuntu-bionic-go_agent
+          sha1: 4cf0de2078b94dfdeb01ac6e3af7a32c31df5171
+          url: https://storage.googleapis.com/bosh-core-stemcells/1.36/bosh-stemcell-1.36-vsphere-esxi-ubuntu-bionic-go_agent.tgz
+          version: "1.36"
+        username: blacksmith
+      broker:
+        password: REDACTED
+        port: 80
+        tls:
+          certificate: REDACTED
+          enabled: true
+          key: REDACTED
+          port: 443
+        username: blacksmith
+      debug: true
+      env: lab-itsouvalas
+      shareable: false
+    release: blacksmith
+  - name: redis-blacksmith-plans
+    properties:
+      bosh_env: lab-itsouvalas
+      environment: lab-itsouvalas
+      plans:
+        standalone:
+          description: A dedicated Redis server, with no redundancy or replication
+          limit: 7
+          name: standalone
+          type: standalone
+          vm_type: default
+        standalone-6:
+          description: A dedicated Redis 6 server, with no redundancy or replication
+          limit: 7
+          name: standalone-6
+          type: standalone-6
+          vm_type: default
+      redis:
+        tls:
+          ca: REDACTED
+          ca_cert: REDACTED
+          ca_key: REDACTED
+          enabled: true
+      service:
+        description: A dedicated Redis instance, deployed on-demand
+        id: redis
+        limit: 0
+        name: redis
+        tags:
+        - blacksmith
+        - dedicated
+        - redis
+    release: redis-forge
+  - name: rabbitmq-blacksmith-plans
+    properties:
+      bosh_env: lab-itsouvalas
+      environment: lab-itsouvalas
+      plans:
+        standalone:
+          description: A dedicated RabbitMQ server, with no redundancy or replication
+          limit: 7
+          name: standalone
+          type: standalone
+          vm_type: default
+      rabbitmq:
+        tls:
+          ca: REDACTED
+          crt: REDACTED
+          enabled: true
+          key: REDACTED
+      service:
+        description: A dedicated RabbitMQ instance, deployed on-demand
+        id: rabbitmq
+        limit: 0
+        name: rabbitmq
+        tags:
+        - blacksmith
+        - dedicated
+        - rabbitmq
+    release: rabbitmq-forge
+  - name: mariadb-blacksmith-plans
+    properties:
+      plans:
+        standalone:
+          description: A dedicated MariaDB server, with no redundancy or replication
+          limit: 7
+          name: standalone
+          type: standalone
+          vm_type: default
+      service:
+        description: A dedicated MariaDB instance, deployed on-demand
+        id: mariadb
+        limit: 0
+        name: mariadb
+        tags:
+        - blacksmith
+        - dedicated
+        - mariadb
+    release: mariadb-forge
+  - name: bpm
+    release: bpm
+  - name: nats
+    release: bosh
+  - name: postgres-9.4
+    release: bosh
+  - name: blobstore
+    release: bosh
+  - name: director
+    release: bosh
+  - name: health_monitor
+    release: bosh
+  - name: vsphere_cpi
+    release: bosh-vsphere-cpi
+  name: blacksmith
+  networks:
+  - name: blacksmith
+    static_ips:
+    - 10.168.17.0
+  persistent_disk: 20480
+  properties:
+    agent:
+      env:
+        bosh:
+          blobstores:
+          - options:
+              endpoint: http://10.168.17.0:25250
+              password: REDACTED
+              user: agent
+            provider: dav
+      mbus: nats://nats:REDACTED@10.168.17.0:4222
+    blobstore:
+      address: 10.168.17.0
+      agent:
+        password: REDACTED
+        user: agent
+      director:
+        password: REDACTED
+        user: director
+      port: 25250
+      provider: dav
+      tls:
+        cert:
+          ca: REDACTED
+          certificate: REDACTED
+          private_key: REDACTED
+    director:
+      address: 10.168.17.0
+      cpi_job: vsphere_cpi
+      db:
+        adapter: postgres
+        database: bosh
+        host: 127.0.0.1
+        listen_address: 127.0.0.1
+        password: REDACTED
+        user: postgres
+      enable_dedicated_status_worker: true
+      enable_nats_delivered_templates: true
+      enable_post_deploy: true
+      events:
+        record_events: true
+      flush_arp: true
+      generate_vm_passwords: true
+      local_dns:
+        enabled: true
+      name: lab-itsouvalas-blacksmith
+      ssl:
+        cert: REDACTED
+        key: REDACTED
+      user_management:
+        local:
+          users:
+          - name: admin
+            password: REDACTED
+          - name: hm
+            password: REDACTED
+          - name: blacksmith
+            password: REDACTED
+        provider: local
+      workers: 4
+    env:
+      http_proxy: ""
+      https_proxy: ""
+      no_proxy: ""
+    hm:
+      director_account:
+        ca_cert: REDACTED
+        password: REDACTED
+        user: hm
+      resurrector_enabled: true
+    nats:
+      address: 10.168.17.0
+      password: REDACTED
+      tls:
+        ca: REDACTED
+        client_ca:
+          certificate: REDACTED
+          private_key: REDACTED
+        director:
+          certificate: REDACTED
+          private_key: REDACTED
+        health_monitor:
+          certificate: REDACTED
+          private_key: REDACTED
+        server:
+          certificate: REDACTED
+          private_key: REDACTED
+      user: nats
+    postgres:
+      adapter: postgres
+      database: bosh
+      host: 127.0.0.1
+      listen_address: 127.0.0.1
+      password: REDACTED
+      user: postgres
+    vcenter:
+      address: REDACTED
+      datacenters:
+      - clusters:
+        - Cluster1
+        datastore_pattern: ^(ephemeral)$
+        disk_path: lab-itsouvalas-blacksmith/disks
+        name: Datacenter
+        persistent_datastore_pattern: ^(persistent)$
+        template_folder: lab-itsouvalas-blacksmith/templates
+        vm_folder: lab-itsouvalas-blacksmith/vms
+      password: REDACTED
+      user: REDACTED
+  stemcell: bionic
+  vm_type: blacksmith
+kit:
+  features:
+  - vsphere
+  - redis
+  - rabbitmq
+  - mariadb
+  - broker-tls
+  - redis-tls
+  - rabbitmq-tls
+  name: dev
+  version: latest
+meta:
+  blacksmith_port: 80
+  blacksmith_tls_certificate: REDACTED
+  blacksmith_tls_key: REDACTED
+  blacksmith_tls_port: 443
+  bosh_env: lab-itsouvalas
+  default:
+    azs:
+    - z1
+    blacksmith_port: 3000
+    host: 10.168.17.0
+    mariadb_plans:
+      standalone:
+        description: A dedicated MariaDB server, with no redundancy or replication
+        limit: 7
+        name: standalone
+        type: standalone
+        vm_type: default
+    mariadb_tags:
+    - blacksmith
+    - dedicated
+    - mariadb
+    rabbitmq_plans:
+      standalone:
+        description: A dedicated RabbitMQ server, with no redundancy or replication
+        limit: 7
+        name: standalone
+        type: standalone
+        vm_type: default
+    rabbitmq_tags:
+    - blacksmith
+    - dedicated
+    - rabbitmq
+    redis_plans:
+      standalone:
+        description: A dedicated Redis server, with no redundancy or replication
+        limit: 7
+        name: standalone
+        type: standalone
+        vm_type: default
+      standalone-6:
+        description: A dedicated Redis 6 server, with no redundancy or replication
+        limit: 7
+        name: standalone-6
+        type: standalone-6
+        vm_type: default
+    redis_tags:
+    - blacksmith
+    - dedicated
+    - redis
+    scheme: http
+  environment: lab-itsouvalas
+  scheme: https
+  vault: /secret/lab/itsouvalas/blacksmith
+  vsphere:
+    ephemeral: ephemeral
+    persistent: persistent
+name: lab-itsouvalas-blacksmith
+networks:
+- name: bosh
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.15.255
+    - 10.168.16.4 - 10.168.255.254
+    static: []
+  type: manual
+- name: cf-db
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.3
+    - 10.168.16.8 - 10.168.255.254
+    static:
+    - 10.168.16.4
+  type: manual
+- name: shield
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.7
+    - 10.168.16.12 - 10.168.255.254
+    static:
+    - 10.168.16.8
+  type: manual
+- name: vault
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.11
+    - 10.168.16.16 - 10.168.255.254
+    static:
+    - 10.168.16.12 - 10.168.16.14
+  type: manual
+- name: cf-autoscaler
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.15
+    - 10.168.16.24 - 10.168.255.254
+    static: []
+  type: manual
+- name: cf-edge
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.23
+    - 10.168.16.32 - 10.168.255.254
+    static:
+    - 10.168.16.24
+  type: manual
+- name: compilation
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.31
+    - 10.168.16.40 - 10.168.255.254
+    static: []
+  type: manual
+- name: concourse
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.39
+    - 10.168.16.48 - 10.168.255.254
+    static:
+    - 10.168.16.40 - 10.168.16.41
+  type: manual
+- name: cf-core
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.63
+    - 10.168.16.96 - 10.168.255.254
+    static:
+    - 10.168.16.64 - 10.168.16.65
+  type: manual
+- name: cf-runtime
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.95
+    - 10.168.16.128 - 10.168.255.254
+    static:
+    - 10.168.16.96 - 10.168.16.97
+  type: manual
+- name: default
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.127
+    - 10.168.16.192 - 10.168.255.254
+    static:
+    - 10.168.16.128 - 10.168.16.130
+  type: manual
+- name: nfs
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.191
+    - 10.168.16.196 - 10.168.255.254
+    static:
+    - 10.168.16.192
+  type: manual
+- name: nfs-broker
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.195
+    - 10.168.16.200 - 10.168.255.254
+    static:
+    - 10.168.16.196
+  type: manual
+- name: prometheus
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.199
+    - 10.168.16.204 - 10.168.255.254
+    static:
+    - 10.168.16.200
+  type: manual
+- name: doomsday
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.203
+    - 10.168.16.208 - 10.168.255.254
+    static:
+    - 10.168.16.204
+  type: manual
+- name: rabbitmq
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.207
+    - 10.168.16.216 - 10.168.255.254
+    static:
+    - 10.168.16.208 - 10.168.16.209
+  type: manual
+- name: haproxy
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.215
+    - 10.168.16.220 - 10.168.255.254
+    static:
+    - 10.168.16.216
+  type: manual
+- name: blacksmith
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.255
+    - 10.168.18.0 - 10.168.255.254
+    static:
+    - 10.168.17.0
+  type: manual
+params:
+  blacksmith_debug: true
+  cloud_config: ~/ops/configs/configs/cloud/lab-itsouvalas.yml
+  disk_type: 10GB
+  env: lab-itsouvalas
+  ip: 10.168.17.0
+  releases:
+  - name: redis-forge
+    sha1: feede84c0f37b7eda4421debd2304cb48da83ff7
+    url: https://github.com/blacksmith-community/redis-forge-boshrelease/releases/download/v0.8.16/redis-forge-0.8.16.tgz
+    version: 0.8.16
+  - name: rabbitmq-forge
+    sha1: 5338da47c6b431bc079dc60ca6e83e85b0c557fe
+    url: https://github.com/blacksmith-community/rabbitmq-forge-boshrelease/releases/download/v1.0.2/rabbitmq-forge-1.0.2.tgz
+    version: 1.0.2
+  - name: mariadb-forge
+    sha1: e332545449e55df5cd28f9d78f83e6df62a4e4ae
+    url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
+    version: 0.5.0
+  stemcells:
+  - name: bosh-vsphere-esxi-ubuntu-bionic-go_agent
+    sha1: 4cf0de2078b94dfdeb01ac6e3af7a32c31df5171
+    url: https://storage.googleapis.com/bosh-core-stemcells/1.36/bosh-stemcell-1.36-vsphere-esxi-ubuntu-bionic-go_agent.tgz
+    version: "1.36"
+  vsphere_clusters:
+  - Cluster1
+  vsphere_datacenter: Datacenter
+  vsphere_ephemeral_datastores:
+  - ephemeral
+  vsphere_persistent_datastores:
+  - persistent
+releases:
+- name: blacksmith
+  sha1: 1791f977ac19a06f2550a87dea930418b340313a
+  url: https://github.com/blacksmith-community/blacksmith-boshrelease/releases/download/v1.6.10/blacksmith-1.6.10.tgz
+  version: 1.6.10
+- name: bosh
+  sha1: ecb69fdc834e962cc66747f2a9f57470a57401f9
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=270.12.0
+  version: 270.12.0
+- name: bpm
+  sha1: 502e9446fa34accaf122ad2b28b6ffa543d5bbca
+  url: https://bosh.io/d/github.com/cloudfoundry/bpm-release?v=1.1.12
+  version: 1.1.12
+- name: routing
+  sha1: a5b7f3b746cfa169f466c2b682db296ab8dcd0ad
+  url: https://bosh.io/d/github.com/cloudfoundry/routing-release?v=0.225.0
+  version: 0.225.0
+- name: bosh-dns-aliases
+  sha1: 55b3dced813ff9ed92a05cda02156e4b5604b273
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-aliases-release?v=0.0.4
+  version: 0.0.4
+- name: redis-forge
+  sha1: feede84c0f37b7eda4421debd2304cb48da83ff7
+  url: https://github.com/blacksmith-community/redis-forge-boshrelease/releases/download/v0.8.16/redis-forge-0.8.16.tgz
+  version: 0.8.16
+- name: rabbitmq-forge
+  sha1: 5338da47c6b431bc079dc60ca6e83e85b0c557fe
+  url: https://github.com/blacksmith-community/rabbitmq-forge-boshrelease/releases/download/v1.0.2/rabbitmq-forge-1.0.2.tgz
+  version: 1.0.2
+- name: mariadb-forge
+  sha1: e332545449e55df5cd28f9d78f83e6df62a4e4ae
+  url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
+  version: 0.5.0
+- name: bosh-vsphere-cpi
+  sha1: 132a1548f244866e09c6ef770b248ad703b844ba
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh-vsphere-cpi-release?v=59
+  version: "59"
+stemcells:
+- alias: bionic
+  os: ubuntu-bionic
+  version: latest
+update:
+  canaries: 1
+  canary_watch_time: 30000-600000
+  max_errors: 1
+  max_in_flight: 1
+  serial: false
+  update_watch_time: 5000-600000
+vm_extensions:
+- name: cf-elb
+- name: ssh-elb
+- name: cf-load-balanced
+- cloud_properties:
+    disk: 102400
+  name: 100GB_ephemeral_disk
+- cloud_properties:
+    disk: 51200
+  name: 50GB_ephemeral_disk
+- name: cf-router-network-properties
+- name: cf-tcp-router-network-properties
+- name: diego-ssh-proxy-network-properties
+- name: rmq-loadbalancer
+- cloud_properties:
+    vmx_options:
+      disk.enableUUID: "1"
+  name: kubelet
+- name: concourse-loadbalancer
+vm_types:
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 2048
+  name: default
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: compilation
+- cloud_properties:
+    cpu: 2
+    disk: 10240
+    ram: 8192
+  name: small
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: medium
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: large
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 2048
+  name: haproxy
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: api
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: bbs
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: blobstore
+- cloud_properties:
+    cpu: 4
+    disk: 40960
+    ram: 4096
+  name: cell
+- cloud_properties:
+    cpu: 1
+    disk: 36384
+    ram: 2048
+  name: diego
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: doppler
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 2048
+  name: errand
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: loggregator
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: nats
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: postgres
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: router
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: syslogger
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: uaa
+- cloud_properties:
+    cpu: 1
+    disk: 10240
+    ram: 4096
+  name: minimal
+- cloud_properties:
+    cpu: 2
+    disk: 10240
+    ram: 8192
+  name: small-cf
+- cloud_properties:
+    cpu: 4
+    disk: 10240
+    ram: 8192
+  name: small-highmem
+- cloud_properties:
+    cpu: 1
+    disk: 10240
+    ram: 2048
+  name: blacksmith
+- cloud_properties:
+    cpu: 2
+    disk: 10240
+    ram: 4096
+  name: jumpbox
+- cloud_properties:
+    cpu: 2
+    disk: 65536
+    ram: 4096
+  name: concourse-worker
+- cloud_properties:
+    cpu: 4
+    disk: 81920
+    ram: 8192
+  name: thunder-dome
+- cloud_properties:
+    cpu: 2
+    disk: 24576
+    ram: 6144
+  name: bosh
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-api
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-broker
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-scheduler
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-collector
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-scaler
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-engine
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-operator
+- cloud_properties:
+    cpu: 2
+    disk: 10240
+    ram: 8192
+  name: rabbitmq

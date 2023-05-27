@@ -299,6 +299,7 @@ disk_types:
   - {"name": "rabbitmq","cloud_properties": {"type": "thin"},"disk_size": 10240}
   - {"name": "5GB","cloud_properties": {"type": "thin"},"disk_size": 5120}
   - {"name": "10GB","cloud_properties": {"type": "thin"},"disk_size": 10240}
+  - {"name": "20GB","cloud_properties": {"type": "thin"},"disk_size": 20480}
   - {"name": "100GB","cloud_properties": {"type": "thin"},"disk_size": 100240}
   - {"name": "minio","cloud_properties": {"type": "thin"},"disk_size": 10240}
 
