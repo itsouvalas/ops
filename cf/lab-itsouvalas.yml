@@ -12,6 +12,8 @@ kit:
     - enable-service-discovery
     - app-autoscaler-integration
     - prometheus-integration
+    - blacksmith-integration
+    - app-scheduler-integration
 
 genesis:
   env:            lab-itsouvalas

@@ -10,6 +10,7 @@ kit:
     - broker-tls
     - redis-tls
     - rabbitmq-tls
+    - cf-route-registrar
 
 params:
   env:   lab-itsouvalas
@@ -17,3 +18,28 @@ params:
   ip: 10.168.17.0
   disk_type: 10GB
   blacksmith_debug: true
+  fqdn: blacksmith.it-lab.instantpc.support
+
+instance_groups:
+- name: blacksmith
+  jobs:
+    - name: rabbitmq-blacksmith-plans
+      properties:
+        plans:
+          standalone:
+            description: A dedicated RabbitMQ server, with no redundancy or replication
+            limit: 7
+            name: standalone
+            type: standalone
+            vm_type: default
+            network: blacksmith
+    - name: mariadb-blacksmith-plans
+      properties:
+        plans:
+          standalone:
+            description: A dedicated MariaDB server, with no redundancy or replication
+            limit: 7
+            name: standalone
+            type: standalone
+            vm_type: default
+            network: blacksmith

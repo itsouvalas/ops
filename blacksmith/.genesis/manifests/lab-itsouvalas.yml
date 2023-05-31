@@ -1,3 +1,28 @@
+addons:
+- include:
+    jobs:
+    - name: route_registrar
+      release: routing
+  jobs:
+  - name: bosh-dns-aliases
+    properties:
+      aliases:
+      - domain: nats.service.cf.internal
+        targets:
+        - deployment: lab-itsouvalas-cf
+          domain: bosh
+          instance_group: nats
+          network: REDACTED
+          query: '*'
+      - domain: _.nats.service.cf.internal
+        targets:
+        - deployment: lab-itsouvalas-cf
+          domain: bosh
+          instance_group: nats
+          network: REDACTED
+          query: _
+    release: bosh-dns-aliases
+  name: bosh-dns-aliases
 azs:
 - cloud_properties:
     datacenters:
@@ -100,11 +125,11 @@ exodus:
   bosh_password: REDACTED
   bosh_username: REDACTED
   broker_password: REDACTED
-  broker_url: http://10.168.17.0:3000
+  broker_url: http://blacksmith.it-lab.instantpc.support:3000
   broker_username: blacksmith
-  dated: 2023-05-27 10:59:23 +0000
+  dated: 2023-05-29 12:44:13 +0000
   deployer: itsouvalas
-  features: external-bosh,redis,rabbitmq,mariadb,broker-tls,redis-tls,rabbitmq-tls
+  features: external-bosh,redis,rabbitmq,mariadb,broker-tls,redis-tls,rabbitmq-tls,cf-route-registrar
   is_director: false
   kit_is_dev: true
   kit_name: blacksmith
@@ -195,6 +220,7 @@ instance_groups:
           description: A dedicated RabbitMQ server, with no redundancy or replication
           limit: 7
           name: standalone
+          network: blacksmith
           type: standalone
           vm_type: default
       rabbitmq:
@@ -220,6 +246,7 @@ instance_groups:
           description: A dedicated MariaDB server, with no redundancy or replication
           limit: 7
           name: standalone
+          network: blacksmith
           type: standalone
           vm_type: default
       service:
@@ -232,6 +259,30 @@ instance_groups:
         - dedicated
         - mariadb
     release: mariadb-forge
+  - consumes:
+      nats-tls:
+        deployment: lab-itsouvalas-cf
+        from: nats-tls
+    name: route_registrar
+    properties:
+      nats:
+        tls:
+          client_cert: REDACTED
+          client_key: REDACTED
+          enabled: true
+      route_registrar:
+        host: REDACTED
+        routes:
+        - name: blacksmith
+          port: 80
+          registration_interval: 10s
+          server_cert_domain_san: blacksmith.it-lab.instantpc.support
+          tls_port: 443
+          uris:
+          - blacksmith.it-lab.instantpc.support
+    release: routing
+  - name: bpm
+    release: bpm
   name: blacksmith
   networks:
   - name: blacksmith
@@ -249,6 +300,7 @@ kit:
   - broker-tls
   - redis-tls
   - rabbitmq-tls
+  - cf-route-registrar
   name: dev
   version: latest
 meta:
@@ -259,11 +311,21 @@ meta:
   bosh_env: lab-itsouvalas
   bosh_exodus_path: lab-itsouvalas/bosh
   bosh_exodus_src: '/secret/exodus/lab-itsouvalas/bosh:'
+  cf:
+    core_network: REDACTED
+    deployment_name: lab-itsouvalas-cf
+    exodus_path: /secret/exodus/lab-itsouvalas/cf
+    nats:
+      client:
+        cert: REDACTED
+        key: REDACTED
+    system:
+      domain: REDACTED
   default:
     azs:
     - z1
     blacksmith_port: 3000
-    host: 10.168.17.0
+    host: blacksmith.it-lab.instantpc.support
     mariadb_plans:
       standalone:
         description: A dedicated MariaDB server, with no redundancy or replication
@@ -658,6 +720,7 @@ params:
   cloud_config: []
   disk_type: 10GB
   env: lab-itsouvalas
+  fqdn: blacksmith.it-lab.instantpc.support
   ip: 10.168.17.0
   releases:
   - name: redis-forge

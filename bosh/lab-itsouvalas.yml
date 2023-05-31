@@ -1,11 +1,12 @@
 kit:
-  name:    bosh
-  version: 3.0.0
+  name:    dev #bosh
+  version: latest #3.0.0
   features:
     - vsphere
     - bosh-dns-healthcheck
     - netop-access
     - sysop-access
+    - credhub
 
 genesis:
   env:            lab-itsouvalas
@@ -46,6 +47,9 @@ params:
   # DNS Caching (for runtime config)
   dns_cache: true
   vsphere_disk_type: thin
+  dns_deployments_whitelist:
+    - lab-itsouvalas-cf
+    - lab-itsouvalas-blacksmith
 
 
 cloud_provider:

@@ -432,6 +432,10 @@ disk_types:
     type: thin
   disk_size: 10240
   name: minio
+- cloud_properties:
+    type: thin
+  disk_size: 20480
+  name: 20GB
 exodus:
   admin_password: ((cf_admin_password))
   admin_username: admin
@@ -442,6 +446,8 @@ exodus:
   - run.it-lab.instantpc.support
   - internal: true
     name: apps.internal
+  app_scheduler_client: app_scheduler_client
+  app_scheduler_secret: ((uaa_clients_app_scheduler_secret))
   apps_domain: run.it-lab.instantpc.support
   base_domain: it-lab.instantpc.support
   bosh: lab-itsouvalas
@@ -451,11 +457,11 @@ exodus:
   cf-deployment-version: 29.0.0
   cf_exporter_secret: ((uaa_clients_cf_exporter_secret))
   core_network: cf-core
-  dated: 2023-05-25 11:11:52 +0000
+  dated: 2023-05-31 10:32:19 +0000
   db_network: cf-core
   deployer: itsouvalas
   edge_network: cf-edge
-  features: tls,haproxy,self-signed,local-postgres-db,small-footprint,nfs-volume-services,enable-service-discovery,app-autoscaler-integration,prometheus-integration
+  features: tls,haproxy,self-signed,local-postgres-db,small-footprint,nfs-volume-services,enable-service-discovery,app-autoscaler-integration,prometheus-integration,blacksmith-integration,app-scheduler-integration
   firehose_exporter_secret: ((uaa_clients_firehose_exporter_secret))
   is_director: false
   kit_is_dev: true
@@ -469,6 +475,8 @@ exodus:
   loggregator_tls_agent_key: ((loggregator_tls_agent.private_key))
   loggregator_tls_rlp_cert: ((loggregator_tls_rlp.certificate))
   loggregator_tls_rlp_key: ((loggregator_tls_rlp.private_key))
+  nats_client_cert: ((nats_client_cert.certificate))
+  nats_client_key: ((nats_client_cert.private_key))
   runtime_network: cf-runtime
   self-signed: true
   system_domain: system.it-lab.instantpc.support
@@ -779,6 +787,10 @@ instance_groups:
             authorities: cloud_controller.read,cloud_controller.admin,uaa.resource
             authorized-grant-types: client_credentials
             secret: ((uaa_clients_app_autoscaler_secret))
+          app_scheduler_client:
+            authorities: cloud_controller.read,cloud_controller.admin,uaa.resource
+            authorized-grant-types: client_credentials
+            secret: ((uaa_clients_app_scheduler_secret))
           cc-service-dashboards:
             authorities: clients.read,clients.write,clients.admin
             authorized-grant-types: client_credentials
@@ -2462,6 +2474,8 @@ kit:
   - enable-service-discovery
   - app-autoscaler-integration
   - prometheus-integration
+  - blacksmith-integration
+  - app-scheduler-integration
   name: dev
   version: latest
 manifest_version: v29.0.0
@@ -3942,6 +3956,8 @@ variables:
 - name: uaa_clients_firehose_exporter_secret
   type: password
 - name: uaa_clients_cf_exporter_secret
+  type: password
+- name: uaa_clients_app_scheduler_secret
   type: password
 vm_extensions:
 - name: cf-elb
