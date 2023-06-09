@@ -1,0 +1,16 @@
+---
+kit:
+  name:    dev #cf-app-autoscaler
+  version: latest #4.1.4
+  features:
+    - (( append ))
+    - postgres
+    - operations/enable-nats-tls
+
+genesis:
+  env:            lab-itsouvalas
+  min_version:    2.8.5
+
+params:
+  cf_deployment_env:  lab-itsouvalas
+  cf_deployment_type: cf
