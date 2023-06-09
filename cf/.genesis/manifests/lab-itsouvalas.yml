@@ -235,6 +235,13 @@ addons:
           instance_group: doppler
           network: ((cf_core_network))
           query: '*'
+      - domain: log-cache.service.cf.internal
+        targets:
+        - deployment: ((deployment_name))
+          domain: bosh
+          instance_group: log-cache
+          network: ((cf_core_network))
+          query: '*'
       - domain: file-server.service.cf.internal
         targets:
         - deployment: ((deployment_name))
@@ -263,6 +270,20 @@ addons:
           instance_group: log-api
           network: ((cf_core_network))
           query: '*'
+      - domain: nats.service.cf.internal
+        targets:
+        - deployment: ((deployment_name))
+          domain: bosh
+          instance_group: nats
+          network: ((cf_core_network))
+          query: '*'
+      - domain: _.nats.service.cf.internal
+        targets:
+        - deployment: ((deployment_name))
+          domain: bosh
+          instance_group: nats
+          network: ((cf_core_network))
+          query: _
       - domain: policy-server.service.cf.internal
         targets:
         - deployment: ((deployment_name))
@@ -319,20 +340,6 @@ addons:
           instance_group: uaa
           network: ((cf_core_network))
           query: '*'
-      - domain: nats.service.cf.internal
-        targets:
-        - deployment: ((deployment_name))
-          domain: bosh
-          instance_group: nats
-          network: ((cf_core_network))
-          query: '*'
-      - domain: _.nats.service.cf.internal
-        targets:
-        - deployment: ((deployment_name))
-          domain: bosh
-          instance_group: nats
-          network: ((cf_core_network))
-          query: _
     release: bosh-dns-aliases
   name: bosh-dns-aliases
 azs:
@@ -444,8 +451,6 @@ exodus:
   app_autoscaler_secret: ((uaa_clients_app_autoscaler_secret))
   app_domains:
   - run.it-lab.instantpc.support
-  - internal: true
-    name: apps.internal
   app_scheduler_client: app_scheduler_client
   app_scheduler_secret: ((uaa_clients_app_scheduler_secret))
   apps_domain: run.it-lab.instantpc.support
@@ -457,11 +462,11 @@ exodus:
   cf-deployment-version: 29.0.0
   cf_exporter_secret: ((uaa_clients_cf_exporter_secret))
   core_network: cf-core
-  dated: 2023-05-31 10:32:19 +0000
+  dated: 2023-06-07 18:18:15 +0000
   db_network: cf-core
   deployer: itsouvalas
   edge_network: cf-edge
-  features: tls,haproxy,self-signed,local-postgres-db,small-footprint,nfs-volume-services,enable-service-discovery,app-autoscaler-integration,prometheus-integration,blacksmith-integration,app-scheduler-integration
+  features: tls,haproxy,self-signed,local-postgres-db,small-footprint,nfs-volume-services,app-autoscaler-integration,prometheus-integration,blacksmith-integration,app-scheduler-integration,trust-blacksmith-ca
   firehose_exporter_secret: ((uaa_clients_firehose_exporter_secret))
   is_director: false
   kit_is_dev: true
@@ -1047,8 +1052,6 @@ instance_groups:
     properties:
       app_domains:
       - run.it-lab.instantpc.support
-      - internal: true
-        name: apps.internal
       app_ssh:
         host_key_fingerprint: ((diego_ssh_proxy_host_key.public_key_fingerprint))
       build: cf-genesis-kit vlatest
@@ -2027,7 +2030,7 @@ instance_groups:
     release: log-cache
   name: log-cache
   networks:
-  - name: default
+  - name: ((cf_core_network))
   stemcell: default
   vm_type: small-highmem
 - azs:
@@ -2073,6 +2076,7 @@ instance_groups:
         - ((diego_instance_identity_ca.ca))
         - ((credhub_tls.ca))
         - ((uaa_ssl.ca))
+        - REDACTED
     release: cflinuxfs3
   - name: cflinuxfs4-rootfs-setup
     properties:
@@ -2117,6 +2121,7 @@ instance_groups:
         - ((diego_instance_identity_ca.ca))
         - ((credhub_tls.ca))
         - ((uaa_ssl.ca))
+        - REDACTED
       diego:
         executor:
           instance_identity_ca_cert: ((diego_instance_identity_ca.certificate))
@@ -2471,11 +2476,11 @@ kit:
   - local-postgres-db
   - small-footprint
   - nfs-volume-services
-  - enable-service-discovery
   - app-autoscaler-integration
   - prometheus-integration
   - blacksmith-integration
   - app-scheduler-integration
+  - trust-blacksmith-ca
   name: dev
   version: latest
 manifest_version: v29.0.0
@@ -2519,9 +2524,7 @@ meta:
   default_azs:
   - z1
   - z2
-  internal_app_domains:
-  - internal: true
-    name: apps.internal
+  internal_app_domains: []
   vault: /secret/lab/itsouvalas/cf
 name: lab-itsouvalas-cf
 networks:
@@ -2867,8 +2870,6 @@ networks:
 params:
   app_domains:
   - run.it-lab.instantpc.support
-  - internal: true
-    name: apps.internal
   apps_domain: run.it-lab.instantpc.support
   apps_domains:
   - run.it-lab.instantpc.support

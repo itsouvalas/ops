@@ -4,16 +4,21 @@ kit:
   version: latest
   features:
     - external-bosh
+    - cf-route-registrar
     - redis
-    - rabbitmq
     - mariadb
     - broker-tls
     - redis-tls
+    - rabbitmq
     - rabbitmq-tls
-    - cf-route-registrar
+    - rabbitmq-dual-mode
+    - rabbitmq-dashboard-registration
 
 params:
+  secrets_mount: secret/exodus/
   env:   lab-itsouvalas
+  cf_skip_ssl_validation: true
+
 
   ip: 10.168.17.0
   disk_type: 10GB
@@ -43,3 +48,23 @@ instance_groups:
             type: standalone
             vm_type: default
             network: blacksmith
+    - name: redis-blacksmith-plans
+      properties:
+        bosh_env: lab-itsouvalas
+        environment: lab-itsouvalas
+        plans:
+          standalone:
+            description: A dedicated Redis server, with no redundancy or replication
+            limit: 7
+            name: standalone
+            type: standalone
+            vm_type: default
+            network: blacksmith
+          standalone-6:
+            description: A dedicated Redis 6 server, with no redundancy or replication
+            limit: 7
+            name: standalone-6
+            type: standalone-6
+            vm_type: default
+            network: blacksmith
+

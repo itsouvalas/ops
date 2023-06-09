@@ -127,9 +127,9 @@ exodus:
   broker_password: REDACTED
   broker_url: http://blacksmith.it-lab.instantpc.support:3000
   broker_username: blacksmith
-  dated: 2023-05-29 12:44:13 +0000
+  dated: 2023-06-08 11:47:13 +0000
   deployer: itsouvalas
-  features: external-bosh,redis,rabbitmq,mariadb,broker-tls,redis-tls,rabbitmq-tls,cf-route-registrar
+  features: external-bosh,cf-route-registrar,redis,mariadb,broker-tls,redis-tls,rabbitmq,rabbitmq-tls,rabbitmq-dual-mode,rabbitmq-dashboard-registration
   is_director: false
   kit_is_dev: true
   kit_name: blacksmith
@@ -178,87 +178,6 @@ instance_groups:
       env: lab-itsouvalas
       shareable: false
     release: blacksmith
-  - name: redis-blacksmith-plans
-    properties:
-      bosh_env: lab-itsouvalas
-      environment: lab-itsouvalas
-      plans:
-        standalone:
-          description: A dedicated Redis server, with no redundancy or replication
-          limit: 7
-          name: standalone
-          type: standalone
-          vm_type: default
-        standalone-6:
-          description: A dedicated Redis 6 server, with no redundancy or replication
-          limit: 7
-          name: standalone-6
-          type: standalone-6
-          vm_type: default
-      redis:
-        tls:
-          ca: REDACTED
-          ca_cert: REDACTED
-          ca_key: REDACTED
-          enabled: true
-      service:
-        description: A dedicated Redis instance, deployed on-demand
-        id: redis
-        limit: 0
-        name: redis
-        tags:
-        - blacksmith
-        - dedicated
-        - redis
-    release: redis-forge
-  - name: rabbitmq-blacksmith-plans
-    properties:
-      bosh_env: lab-itsouvalas
-      environment: lab-itsouvalas
-      plans:
-        standalone:
-          description: A dedicated RabbitMQ server, with no redundancy or replication
-          limit: 7
-          name: standalone
-          network: blacksmith
-          type: standalone
-          vm_type: default
-      rabbitmq:
-        tls:
-          ca: REDACTED
-          crt: REDACTED
-          enabled: true
-          key: REDACTED
-      service:
-        description: A dedicated RabbitMQ instance, deployed on-demand
-        id: rabbitmq
-        limit: 0
-        name: rabbitmq
-        tags:
-        - blacksmith
-        - dedicated
-        - rabbitmq
-    release: rabbitmq-forge
-  - name: mariadb-blacksmith-plans
-    properties:
-      plans:
-        standalone:
-          description: A dedicated MariaDB server, with no redundancy or replication
-          limit: 7
-          name: standalone
-          network: blacksmith
-          type: standalone
-          vm_type: default
-      service:
-        description: A dedicated MariaDB instance, deployed on-demand
-        id: mariadb
-        limit: 0
-        name: mariadb
-        tags:
-        - blacksmith
-        - dedicated
-        - mariadb
-    release: mariadb-forge
   - consumes:
       nats-tls:
         deployment: lab-itsouvalas-cf
@@ -283,6 +202,102 @@ instance_groups:
     release: routing
   - name: bpm
     release: bpm
+  - name: redis-blacksmith-plans
+    properties:
+      bosh_env: lab-itsouvalas
+      environment: lab-itsouvalas
+      plans:
+        standalone:
+          description: A dedicated Redis server, with no redundancy or replication
+          limit: 7
+          name: standalone
+          network: blacksmith
+          type: standalone
+          vm_type: default
+        standalone-6:
+          description: A dedicated Redis 6 server, with no redundancy or replication
+          limit: 7
+          name: standalone-6
+          network: blacksmith
+          type: standalone-6
+          vm_type: default
+      redis:
+        tls:
+          ca: REDACTED
+          ca_cert: REDACTED
+          ca_key: REDACTED
+          enabled: true
+      service:
+        description: A dedicated Redis instance, deployed on-demand
+        id: redis
+        limit: 0
+        name: redis
+        tags:
+        - blacksmith
+        - dedicated
+        - redis
+    release: redis-forge
+  - name: mariadb-blacksmith-plans
+    properties:
+      plans:
+        standalone:
+          description: A dedicated MariaDB server, with no redundancy or replication
+          limit: 7
+          name: standalone
+          network: blacksmith
+          type: standalone
+          vm_type: default
+      service:
+        description: A dedicated MariaDB instance, deployed on-demand
+        id: mariadb
+        limit: 0
+        name: mariadb
+        tags:
+        - blacksmith
+        - dedicated
+        - mariadb
+    release: mariadb-forge
+  - name: rabbitmq-blacksmith-plans
+    properties:
+      bosh:
+        deployment_name: lab-itsouvalas
+      bosh_env: lab-itsouvalas
+      cf:
+        core_network: REDACTED
+        deployment_env: lab-itsouvalas
+        deployment_name: lab-itsouvalas-cf
+        deployment_type: cf
+        system_domain: REDACTED
+      environment: lab-itsouvalas
+      plans:
+        standalone:
+          description: A dedicated RabbitMQ server, with no redundancy or replication
+          limit: 7
+          name: standalone
+          network: blacksmith
+          type: standalone
+          vm_type: default
+      rabbitmq:
+        route_registrar:
+          enabled: true
+          tls:
+            enabled: false
+        tls:
+          ca: REDACTED
+          crt: REDACTED
+          dual-mode: true
+          enabled: true
+          key: REDACTED
+      service:
+        description: A dedicated RabbitMQ instance, deployed on-demand
+        id: rabbitmq
+        limit: 0
+        name: rabbitmq
+        tags:
+        - blacksmith
+        - dedicated
+        - rabbitmq
+    release: rabbitmq-forge
   name: blacksmith
   networks:
   - name: blacksmith
@@ -294,13 +309,15 @@ instance_groups:
 kit:
   features:
   - external-bosh
+  - cf-route-registrar
   - redis
-  - rabbitmq
   - mariadb
   - broker-tls
   - redis-tls
+  - rabbitmq
   - rabbitmq-tls
-  - cf-route-registrar
+  - rabbitmq-dual-mode
+  - rabbitmq-dashboard-registration
   name: dev
   version: latest
 meta:
@@ -308,19 +325,27 @@ meta:
   blacksmith_tls_certificate: REDACTED
   blacksmith_tls_key: REDACTED
   blacksmith_tls_port: 443
+  bosh:
+    env_name: lab-itsouvalas
+    exodus_path: lab-itsouvalas
   bosh_env: lab-itsouvalas
   bosh_exodus_path: lab-itsouvalas/bosh
   bosh_exodus_src: '/secret/exodus/lab-itsouvalas/bosh:'
   cf:
+    api_url: https://api.REDACTED
     core_network: REDACTED
     deployment_name: lab-itsouvalas-cf
+    exodus: /secret/exodus/lab-itsouvalas/cf
     exodus_path: /secret/exodus/lab-itsouvalas/cf
     nats:
       client:
         cert: REDACTED
         key: REDACTED
+    password: REDACTED
     system:
       domain: REDACTED
+    system_domain: REDACTED
+    username: REDACTED
   default:
     azs:
     - z1
@@ -368,6 +393,7 @@ meta:
     scheme: http
   default_bosh_exodus_path: lab-itsouvalas/bosh
   environment: lab-itsouvalas
+  exodus: secret/exodus/
   external_bosh_address: REDACTED
   external_bosh_cacert: REDACTED
   external_bosh_password: REDACTED
@@ -717,6 +743,13 @@ networks:
   type: manual
 params:
   blacksmith_debug: true
+  cf:
+    core_network: REDACTED
+    deployment_env: lab-itsouvalas
+    deployment_name: lab-itsouvalas-cf
+    deployment_type: cf
+    system_domain: REDACTED
+  cf_skip_ssl_validation: true
   cloud_config: []
   disk_type: 10GB
   env: lab-itsouvalas
@@ -727,20 +760,21 @@ params:
     sha1: feede84c0f37b7eda4421debd2304cb48da83ff7
     url: https://github.com/blacksmith-community/redis-forge-boshrelease/releases/download/v0.8.16/redis-forge-0.8.16.tgz
     version: 0.8.16
-  - name: rabbitmq-forge
-    sha1: 5338da47c6b431bc079dc60ca6e83e85b0c557fe
-    url: https://github.com/blacksmith-community/rabbitmq-forge-boshrelease/releases/download/v1.0.2/rabbitmq-forge-1.0.2.tgz
-    version: 1.0.2
   - name: mariadb-forge
     sha1: e332545449e55df5cd28f9d78f83e6df62a4e4ae
     url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
     version: 0.5.0
+  - name: rabbitmq-forge
+    sha1: e948a5f93737f151f81f60f4098c5ba37bd8d681
+    url: https://github.com/blacksmith-community/rabbitmq-forge-boshrelease/releases/download/v1.1.0/rabbitmq-forge-1.1.0.tgz
+    version: 1.1.0
+  secrets_mount: secret/exodus/
   stemcells: []
 releases:
 - name: blacksmith
-  sha1: 1791f977ac19a06f2550a87dea930418b340313a
-  url: https://github.com/blacksmith-community/blacksmith-boshrelease/releases/download/v1.6.10/blacksmith-1.6.10.tgz
-  version: 1.6.10
+  sha1: 03711b925e4d9282ebe5e7d66e2b558d207eb457
+  url: https://github.com/blacksmith-community/blacksmith-boshrelease/releases/download/v1.6.11/blacksmith-1.6.11.tgz
+  version: 1.6.11
 - name: bosh
   sha1: ecb69fdc834e962cc66747f2a9f57470a57401f9
   url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=270.12.0
@@ -761,14 +795,14 @@ releases:
   sha1: feede84c0f37b7eda4421debd2304cb48da83ff7
   url: https://github.com/blacksmith-community/redis-forge-boshrelease/releases/download/v0.8.16/redis-forge-0.8.16.tgz
   version: 0.8.16
-- name: rabbitmq-forge
-  sha1: 5338da47c6b431bc079dc60ca6e83e85b0c557fe
-  url: https://github.com/blacksmith-community/rabbitmq-forge-boshrelease/releases/download/v1.0.2/rabbitmq-forge-1.0.2.tgz
-  version: 1.0.2
 - name: mariadb-forge
   sha1: e332545449e55df5cd28f9d78f83e6df62a4e4ae
   url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
   version: 0.5.0
+- name: rabbitmq-forge
+  sha1: e948a5f93737f151f81f60f4098c5ba37bd8d681
+  url: https://github.com/blacksmith-community/rabbitmq-forge-boshrelease/releases/download/v1.1.0/rabbitmq-forge-1.1.0.tgz
+  version: 1.1.0
 stemcells:
 - alias: bionic
   os: ubuntu-bionic

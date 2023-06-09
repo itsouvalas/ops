@@ -9,11 +9,11 @@ kit:
     - local-postgres-db
     - small-footprint
     - nfs-volume-services
-    - enable-service-discovery
     - app-autoscaler-integration
     - prometheus-integration
     - blacksmith-integration
     - app-scheduler-integration
+    - trust-blacksmith-ca
 
 genesis:
   env:            lab-itsouvalas
