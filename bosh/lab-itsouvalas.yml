@@ -1,6 +1,6 @@
 kit:
   name:    dev #bosh
-  version: latest #3.0.0
+  version: 3.0.0
   features:
     - vsphere
     - bosh-dns-healthcheck
@@ -47,10 +47,10 @@ params:
   # DNS Caching (for runtime config)
   dns_cache: true
   vsphere_disk_type: thin
-  dns_deployments_whitelist:
-    - lab-itsouvalas-cf
-    - lab-itsouvalas-blacksmith
-
+#  dns_deployments_whitelist:
+#    - lab-itsouvalas-cf
+#    - lab-itsouvalas-blacksmith
+#    - lab-itsouvalas-cf-app-autoscaler
 
 cloud_provider:
   properties:

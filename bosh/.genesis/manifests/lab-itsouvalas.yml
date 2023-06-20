@@ -170,13 +170,13 @@ exodus:
   credhub_password: ((credhub_cli_user_password))
   credhub_url: https://10.168.16.0:8844
   credhub_username: credhub_cli_user
-  dated: 2023-05-31 09:33:28 +0000
+  dated: 2023-06-14 12:13:39 +0000
   deployer: itsouvalas
   features: vsphere,bosh-dns-healthcheck,netop-access,sysop-access,credhub
   is_director: true
   kit_is_dev: true
   kit_name: bosh
-  kit_version: 2.0.0
+  kit_version: 3.0.0
   netop_sshkey: REDACTED
   sysop_password: REDACTED
   url: https://10.168.16.0:25555
@@ -568,7 +568,7 @@ kit:
   - sysop-access
   - credhub
   name: dev
-  version: latest
+  version: 3.0.0
 meta:
   disk_path: lab-itsouvalas/disks
   joined_vsphere_ephemeral_datastores: ephemeral
@@ -1005,6 +1005,10 @@ params:
   ca_validity_period: 5y
   cert_validity_period: 1y
   dns_cache: true
+  dns_deployments_whitelist:
+  - lab-itsouvalas-cf
+  - lab-itsouvalas-blacksmith
+  - lab-itsouvalas-cf-app-autoscaler
   ntp:
   - 0.pool.ntp.org
   - 1.pool.ntp.org
