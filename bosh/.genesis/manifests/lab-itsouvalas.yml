@@ -62,7 +62,39 @@ bosh-variables:
   nats_sync_password: REDACTED
   no_proxy: ""
   postgres_password: REDACTED
-  trusted_ca_cert: ""
+  trusted_ca_cert: |
+    -----BEGIN CERTIFICATE-----
+    MIIFgzCCA2ugAwIBAgIUeo0zcIigjAmMpdol4HnvkYqpXL4wDQYJKoZIhvcNAQEN
+    BQAwLzEtMCsGA1UEAxMkYmxhY2tzbWl0aC5zZXJ2aWNlcy5jYS5ib3NoLWludGVy
+    bmFsMB4XDTIzMDUyNzEwMjIxMVoXDTMzMDUyNDEwMjIxMVowLzEtMCsGA1UEAxMk
+    YmxhY2tzbWl0aC5zZXJ2aWNlcy5jYS5ib3NoLWludGVybmFsMIICIjANBgkqhkiG
+    9w0BAQEFAAOCAg8AMIICCgKCAgEAnjpYNW2aNcP3Fzoa+KNNlauxxyxrS1masICu
+    IxCwnoAYlZ1RfuYfuxakvvc2RMYQi+daMlqJqWzO1OE822Ib5iGtLPnPalcGWpqB
+    52kvvhWHDOLt+9zDO/JiLTQXmPPp04ltFRuSqS3JtpZVom9Mj3xr/Ptuu0d6bP7F
+    LzJeBdo0cZnw5NLK6uTaxNpsVACrUyLCwh8C7Rq6YvHHIfduFa6JtgrnOIW+HvOD
+    bt2rwcnuub4aiaXed+TRyi3tB4qn4d/tCHsZz/WzNAhe8A87nqY2JXajFeJvt2PY
+    G6e7bfXu+pcxV07AEmz0616avsR2HPaLZd42if2z8063b8t4TVJmTJQ6mBvF7L5M
+    mMhh8mEQgVqn2qmIO02eHiQFtXy+S+CRpnkye9c72I6IyWz2sv1eef9po92397Cq
+    +Xwk0H5mcyHm3Og0w/Um+95nJa+/ThphZiOAuTOdkB7iOQahZCmlM3OJ59NtqJZF
+    aJOO/rvdVO+0q5th9SgUG26SgAYktVnXHc9NJrEN491kWuSuE9gX5qVSYFrKPZDt
+    r888tSUU4qwvCrqnbk4LwfyL6VbvzQlZwBohbNmCq9VBwCjrQpCE8j40B7RGIn1U
+    LfLVVWoWjGcylrndIj3EPHtbjZPg5KkF5TDUFJB6rR5tMfHcVNg8CiWP3udjKOlo
+    AqV2OU8CAwEAAaOBljCBkzAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0lBBYwFAYIKwYB
+    BQUHAwIGCCsGAQUFBwMBMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYEFFkV
+    uZH6QxdVbyVEK/ecy4+CyaBeMC8GA1UdEQQoMCaCJGJsYWNrc21pdGguc2Vydmlj
+    ZXMuY2EuYm9zaC1pbnRlcm5hbDANBgkqhkiG9w0BAQ0FAAOCAgEAZa5zJ74BwChd
+    NWdAT4vHzwGZcv8P6lryPYghdM8laXJds2YUqh1VW6ya7rOQ3g7F14E/HaHcYKSm
+    ieRHrz8T+Yc1sdQ7LKCQ3VB+PwbAxL65REIXvIFjJiSTlu3+58MiQNnKWBdvLEVJ
+    6NRrdhzNipkTStDo09v/2xkVqN9yPlfYHA86gCtTF7SdXXVLKu5HGo6KnDU79WU8
+    kkFAzKJbD8MpiBOEpOmmoPljG3iF/y4+E29w4ZjBuFhvloKDRrrMuNciztGxE9B5
+    +TTwBZXC9vSCdDWpnNTi8DMUs+WnQ9MeRyXP27WgCD36iWUzRiHGjuJ6NOUbT+2K
+    nn5kQuHQI1f/lOxoGkA4H4OF8SWa/QAnsIfpfsG8ryycAbRS8vkxaTUJEF6VUK6j
+    7peDo3FKyDI6fVoRFyn0ZFwIm5U490Phk2//gmjkgVOEKDPEIjgcNrZiKeDNKG0T
+    7gdz8sYQ1WfQhRf2uaNLJPTbLqAPpj69kKho9psHcSkGzeQ9i/mn3+Cv3FDOnYRX
+    H1PJrTMlsAlFtNvBroRmJofU3h+rVZLROZaGiOrSSmtzsTyj5fPY07uLWhjHpe6t
+    JtCLJLzz+1eYKiLB7Ha2yhqWGcNG9yvBePFZphnzJOa2LmKgvkjfIE3HuzlFyf6U
+    0ALXaiSo8KRSR3FF3Qmz9GAzcAMsvUk=
+    -----END CERTIFICATE-----
   uaa_admin_client_secret: REDACTED
   uaa_clients_director_to_credhub: REDACTED
   uaa_encryption_key_1: REDACTED
@@ -161,6 +193,8 @@ disk_types:
 exodus:
   admin_password: REDACTED
   admin_username: admin
+  blacksmith_password: REDACTED
+  blacksmith_user: blacksmith
   bosh: lab-proto
   bosh-deployment-date: 2023-May-18 22:48:03 UTC
   bosh-deployment-url: https://github.com/cloudfoundry/bosh-deployment/tree/5c61fbbb694f3d247547fa67a45459563970833e
@@ -170,9 +204,9 @@ exodus:
   credhub_password: ((credhub_cli_user_password))
   credhub_url: https://10.168.16.0:8844
   credhub_username: credhub_cli_user
-  dated: 2023-06-14 12:13:39 +0000
+  dated: 2023-06-21 07:55:01 +0000
   deployer: itsouvalas
-  features: vsphere,bosh-dns-healthcheck,netop-access,sysop-access,credhub
+  features: vsphere,bosh-dns-healthcheck,netop-access,sysop-access,credhub,trust-blacksmith-ca,blacksmith-integration
   is_director: true
   kit_is_dev: true
   kit_name: bosh
@@ -182,7 +216,7 @@ exodus:
   url: https://10.168.16.0:25555
   use_create_env: false
   vault_base: /secret/lab/itsouvalas/bosh
-  version: 2.8.9
+  version: 2.8.10
 genesis:
   bosh_env: lab-proto
   ci_mount: /secret/ci/
@@ -235,6 +269,12 @@ instance_groups:
             override: true
             scope: ""
             secret: ((admin_password))
+          blacksmith:
+            authorities: bosh.teams.blacksmith.admin,bosh.stemcells.upload,bosh.releases.upload
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: REDACTED
           bosh_cli:
             access-token-validity: 120
             authorities: uaa.none
@@ -327,6 +367,12 @@ instance_groups:
             - credhub.write
             name: credhub_cli_user
             password: ((credhub_cli_user_password))
+          - groups:
+            - bosh.teams.blacksmith.admin
+            - bosh.stemcells.upload
+            - bosh.releases.upload
+            name: blacksmith
+            password: REDACTED
         sslCertificate: ((uaa_ssl.certificate))
         sslPrivateKey: ((uaa_ssl.private_key))
         url: https://((internal_ip)):8443
@@ -567,6 +613,8 @@ kit:
   - netop-access
   - sysop-access
   - credhub
+  - trust-blacksmith-ca
+  - blacksmith-integration
   name: dev
   version: 3.0.0
 meta:
@@ -1005,10 +1053,6 @@ params:
   ca_validity_period: 5y
   cert_validity_period: 1y
   dns_cache: true
-  dns_deployments_whitelist:
-  - lab-itsouvalas-cf
-  - lab-itsouvalas-blacksmith
-  - lab-itsouvalas-cf-app-autoscaler
   ntp:
   - 0.pool.ntp.org
   - 1.pool.ntp.org
@@ -1018,6 +1062,39 @@ params:
   resurrector_time_threshold: 600
   session_timeout: 1
   static_ip: 10.168.16.0
+  trusted_certs: |
+    -----BEGIN CERTIFICATE-----
+    MIIFgzCCA2ugAwIBAgIUeo0zcIigjAmMpdol4HnvkYqpXL4wDQYJKoZIhvcNAQEN
+    BQAwLzEtMCsGA1UEAxMkYmxhY2tzbWl0aC5zZXJ2aWNlcy5jYS5ib3NoLWludGVy
+    bmFsMB4XDTIzMDUyNzEwMjIxMVoXDTMzMDUyNDEwMjIxMVowLzEtMCsGA1UEAxMk
+    YmxhY2tzbWl0aC5zZXJ2aWNlcy5jYS5ib3NoLWludGVybmFsMIICIjANBgkqhkiG
+    9w0BAQEFAAOCAg8AMIICCgKCAgEAnjpYNW2aNcP3Fzoa+KNNlauxxyxrS1masICu
+    IxCwnoAYlZ1RfuYfuxakvvc2RMYQi+daMlqJqWzO1OE822Ib5iGtLPnPalcGWpqB
+    52kvvhWHDOLt+9zDO/JiLTQXmPPp04ltFRuSqS3JtpZVom9Mj3xr/Ptuu0d6bP7F
+    LzJeBdo0cZnw5NLK6uTaxNpsVACrUyLCwh8C7Rq6YvHHIfduFa6JtgrnOIW+HvOD
+    bt2rwcnuub4aiaXed+TRyi3tB4qn4d/tCHsZz/WzNAhe8A87nqY2JXajFeJvt2PY
+    G6e7bfXu+pcxV07AEmz0616avsR2HPaLZd42if2z8063b8t4TVJmTJQ6mBvF7L5M
+    mMhh8mEQgVqn2qmIO02eHiQFtXy+S+CRpnkye9c72I6IyWz2sv1eef9po92397Cq
+    +Xwk0H5mcyHm3Og0w/Um+95nJa+/ThphZiOAuTOdkB7iOQahZCmlM3OJ59NtqJZF
+    aJOO/rvdVO+0q5th9SgUG26SgAYktVnXHc9NJrEN491kWuSuE9gX5qVSYFrKPZDt
+    r888tSUU4qwvCrqnbk4LwfyL6VbvzQlZwBohbNmCq9VBwCjrQpCE8j40B7RGIn1U
+    LfLVVWoWjGcylrndIj3EPHtbjZPg5KkF5TDUFJB6rR5tMfHcVNg8CiWP3udjKOlo
+    AqV2OU8CAwEAAaOBljCBkzAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0lBBYwFAYIKwYB
+    BQUHAwIGCCsGAQUFBwMBMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYEFFkV
+    uZH6QxdVbyVEK/ecy4+CyaBeMC8GA1UdEQQoMCaCJGJsYWNrc21pdGguc2Vydmlj
+    ZXMuY2EuYm9zaC1pbnRlcm5hbDANBgkqhkiG9w0BAQ0FAAOCAgEAZa5zJ74BwChd
+    NWdAT4vHzwGZcv8P6lryPYghdM8laXJds2YUqh1VW6ya7rOQ3g7F14E/HaHcYKSm
+    ieRHrz8T+Yc1sdQ7LKCQ3VB+PwbAxL65REIXvIFjJiSTlu3+58MiQNnKWBdvLEVJ
+    6NRrdhzNipkTStDo09v/2xkVqN9yPlfYHA86gCtTF7SdXXVLKu5HGo6KnDU79WU8
+    kkFAzKJbD8MpiBOEpOmmoPljG3iF/y4+E29w4ZjBuFhvloKDRrrMuNciztGxE9B5
+    +TTwBZXC9vSCdDWpnNTi8DMUs+WnQ9MeRyXP27WgCD36iWUzRiHGjuJ6NOUbT+2K
+    nn5kQuHQI1f/lOxoGkA4H4OF8SWa/QAnsIfpfsG8ryycAbRS8vkxaTUJEF6VUK6j
+    7peDo3FKyDI6fVoRFyn0ZFwIm5U490Phk2//gmjkgVOEKDPEIjgcNrZiKeDNKG0T
+    7gdz8sYQ1WfQhRf2uaNLJPTbLqAPpj69kKho9psHcSkGzeQ9i/mn3+Cv3FDOnYRX
+    H1PJrTMlsAlFtNvBroRmJofU3h+rVZLROZaGiOrSSmtzsTyj5fPY07uLWhjHpe6t
+    JtCLJLzz+1eYKiLB7Ha2yhqWGcNG9yvBePFZphnzJOa2LmKgvkjfIE3HuzlFyf6U
+    0ALXaiSo8KRSR3FF3Qmz9GAzcAMsvUk=
+    -----END CERTIFICATE-----
   vsphere_clusters:
   - Cluster1
   vsphere_datacenter: Datacenter
