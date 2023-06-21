@@ -127,16 +127,16 @@ exodus:
   broker_password: REDACTED
   broker_url: http://blacksmith.it-lab.instantpc.support:3000
   broker_username: blacksmith
-  dated: 2023-06-08 11:47:13 +0000
+  dated: 2023-06-21 08:12:36 +0000
   deployer: itsouvalas
-  features: external-bosh,cf-route-registrar,redis,mariadb,broker-tls,redis-tls,rabbitmq,rabbitmq-tls,rabbitmq-dual-mode,rabbitmq-dashboard-registration
+  features: external-bosh,cf-route-registrar,redis,mariadb,broker-tls,redis-tls,rabbitmq,rabbitmq-tls,rabbitmq-dual-mode,rabbitmq-dashboard-registration,rabbitmq-autoscale
   is_director: false
   kit_is_dev: true
   kit_name: blacksmith
   kit_version: 0.12.0
   use_create_env: false
   vault_base: /secret/lab/itsouvalas/blacksmith
-  version: 2.8.9
+  version: 2.8.10
 genesis:
   ci_mount: /secret/ci/
   env: lab-itsouvalas
@@ -263,21 +263,34 @@ instance_groups:
         deployment_name: lab-itsouvalas
       bosh_env: lab-itsouvalas
       cf:
+        api_url: https://api.REDACTED
         core_network: REDACTED
         deployment_env: lab-itsouvalas
         deployment_name: lab-itsouvalas-cf
         deployment_type: cf
+        exodus_path: /secret/exodus/lab-itsouvalas/cf
+        nats_tls_only: true
+        password: REDACTED
         system_domain: REDACTED
+        username: REDACTED
       environment: lab-itsouvalas
+      loggregator:
+        tls:
+          agent:
+            cert: REDACTED
+            key: REDACTED
+          ca_cert: REDACTED
       plans:
-        standalone:
+        single-node:
           description: A dedicated RabbitMQ server, with no redundancy or replication
           limit: 7
-          name: standalone
+          name: single-node
           network: blacksmith
           type: standalone
           vm_type: default
       rabbitmq:
+        autoscale:
+          enabled: true
         route_registrar:
           enabled: true
           tls:
@@ -288,6 +301,17 @@ instance_groups:
           dual-mode: true
           enabled: true
           key: REDACTED
+      rabbitmq_metrics_emitter:
+        cloud_foundry:
+          api: https://api.REDACTED
+          password: REDACTED
+          skip_ssl_validation: true
+          username: REDACTED
+        rmq_management:
+          mgmt_host: localhost
+          mgmt_port: "15671"
+          mgmt_scheme: https
+          skip_ssl_validation: true
       service:
         description: A dedicated RabbitMQ instance, deployed on-demand
         id: rabbitmq
@@ -318,6 +342,7 @@ kit:
   - rabbitmq-tls
   - rabbitmq-dual-mode
   - rabbitmq-dashboard-registration
+  - rabbitmq-autoscale
   name: dev
   version: latest
 meta:
@@ -393,7 +418,6 @@ meta:
     scheme: http
   default_bosh_exodus_path: lab-itsouvalas/bosh
   environment: lab-itsouvalas
-  exodus: secret/exodus/
   external_bosh_address: REDACTED
   external_bosh_cacert: REDACTED
   external_bosh_password: REDACTED
@@ -748,6 +772,7 @@ params:
     deployment_env: lab-itsouvalas
     deployment_name: lab-itsouvalas-cf
     deployment_type: cf
+    nats_tls_only: true
     system_domain: REDACTED
   cf_skip_ssl_validation: true
   cloud_config: []
@@ -765,10 +790,7 @@ params:
     url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
     version: 0.5.0
   - name: rabbitmq-forge
-    sha1: e948a5f93737f151f81f60f4098c5ba37bd8d681
-    url: https://github.com/blacksmith-community/rabbitmq-forge-boshrelease/releases/download/v1.1.0/rabbitmq-forge-1.1.0.tgz
-    version: 1.1.0
-  secrets_mount: secret/exodus/
+    version: 1.1.0+dev.2
   stemcells: []
 releases:
 - name: blacksmith
@@ -800,9 +822,7 @@ releases:
   url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
   version: 0.5.0
 - name: rabbitmq-forge
-  sha1: e948a5f93737f151f81f60f4098c5ba37bd8d681
-  url: https://github.com/blacksmith-community/rabbitmq-forge-boshrelease/releases/download/v1.1.0/rabbitmq-forge-1.1.0.tgz
-  version: 1.1.0
+  version: 1.1.0+dev.2
 stemcells:
 - alias: bionic
   os: ubuntu-bionic
