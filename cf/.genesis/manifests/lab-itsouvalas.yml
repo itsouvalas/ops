@@ -456,13 +456,13 @@ exodus:
   apps_domain: run.it-lab.instantpc.support
   base_domain: it-lab.instantpc.support
   bosh: lab-itsouvalas
-  cf-deployment-date: 2023-May-24 08:57:36 UTC
+  cf-deployment-date: 2023-Jun-06 00:28:49 UTC
   cf-deployment-hotfixes: true
   cf-deployment-url: https://github.com/cloudfoundry/cf-deployment/releases/tag/v29.0.0
   cf-deployment-version: 29.0.0
   cf_exporter_secret: ((uaa_clients_cf_exporter_secret))
   core_network: cf-core
-  dated: 2023-06-07 18:18:15 +0000
+  dated: 2023-06-20 14:47:22 +0000
   db_network: cf-core
   deployer: itsouvalas
   edge_network: cf-edge
@@ -490,7 +490,7 @@ exodus:
   use_create_env: false
   vault_base: /secret/lab/itsouvalas/cf
   vaulted_uaa_clients: /secret/lab/itsouvalas/cf/uaa/client_secrets:firehose
-  version: 2.8.9
+  version: 2.8.10
 features:
   randomize_az_placement: true
 genesis:
@@ -2077,6 +2077,7 @@ instance_groups:
         - ((credhub_tls.ca))
         - ((uaa_ssl.ca))
         - REDACTED
+        - REDACTED
     release: cflinuxfs3
   - name: cflinuxfs4-rootfs-setup
     properties:
@@ -2085,6 +2086,7 @@ instance_groups:
         - ((diego_instance_identity_ca.ca))
         - ((credhub_tls.ca))
         - ((uaa_ssl.ca))
+        - REDACTED
     release: cflinuxfs4
   - name: garden
     properties:
@@ -2121,6 +2123,7 @@ instance_groups:
         - ((diego_instance_identity_ca.ca))
         - ((credhub_tls.ca))
         - ((uaa_ssl.ca))
+        - REDACTED
         - REDACTED
       diego:
         executor:
@@ -2525,6 +2528,10 @@ meta:
   - z1
   - z2
   internal_app_domains: []
+  ocfp:
+    certs:
+      trusted:
+      - REDACTED
   vault: /secret/lab/itsouvalas/cf
 name: lab-itsouvalas-cf
 networks:

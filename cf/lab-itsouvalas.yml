@@ -15,6 +15,13 @@ kit:
     - app-scheduler-integration
     - trust-blacksmith-ca
 
+meta:
+  ocfp:
+    certs:
+      trusted:
+        - (( append ))
+        - (( vault $GENESIS_EXODUS_MOUNT genesis.env "/blacksmith:blacksmith_ca" ))
+
 genesis:
   env:            lab-itsouvalas
   min_version:    2.8.6
@@ -33,3 +40,25 @@ stemcells:
   - alias: default
     os: ubuntu-jammy
     version: latest
+
+instance_groups:
+- name: diego-cell
+  jobs:
+    - name: rep
+      properties:
+        containers:
+          trusted_ca_certificates:
+            - (( append ))
+            - (( join "" meta.ocfp.certs.trusted ))
+    - name: cflinuxfs3-rootfs-setup
+      properties:
+        cflinuxfs3-rootfs:
+          trusted_certs:
+            - (( append ))
+            - (( join "" meta.ocfp.certs.trusted ))
+    - name: cflinuxfs4-rootfs-setup
+      properties:
+        cflinuxfs4-rootfs:
+          trusted_certs:
+            - (( append ))
+            - (( join "" meta.ocfp.certs.trusted ))
