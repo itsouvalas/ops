@@ -1,0 +1,1914 @@
+addons:
+- jobs:
+  - name: bosh-dns-aliases
+    properties:
+      aliases:
+      - domain: autoscalerpostgres.service.cf.internal
+        targets:
+        - deployment: lab-itsouvalas-cf-app-autoscaler
+          domain: bosh
+          instance_group: postgres_autoscaler
+          network: REDACTED
+          query: '*'
+      - domain: apiserver.service.cf.internal
+        targets:
+        - deployment: lab-itsouvalas-cf-app-autoscaler
+          domain: bosh
+          instance_group: asapi
+          network: REDACTED
+          query: '*'
+      - domain: autoscalerscheduler.service.cf.internal
+        targets:
+        - deployment: lab-itsouvalas-cf-app-autoscaler
+          domain: bosh
+          instance_group: asactors
+          network: REDACTED
+          query: '*'
+      - domain: servicebroker.service.cf.internal
+        targets:
+        - deployment: lab-itsouvalas-cf-app-autoscaler
+          domain: bosh
+          instance_group: asapi
+          network: REDACTED
+          query: '*'
+      - domain: eventgenerator.service.cf.internal
+        targets:
+        - deployment: lab-itsouvalas-cf-app-autoscaler
+          domain: bosh
+          instance_group: asmetrics
+          network: REDACTED
+          query: '*'
+      - domain: scalingengine.service.cf.internal
+        targets:
+        - deployment: lab-itsouvalas-cf-app-autoscaler
+          domain: bosh
+          instance_group: asactors
+          network: REDACTED
+          query: '*'
+      - domain: reverse-log-proxy.service.cf.internal
+        targets:
+        - deployment: lab-itsouvalas-cf
+          domain: bosh
+          instance_group: log-api
+          network: REDACTED
+          query: '*'
+      - domain: metricsgateway.service.cf.internal
+        targets:
+        - deployment: lab-itsouvalas-cf-app-autoscaler
+          domain: bosh
+          instance_group: asnozzle
+          network: REDACTED
+          query: '*'
+      - domain: metricsserver.service.cf.internal
+        targets:
+        - deployment: lab-itsouvalas-cf-app-autoscaler
+          domain: bosh
+          instance_group: asmetrics
+          network: REDACTED
+          query: '*'
+      - domain: nats.service.cf.internal
+        targets:
+        - deployment: lab-itsouvalas-cf
+          domain: bosh
+          instance_group: nats
+          network: REDACTED
+          query: '*'
+      - domain: _.nats.service.cf.internal
+        targets:
+        - deployment: lab-itsouvalas-cf
+          domain: bosh
+          instance_group: nats
+          network: REDACTED
+          query: _
+    release: bosh-dns-aliases
+  name: bosh-dns-aliases
+- jobs:
+  - name: bpm
+    release: bpm
+  name: bpm
+azs:
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster1: {}
+      name: Datacenter
+  name: z1
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster1: {}
+      name: Datacenter
+  name: z2
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster1: {}
+      name: Datacenter
+  name: z3
+bosh-variables:
+  cf_client_id: REDACTED
+  cf_client_secret: REDACTED
+  loggregator_ca:
+    certificate: REDACTED
+  loggregator_tls_agent:
+    ca: REDACTED
+    certificate: REDACTED
+    private_key: REDACTED
+  loggregator_tls_rlp:
+    certificate: REDACTED
+    private_key: REDACTED
+  skip_ssl_validation: "true"
+compilation:
+  az: z1
+  network: compilation
+  reuse_compilation_vms: true
+  vm_type: large
+  workers: 5
+disk_types:
+- cloud_properties:
+    type: thin
+  disk_size: 2048
+  name: default
+- cloud_properties:
+    type: thin
+  disk_size: 2048
+  name: consul
+- cloud_properties:
+    type: thin
+  disk_size: 10240
+  name: concourse
+- cloud_properties:
+    type: thin
+  disk_size: 4096
+  name: postgres
+- cloud_properties:
+    type: thin
+  disk_size: 4096
+  name: blobstore
+- cloud_properties:
+    type: thin
+  disk_size: 1024
+  name: vault
+- cloud_properties:
+    type: thin
+  disk_size: 65536
+  name: bosh
+- cloud_properties:
+    type: thin
+  disk_size: 131072
+  name: bosh-large
+- cloud_properties:
+    type: thin
+  disk_size: 2048
+  name: shield
+- cloud_properties:
+    type: thin
+  disk_size: 51200
+  name: jumpbox
+- cloud_properties:
+    type: thin
+  disk_size: 51200
+  name: prometheus
+- cloud_properties:
+    type: thin
+  disk_size: 10240
+  name: rabbitmq
+- cloud_properties:
+    type: thin
+  disk_size: 5120
+  name: 5GB
+- cloud_properties:
+    type: thin
+  disk_size: 10240
+  name: 10GB
+- cloud_properties:
+    type: thin
+  disk_size: 100240
+  name: 100GB
+- cloud_properties:
+    type: thin
+  disk_size: 10240
+  name: minio
+- cloud_properties:
+    type: thin
+  disk_size: 20480
+  name: 20GB
+exodus:
+  app-autoscaler-release-date: 2022-Apr-10 09:04:18 UTC
+  app-autoscaler-release-version: 5.1.0
+  autoscaler_api_domain: autoscaler.REDACTED
+  autoscaler_metrics_domain: autoscalermetrics.REDACTED
+  bosh: lab-itsouvalas
+  cf_deployment_env: lab-itsouvalas
+  cf_deployment_type: cf
+  dated: 2023-06-19 09:11:37 +0000
+  deployer: itsouvalas
+  features: postgres,operations/enable-nats-tls
+  is_director: false
+  kit_is_dev: true
+  kit_name: cf-app-autoscaler
+  kit_version: 4.1.2
+  service_broker_domain: autoscalerservicebroker.REDACTED
+  service_broker_password: ((autoscaler_service_broker_password))
+  service_broker_username: autoscaler_service_broker_user
+  use_create_env: false
+  vault_base: /secret/lab/itsouvalas/cf-app-autoscaler
+  version: 2.8.10
+features:
+  use_dns_addresses: true
+genesis:
+  ci_mount: /secret/ci/
+  env: lab-itsouvalas
+  exodus_base: /secret/exodus/lab-itsouvalas/cf-app-autoscaler
+  exodus_mount: /secret/exodus/
+  exodus_path: lab-itsouvalas/cf-app-autoscaler
+  min_version: 2.8.5
+  secrets_base: /secret/lab/itsouvalas/cf-app-autoscaler/
+  secrets_mount: /secret/
+  secrets_path: lab/itsouvalas/cf-app-autoscaler
+  vault_env: lab/itsouvalas
+instance_groups:
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - name: postgres
+    properties:
+      databases:
+        connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+        databases:
+        - name: autoscaler
+          tag: default
+        db_scheme: postgres
+        port: 5432
+        roles:
+        - name: postgres
+          password: ((database_password))
+          tag: default
+        sslmode: verify-full
+        tls:
+          ca: ((postgres_ca.ca))
+          certificate: ((postgres_server.certificate))
+          private_key: ((postgres_server.private_key))
+    release: postgres
+  name: postgres_autoscaler
+  networks:
+  - name: REDACTED
+  persistent_disk_type: 10GB
+  stemcell: default
+  update:
+    serial: true
+  vm_type: small
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - name: scalingengine
+    properties:
+      autoscaler:
+        cf:
+          api: https://api.REDACTED
+          client_id: ((cf_client_id))
+          grant_type: client_credentials
+          secret: ((cf_client_secret))
+          skip_ssl_validation: ((skip_ssl_validation))
+        policy_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        policy_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+        scalingengine:
+          ca_cert: ((scalingengine_ca.ca))
+          defaultCoolDownSecs: 300
+          health:
+            password: ((autoscaler_scalingengine_health_password))
+            port: 6204
+            username: scalingengine
+          http_client_timeout: 60s
+          lockSize: 32
+          logging:
+            level: info
+          server:
+            port: 6104
+          server_cert: ((scalingengine_server.certificate))
+          server_key: ((scalingengine_server.private_key))
+        scalingengine_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        scalingengine_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+        scheduler_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        scheduler_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+    release: app-autoscaler
+  - name: scheduler
+    properties:
+      autoscaler:
+        policy_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        scheduler:
+          ca_cert: ((scheduler_ca.ca))
+          health:
+            basicAuthEnabled: true
+            password: ((autoscaler_scheduler_health_password))
+            port: 6202
+            username: scheduler
+          http_client_timeout: 60
+          job_reschedule_interval_millisecond: 10000
+          job_reschedule_maxcount: 6
+          notification_reschedule_maxcount: 3
+          port: 6102
+          scaling_engine:
+            ca_cert: ((scalingengine_ca.ca))
+            client_cert: ((scalingengine_client.certificate))
+            client_key: ((scalingengine_client.private_key))
+          server_cert: ((scheduler_server.certificate))
+          server_key: ((scheduler_server.private_key))
+        scheduler_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+    release: app-autoscaler
+  - name: operator
+    properties:
+      autoscaler:
+        appmetrics_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        appmetrics_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+        cf:
+          api: https://api.REDACTED
+          client_id: ((cf_client_id))
+          grant_type: client_credentials
+          secret: ((cf_client_secret))
+          skip_ssl_validation: ((skip_ssl_validation))
+        instancemetrics_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        instancemetrics_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+        lock_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        lock_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+        operator:
+          app_sync_interval: 24h
+          db_lock:
+            retry_interval: 5s
+            ttl: 15s
+          health:
+            password: ((autoscaler_operator_health_password))
+            port: 6208
+            username: operator
+          http_client_timeout: 60s
+          logging:
+            level: info
+          scaling_engine:
+            ca_cert: ((scalingengine_ca.ca))
+            client_cert: ((scalingengine_client.certificate))
+            client_key: ((scalingengine_client.private_key))
+            port: 6104
+          scheduler:
+            ca_cert: ((scheduler_ca.ca))
+            client_cert: ((scheduler_client.certificate))
+            client_key: ((scheduler_client.private_key))
+            port: 6102
+        policy_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        policy_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+        scalingengine_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        scalingengine_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+    release: app-autoscaler
+  - consumes:
+      nats-tls:
+        deployment: lab-itsouvalas-cf
+        from: nats-tls
+    name: route_registrar
+    properties:
+      nats:
+        tls:
+          client_cert: ((/lab-itsouvalas-bosh/lab-itsouvalas-cf/nats_client_cert.certificate))
+          client_key: ((/lab-itsouvalas-bosh/lab-itsouvalas-cf/nats_client_cert.private_key))
+          enabled: true
+      route_registrar:
+        routes:
+        - name: autoscaler_scalingengine_health
+          port: 6204
+          registration_interval: 20s
+          tags:
+            component: autoscaler_scalingengine_health
+          uris:
+          - autoscaler-scalingengine.REDACTED
+        - name: autoscaler_operator_health
+          port: 6208
+          registration_interval: 20s
+          tags:
+            component: autoscaler_operator_health
+          uris:
+          - autoscaler-operator.REDACTED
+        - name: autoscaler_scheduler_health
+          port: 6202
+          registration_interval: 20s
+          tags:
+            component: autoscaler_scheduler_health
+          uris:
+          - autoscaler-scheduler.REDACTED
+    release: routing
+  name: asactors
+  networks:
+  - name: REDACTED
+  stemcell: default
+  update:
+    max_in_flight: 1
+    serial: true
+  vm_type: minimal
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - name: metricsserver
+    properties:
+      autoscaler:
+        instancemetrics_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        instancemetrics_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+        metricsserver:
+          ca_cert: ((metricsserver_server.ca))
+          collector:
+            collect_interval: 60s
+            envelope_channel_size: 1000
+            envelope_processor_count: 5
+            keep_alive_time: 60s
+            metric_cache_size_per_app: 1000
+            metric_channel_size: 1000
+            persist_metrics: true
+            port: 7103
+            refresh_interval: 60s
+            save_interval: 5s
+          health:
+            password: ((autoscaler_metricsserver_health_password))
+            port: 6303
+            username: metricsserver
+          http_client_timeout: 60s
+          logging:
+            level: info
+          server:
+            port: 6103
+          server_cert: ((metricsserver_server.certificate))
+          server_key: ((metricsserver_server.private_key))
+        policy_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        policy_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+    release: app-autoscaler
+  - name: eventgenerator
+    properties:
+      autoscaler:
+        appmetrics_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        appmetrics_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+        eventgenerator:
+          aggregator:
+            aggregator_execute_interval: 40s
+            app_metric_channel_size: 1000
+            app_monitor_channel_size: 200
+            metric_poller_count: 20
+            policy_poller_interval: 60s
+            save_interval: 5s
+          ca_cert: ((eventgenerator_ca.ca))
+          circuitBreaker:
+            back_off_initial_interval: 5m
+            back_off_max_interval: 120m
+            consecutive_failure_count: 5
+          defaultBreachDurationSecs: 120
+          defaultStatWindowSecs: 120
+          evaluator:
+            evaluation_manager_execute_interval: 60s
+            evaluator_count: 20
+            trigger_array_channel_size: 200
+          health:
+            password: ((autoscaler_eventgenerator_health_password))
+            port: 6205
+            username: eventgenerator
+          http_client_timeout: 60s
+          logging:
+            level: info
+          metricscollector:
+            ca_cert: ((metricsserver_ca.ca))
+            client_cert: ((metricsserver_client.certificate))
+            client_key: ((metricsserver_client.private_key))
+            host: metricsserver.service.cf.internal
+            port: 6103
+          scaling_engine:
+            ca_cert: ((scalingengine_ca.ca))
+            client_cert: ((scalingengine_client.certificate))
+            client_key: ((scalingengine_client.private_key))
+            host: scalingengine.service.cf.internal
+            port: 6104
+          server:
+            port: 6105
+          server_cert: ((eventgenerator_server.certificate))
+          server_key: ((eventgenerator_server.private_key))
+        policy_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        policy_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+    release: app-autoscaler
+  - consumes:
+      nats-tls:
+        deployment: lab-itsouvalas-cf
+        from: nats-tls
+    name: route_registrar
+    properties:
+      nats:
+        tls:
+          client_cert: ((/lab-itsouvalas-bosh/lab-itsouvalas-cf/nats_client_cert.certificate))
+          client_key: ((/lab-itsouvalas-bosh/lab-itsouvalas-cf/nats_client_cert.private_key))
+          enabled: true
+      route_registrar:
+        routes:
+        - name: autoscaler_eventgenerator_health
+          port: 6205
+          registration_interval: 20s
+          tags:
+            component: autoscaler_eventgenerator_health
+          uris:
+          - autoscaler-eventgenerator.REDACTED
+        - name: autoscaler_metricsserver_health
+          port: 6303
+          registration_interval: 20s
+          tags:
+            component: autoscaler_metricsserver_health
+          uris:
+          - autoscaler-metricsserver.REDACTED
+    release: routing
+  name: asmetrics
+  networks:
+  - name: REDACTED
+  stemcell: default
+  update:
+    max_in_flight: 1
+    serial: true
+  vm_type: small
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - name: metricsgateway
+    properties:
+      autoscaler:
+        metricsgateway:
+          app_manager:
+            app_refresh_interval: 5s
+          emitter:
+            buffer_size: 500
+            handshake_timeout: 1s
+            keep_alive_interval: 5s
+            max_close_retry_count: 3
+            max_setup_retry_count: 3
+            metricsserver_client:
+              ca_cert: ((metricsserver_client.ca))
+              cert: ((metricsserver_client.certificate))
+              key: ((metricsserver_client.private_key))
+            retry_delay: 1s
+          envelop_chan_size: 1000
+          health:
+            password: ((autoscaler_metricsgateway_health_password))
+            port: 6503
+            username: metricsgateway
+          logging:
+            level: info
+          nozzle:
+            loggregator_rlp_tls:
+              ca_cert: ((loggregator_ca.certificate))
+              cert: ((loggregator_tls_rlp.certificate))
+              key: ((loggregator_tls_rlp.private_key))
+            rlp_addr: reverse-log-proxy.service.cf.internal:8082
+            shard_id: CF_AUTOSCALER
+          nozzle_count: 3
+        policy_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        policy_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+    release: app-autoscaler
+  - consumes:
+      nats-tls:
+        deployment: lab-itsouvalas-cf
+        from: nats-tls
+    name: route_registrar
+    properties:
+      nats:
+        tls:
+          client_cert: ((/lab-itsouvalas-bosh/lab-itsouvalas-cf/nats_client_cert.certificate))
+          client_key: ((/lab-itsouvalas-bosh/lab-itsouvalas-cf/nats_client_cert.private_key))
+          enabled: true
+      route_registrar:
+        routes:
+        - name: autoscaler_metricsgateway_health
+          port: 6503
+          registration_interval: 20s
+          tags:
+            component: autoscaler_metricsgateway_health
+          uris:
+          - autoscaler-metricsgateway.REDACTED
+    release: routing
+  name: asnozzle
+  networks:
+  - name: REDACTED
+  stemcell: default
+  update:
+    max_in_flight: 1
+    serial: true
+  vm_type: small
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - name: golangapiserver
+    properties:
+      autoscaler:
+        apiserver:
+          broker:
+            password: ((autoscaler_service_broker_password))
+            server:
+              catalog:
+                services:
+                - bindable: true
+                  description: Automatically increase or decrease the number of application
+                    instances based on a policy you define.
+                  id: autoscaler-guid
+                  name: autoscaler
+                  plans:
+                  - description: This is the free service plan for the Auto-Scaling
+                      service.
+                    id: autoscaler-free-plan-id
+                    name: autoscaler-free-plan
+              dashboard_redirect_uri: ""
+              port: 6102
+            username: autoscaler_service_broker_user
+          event_generator:
+            ca_cert: ((eventgenerator_ca.ca))
+            client_cert: ((eventgenerator_client.certificate))
+            client_key: ((eventgenerator_client.private_key))
+          logging:
+            level: info
+          metrics_collector:
+            ca_cert: ((metricsserver_ca.ca))
+            client_cert: ((metricsserver_client.certificate))
+            client_key: ((metricsserver_client.private_key))
+            host: metricsserver.service.cf.internal
+            port: 6103
+          metrics_forwarder:
+            host: autoscalermetrics.REDACTED
+          public_api:
+            server:
+              port: 6101
+          scaling_engine:
+            ca_cert: ((scalingengine_ca.ca))
+            client_cert: ((scalingengine_client.certificate))
+            client_key: ((scalingengine_client.private_key))
+          scheduler:
+            ca_cert: ((scheduler_ca.ca))
+            client_cert: ((scheduler_client.certificate))
+            client_key: ((scheduler_client.private_key))
+          use_buildin_mode: false
+        binding_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        binding_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+        cf:
+          api: https://api.REDACTED
+          client_id: ((cf_client_id))
+          grant_type: client_credentials
+          secret: ((cf_client_secret))
+          skip_ssl_validation: ((skip_ssl_validation))
+        policy_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        policy_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+    release: app-autoscaler
+  - name: metricsforwarder
+    properties:
+      autoscaler:
+        metricsforwarder:
+          cache_cleanup_interval: 6h
+          cache_ttl: 900s
+          health:
+            password: ((autoscaler_metricsforwarder_health_password))
+            port: 6403
+            username: metricsforwarder
+          logging:
+            level: info
+          loggregator:
+            metron_address: 127.0.0.1:3458
+            tls:
+              ca_cert: ((loggregator_tls_agent.ca))
+              cert: ((loggregator_tls_agent.certificate))
+              key: ((loggregator_tls_agent.private_key))
+          policy_poller_interval: 60s
+          require_consule: false
+          server:
+            port: 6201
+        policy_db:
+          connection_config:
+            connection_max_lifetime: 60s
+            max_idle_connections: 10
+            max_open_connections: 100
+          databases:
+          - name: autoscaler
+            tag: default
+          db_scheme: postgres
+          port: 5432
+          roles:
+          - name: postgres
+            password: ((database_password))
+            tag: default
+          sslmode: verify-full
+          tls:
+            ca: ((postgres_ca.ca))
+            certificate: ((postgres_server.certificate))
+            private_key: ((postgres_server.private_key))
+        policy_db_connection_config:
+          connection_max_lifetime: 60s
+          max_idle_connections: 10
+          max_open_connections: 100
+    release: app-autoscaler
+  - consumes:
+      nats-tls:
+        deployment: lab-itsouvalas-cf
+        from: nats-tls
+    name: route_registrar
+    properties:
+      nats:
+        tls:
+          client_cert: ((/lab-itsouvalas-bosh/lab-itsouvalas-cf/nats_client_cert.certificate))
+          client_key: ((/lab-itsouvalas-bosh/lab-itsouvalas-cf/nats_client_cert.private_key))
+          enabled: true
+      route_registrar:
+        routes:
+        - name: api_server
+          port: 6101
+          registration_interval: 20s
+          tags:
+            component: api_server
+          uris:
+          - autoscaler.REDACTED
+        - name: autoscaler_service_broker
+          port: 6102
+          registration_interval: 20s
+          tags:
+            component: autoscaler_service_broker
+          uris:
+          - autoscalerservicebroker.REDACTED
+        - name: autoscaler_metrics_forwarder
+          port: 6201
+          registration_interval: 20s
+          tags:
+            component: autoscaler_metrics_forwarder
+          uris:
+          - autoscalermetrics.REDACTED
+        - name: autoscaler_metricsforwarder_health
+          port: 6403
+          registration_interval: 20s
+          tags:
+            component: autoscaler_metricsforwarder_health
+          uris:
+          - autoscaler-metricsforwarder.REDACTED
+    release: routing
+  - consumes:
+      doppler:
+        deployment: lab-itsouvalas-cf
+        from: doppler
+    name: loggregator_agent
+    properties:
+      loggregator:
+        tls:
+          agent:
+            cert: ((loggregator_tls_agent.certificate))
+            key: ((loggregator_tls_agent.private_key))
+          ca_cert: ((loggregator_ca.certificate))
+    release: loggregator-agent
+  name: asapi
+  networks:
+  - name: REDACTED
+  stemcell: default
+  update:
+    max_in_flight: 1
+    serial: true
+  vm_type: minimal
+kit:
+  features:
+  - postgres
+  - operations/enable-nats-tls
+  name: dev
+  version: latest
+meta:
+  cf:
+    deployment_name: lab-itsouvalas-cf
+    exodus: /secret/exodus/lab-itsouvalas/cf
+  vault: /secret/lab/itsouvalas/cf-app-autoscaler
+name: lab-itsouvalas-cf-app-autoscaler
+networks:
+- name: bosh
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.15.255
+    - 10.168.16.4 - 10.168.255.254
+    static: []
+  type: manual
+- name: cf-db
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.3
+    - 10.168.16.8 - 10.168.255.254
+    static:
+    - 10.168.16.4
+  type: manual
+- name: shield
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.7
+    - 10.168.16.12 - 10.168.255.254
+    static:
+    - 10.168.16.8
+  type: manual
+- name: vault
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.11
+    - 10.168.16.16 - 10.168.255.254
+    static:
+    - 10.168.16.12 - 10.168.16.14
+  type: manual
+- name: cf-autoscaler
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.15
+    - 10.168.16.24 - 10.168.255.254
+    static: []
+  type: manual
+- name: cf-edge
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.23
+    - 10.168.16.32 - 10.168.255.254
+    static:
+    - 10.168.16.24
+  type: manual
+- name: compilation
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.31
+    - 10.168.16.40 - 10.168.255.254
+    static: []
+  type: manual
+- name: concourse
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.39
+    - 10.168.16.48 - 10.168.255.254
+    static:
+    - 10.168.16.40 - 10.168.16.41
+  type: manual
+- name: cf-core
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.63
+    - 10.168.16.96 - 10.168.255.254
+    static:
+    - 10.168.16.64 - 10.168.16.65
+  type: manual
+- name: cf-runtime
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.95
+    - 10.168.16.128 - 10.168.255.254
+    static:
+    - 10.168.16.96 - 10.168.16.97
+  type: manual
+- name: default
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.127
+    - 10.168.16.192 - 10.168.255.254
+    static:
+    - 10.168.16.128 - 10.168.16.130
+  type: manual
+- name: nfs
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.191
+    - 10.168.16.196 - 10.168.255.254
+    static:
+    - 10.168.16.192
+  type: manual
+- name: nfs-broker
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.195
+    - 10.168.16.200 - 10.168.255.254
+    static:
+    - 10.168.16.196
+  type: manual
+- name: prometheus
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.199
+    - 10.168.16.204 - 10.168.255.254
+    static:
+    - 10.168.16.200
+  type: manual
+- name: doomsday
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.203
+    - 10.168.16.208 - 10.168.255.254
+    static:
+    - 10.168.16.204
+  type: manual
+- name: rabbitmq
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.207
+    - 10.168.16.216 - 10.168.255.254
+    static:
+    - 10.168.16.208 - 10.168.16.209
+  type: manual
+- name: haproxy
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.215
+    - 10.168.16.220 - 10.168.255.254
+    static:
+    - 10.168.16.216
+  type: manual
+- name: blacksmith
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: DSwitch-VM Network
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    gateway: 10.168.0.1
+    range: 10.168.0.0/16
+    reserved:
+    - 10.168.0.1 - 10.168.16.255
+    - 10.168.18.0 - 10.168.255.254
+    static:
+    - 10.168.17.0
+  type: manual
+params:
+  cf_core_network: REDACTED
+  cf_deployment_env: lab-itsouvalas
+  cf_deployment_type: cf
+  cf_system_domain: REDACTED
+  network: REDACTED
+releases:
+- name: app-autoscaler
+  sha1: 837ac0d7e14c67b3054e09494678441e72fbeabb
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/app-autoscaler-release?v=10.0.1
+  version: 10.0.1
+- name: postgres
+  sha1: 24d2e2887a45258b71bc40577c0f406180e47701
+  url: https://bosh.io/d/github.com/cloudfoundry/postgres-release?v=29
+  version: "29"
+- name: bosh-dns-aliases
+  sha1: b0d0a0350ed87f1ded58b2ebb469acea0e026ccc
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-aliases-release?v=0.0.3
+  version: 0.0.3
+- name: routing
+  sha1: edb2f822ca5bbe579a179abfa4b053dc9c99224f
+  url: https://bosh.io/d/github.com/cloudfoundry/routing-release?v=0.223.0
+  version: 0.223.0
+- name: loggregator-agent
+  sha1: bf723af956a61c7b51db0ba535c871bad24dd289
+  url: https://bosh.io/d/github.com/cloudfoundry/loggregator-agent-release?v=3.9
+  version: "3.9"
+- name: bpm
+  sha1: sha256:031cf5600158f44762c747a1f8648b7cebca876d4297dd9e2ce3b51b36ccd476
+  url: https://bosh.io/d/github.com/cloudfoundry/bpm-release?v=1.1.9
+  version: 1.1.9
+stemcells:
+- alias: default
+  os: ubuntu-bionic
+  version: latest
+update:
+  canaries: 1
+  canary_watch_time: 1000-300000
+  max_in_flight: 1
+  update_watch_time: 1000-300000
+variables:
+- name: database_password
+  type: password
+- name: autoscaler_service_broker_password
+  type: password
+- name: autoscaler_scheduler_health_password
+  type: password
+- name: autoscaler_eventgenerator_health_password
+  type: password
+- name: autoscaler_metricsforwarder_health_password
+  type: password
+- name: autoscaler_metricsgateway_health_password
+  type: password
+- name: autoscaler_metricsserver_health_password
+  type: password
+- name: autoscaler_operator_health_password
+  type: password
+- name: autoscaler_scalingengine_health_password
+  type: password
+- name: scalingengine_ca
+  options:
+    common_name: scalingengineCA
+    duration: 3650
+    is_ca: true
+  type: certificate
+- name: scalingengine_server
+  options:
+    alternative_names:
+    - scalingengine.service.cf.internal
+    ca: scalingengine_ca
+    common_name: scalingengine.service.cf.internal
+    extended_key_usage:
+    - client_auth
+    - server_auth
+  type: certificate
+- name: scalingengine_client
+  options:
+    ca: scalingengine_ca
+    common_name: scalingengine client
+    extended_key_usage:
+    - client_auth
+  type: certificate
+- name: eventgenerator_ca
+  options:
+    common_name: eventgeneratorCA
+    duration: 3650
+    is_ca: true
+  type: certificate
+- name: eventgenerator_server
+  options:
+    alternative_names:
+    - eventgenerator.service.cf.internal
+    ca: eventgenerator_ca
+    common_name: eventgenerator.service.cf.internal
+    extended_key_usage:
+    - client_auth
+    - server_auth
+  type: certificate
+- name: eventgenerator_client
+  options:
+    ca: eventgenerator_ca
+    common_name: eventgenerator client
+    extended_key_usage:
+    - client_auth
+  type: certificate
+- name: apiserver_ca
+  options:
+    common_name: apiserverCA
+    duration: 3650
+    is_ca: true
+  type: certificate
+- name: apiserver_server
+  options:
+    alternative_names:
+    - apiserver.service.cf.internal
+    ca: apiserver_ca
+    common_name: apiserver.service.cf.internal
+    extended_key_usage:
+    - client_auth
+    - server_auth
+  type: certificate
+- name: apiserver_public_ca
+  options:
+    common_name: apiserverpublicCA
+    duration: 3650
+    is_ca: true
+  type: certificate
+- name: apiserver_public_server
+  options:
+    alternative_names:
+    - autoscaler.REDACTED
+    ca: apiserver_public_ca
+    common_name: autoscaler.REDACTED
+    extended_key_usage:
+    - client_auth
+    - server_auth
+  type: certificate
+- name: apiserver_client
+  options:
+    ca: apiserver_ca
+    common_name: apiserver client
+    extended_key_usage:
+    - client_auth
+  type: certificate
+- name: servicebroker_ca
+  options:
+    common_name: servicebrokerCA
+    duration: 3650
+    is_ca: true
+  type: certificate
+- name: servicebroker_server
+  options:
+    alternative_names:
+    - servicebroker.service.cf.internal
+    ca: servicebroker_ca
+    common_name: servicebroker.service.cf.internal
+    extended_key_usage:
+    - client_auth
+    - server_auth
+  type: certificate
+- name: servicebroker_client
+  options:
+    ca: servicebroker_ca
+    common_name: servicebroker client
+    extended_key_usage:
+    - client_auth
+  type: certificate
+- name: servicebroker_public_ca
+  options:
+    common_name: servicebrokerCA
+    duration: 3650
+    is_ca: true
+  type: certificate
+- name: servicebroker_public_server
+  options:
+    alternative_names:
+    - autoscalerservicebroker.REDACTED
+    ca: servicebroker_public_ca
+    common_name: autoscalerservicebroker.REDACTED
+    extended_key_usage:
+    - client_auth
+    - server_auth
+  type: certificate
+- name: scheduler_ca
+  options:
+    common_name: schedulerCA
+    duration: 3650
+    is_ca: true
+  type: certificate
+- name: scheduler_server
+  options:
+    alternative_names:
+    - autoscalerscheduler.service.cf.internal
+    ca: scheduler_ca
+    common_name: autoscalerscheduler.service.cf.internal
+    extended_key_usage:
+    - client_auth
+    - server_auth
+  type: certificate
+- name: scheduler_client
+  options:
+    ca: scheduler_ca
+    common_name: scheduler client
+    extended_key_usage:
+    - client_auth
+  type: certificate
+- name: metricsserver_ca
+  options:
+    common_name: metricsserverCA
+    duration: 3650
+    is_ca: true
+  type: certificate
+- name: metricsserver_server
+  options:
+    alternative_names:
+    - metricsserver.service.cf.internal
+    - '*.asmetrics.REDACTED.lab-itsouvalas-cf-app-autoscaler.bosh'
+    ca: metricsserver_ca
+    common_name: metricsserver.service.cf.internal
+    extended_key_usage:
+    - client_auth
+    - server_auth
+  type: certificate
+- name: metricsserver_client
+  options:
+    ca: metricsserver_ca
+    common_name: metricsserver client
+    extended_key_usage:
+    - client_auth
+  type: certificate
+- name: postgres_ca
+  options:
+    common_name: postgresCA
+    duration: 3650
+    is_ca: true
+  type: certificate
+- name: postgres_server
+  options:
+    alternative_names:
+    - autoscalerpostgres.service.cf.internal
+    ca: postgres_ca
+    common_name: autoscalerpostgres.service.cf.internal
+    extended_key_usage:
+    - client_auth
+    - server_auth
+  type: certificate
+vm_extensions:
+- name: cf-elb
+- name: ssh-elb
+- name: cf-load-balanced
+- cloud_properties:
+    disk: 102400
+  name: 100GB_ephemeral_disk
+- cloud_properties:
+    disk: 51200
+  name: 50GB_ephemeral_disk
+- name: cf-router-network-properties
+- name: cf-tcp-router-network-properties
+- name: diego-ssh-proxy-network-properties
+- name: rmq-loadbalancer
+- cloud_properties:
+    vmx_options:
+      disk.enableUUID: "1"
+  name: kubelet
+- name: concourse-loadbalancer
+vm_types:
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 2048
+  name: default
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: compilation
+- cloud_properties:
+    cpu: 2
+    disk: 10240
+    ram: 8192
+  name: small
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: medium
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: large
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 2048
+  name: haproxy
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: api
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: bbs
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: blobstore
+- cloud_properties:
+    cpu: 4
+    disk: 40960
+    ram: 4096
+  name: cell
+- cloud_properties:
+    cpu: 1
+    disk: 36384
+    ram: 2048
+  name: diego
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: doppler
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 2048
+  name: errand
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: loggregator
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: nats
+- cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+  name: postgres
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: router
+- cloud_properties:
+    cpu: 1
+    disk: 8192
+    ram: 1024
+  name: syslogger
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: uaa
+- cloud_properties:
+    cpu: 1
+    disk: 10240
+    ram: 4096
+  name: minimal
+- cloud_properties:
+    cpu: 2
+    disk: 10240
+    ram: 8192
+  name: small-cf
+- cloud_properties:
+    cpu: 4
+    disk: 10240
+    ram: 8192
+  name: small-highmem
+- cloud_properties:
+    cpu: 1
+    disk: 10240
+    ram: 2048
+  name: blacksmith
+- cloud_properties:
+    cpu: 2
+    disk: 10240
+    ram: 4096
+  name: jumpbox
+- cloud_properties:
+    cpu: 2
+    disk: 65536
+    ram: 4096
+  name: concourse-worker
+- cloud_properties:
+    cpu: 4
+    disk: 81920
+    ram: 8192
+  name: thunder-dome
+- cloud_properties:
+    cpu: 2
+    disk: 24576
+    ram: 6144
+  name: bosh
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-api
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-broker
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-scheduler
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-collector
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-scaler
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-engine
+- cloud_properties:
+    cpu: 1
+    disk: 16384
+    ram: 2048
+  name: as-operator
+- cloud_properties:
+    cpu: 2
+    disk: 10240
+    ram: 8192
+  name: rabbitmq

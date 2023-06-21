@@ -1,0 +1,18 @@
+{
+    "instance_min_count": 1,
+    "instance_max_count": 3,
+    "scaling_rules": [
+{
+  "metric_type": "dummy_queue_messages_ready",
+  "threshold": 1,
+  "operator": ">",
+  "adjustment": "+1"
+},
+{
+  "metric_type": "dummy_queue_messages_ready",
+  "threshold": 2,
+  "operator": "<",
+  "adjustment": "-1"
+}
+]
+}
