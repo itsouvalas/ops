@@ -69,4 +69,5 @@ instance_groups:
             type: standalone-6
             vm_type: default
             network: blacksmith
+            persist: true
 
