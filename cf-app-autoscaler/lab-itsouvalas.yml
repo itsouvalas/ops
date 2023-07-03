@@ -5,7 +5,8 @@ kit:
   features:
     - (( append ))
     - postgres
-    - operations/enable-nats-tls
+    - enable-nats-tls
+    - enable-jammy-postgres
 
 genesis:
   env:            lab-itsouvalas
