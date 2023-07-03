@@ -127,7 +127,7 @@ exodus:
   broker_password: REDACTED
   broker_url: http://blacksmith.it-lab.instantpc.support:3000
   broker_username: blacksmith
-  dated: 2023-06-21 08:12:36 +0000
+  dated: 2023-07-01 08:14:58 +0000
   deployer: itsouvalas
   features: external-bosh,cf-route-registrar,redis,mariadb,broker-tls,redis-tls,rabbitmq,rabbitmq-tls,rabbitmq-dual-mode,rabbitmq-dashboard-registration,rabbitmq-autoscale
   is_director: false
@@ -219,6 +219,7 @@ instance_groups:
           limit: 7
           name: standalone-6
           network: blacksmith
+          persist: true
           type: standalone-6
           vm_type: default
       redis:
@@ -782,9 +783,7 @@ params:
   ip: 10.168.17.0
   releases:
   - name: redis-forge
-    sha1: feede84c0f37b7eda4421debd2304cb48da83ff7
-    url: https://github.com/blacksmith-community/redis-forge-boshrelease/releases/download/v0.8.16/redis-forge-0.8.16.tgz
-    version: 0.8.16
+    version: 0.8.18+dev.6
   - name: mariadb-forge
     sha1: e332545449e55df5cd28f9d78f83e6df62a4e4ae
     url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
@@ -814,9 +813,7 @@ releases:
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-aliases-release?v=0.0.4
   version: 0.0.4
 - name: redis-forge
-  sha1: feede84c0f37b7eda4421debd2304cb48da83ff7
-  url: https://github.com/blacksmith-community/redis-forge-boshrelease/releases/download/v0.8.16/redis-forge-0.8.16.tgz
-  version: 0.8.16
+  version: 0.8.18+dev.6
 - name: mariadb-forge
   sha1: e332545449e55df5cd28f9d78f83e6df62a4e4ae
   url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
