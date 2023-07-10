@@ -127,7 +127,7 @@ exodus:
   broker_password: REDACTED
   broker_url: http://blacksmith.it-lab.instantpc.support:3000
   broker_username: blacksmith
-  dated: 2023-07-01 08:14:58 +0000
+  dated: 2023-07-04 10:50:53 +0000
   deployer: itsouvalas
   features: external-bosh,cf-route-registrar,redis,mariadb,broker-tls,redis-tls,rabbitmq,rabbitmq-tls,rabbitmq-dual-mode,rabbitmq-dashboard-registration,rabbitmq-autoscale
   is_director: false
@@ -288,6 +288,13 @@ instance_groups:
           name: single-node
           network: blacksmith
           type: standalone
+          vm_type: default
+        three-node:
+          description: A dedicated RabbitMQ server, with no redundancy or replication
+          limit: 7
+          name: three-node
+          network: blacksmith
+          type: cluster
           vm_type: default
       rabbitmq:
         autoscale:
@@ -789,7 +796,7 @@ params:
     url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
     version: 0.5.0
   - name: rabbitmq-forge
-    version: 1.1.0+dev.2
+    version: 1.1.0+dev.4
   stemcells: []
 releases:
 - name: blacksmith
@@ -819,7 +826,7 @@ releases:
   url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
   version: 0.5.0
 - name: rabbitmq-forge
-  version: 1.1.0+dev.2
+  version: 1.1.0+dev.4
 stemcells:
 - alias: bionic
   os: ubuntu-bionic
