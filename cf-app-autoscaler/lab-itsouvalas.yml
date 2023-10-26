@@ -6,7 +6,7 @@ kit:
     - (( append ))
     - postgres
     - enable-nats-tls
-    - enable-jammy-postgres
+
 
 genesis:
   env:            lab-itsouvalas

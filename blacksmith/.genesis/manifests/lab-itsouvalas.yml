@@ -127,16 +127,16 @@ exodus:
   broker_password: REDACTED
   broker_url: http://blacksmith.it-lab.instantpc.support:3000
   broker_username: blacksmith
-  dated: 2023-07-04 10:50:53 +0000
+  dated: 2023-10-18 14:41:01 +0000
   deployer: itsouvalas
-  features: external-bosh,cf-route-registrar,redis,mariadb,broker-tls,redis-tls,rabbitmq,rabbitmq-tls,rabbitmq-dual-mode,rabbitmq-dashboard-registration,rabbitmq-autoscale
+  features: external-bosh,cf-route-registrar,redis,mariadb,broker-tls,redis-tls,rabbitmq,rabbitmq-tls,rabbitmq-dual-mode,rabbitmq-dashboard-registration,rabbitmq-autoscale,postgresql
   is_director: false
   kit_is_dev: true
   kit_name: blacksmith
   kit_version: 0.12.0
   use_create_env: false
   vault_base: /secret/lab/itsouvalas/blacksmith
-  version: 2.8.10
+  version: 2.8.9
 genesis:
   ci_mount: /secret/ci/
   env: lab-itsouvalas
@@ -207,12 +207,15 @@ instance_groups:
       bosh_env: lab-itsouvalas
       environment: lab-itsouvalas
       plans:
-        standalone:
-          description: A dedicated Redis server, with no redundancy or replication
+        clsuter-6:
+          description: A dedicated Redis 6 server, with no redundancy or replication
           limit: 7
-          name: standalone
+          masters: 1
+          name: cluster-6
           network: blacksmith
-          type: standalone
+          persist: true
+          replicas: 1
+          type: cluster-6
           vm_type: default
         standalone-6:
           description: A dedicated Redis 6 server, with no redundancy or replication
@@ -330,13 +333,30 @@ instance_groups:
         - dedicated
         - rabbitmq
     release: rabbitmq-forge
+  - name: postgresql-blacksmith-plans
+    properties:
+      plans:
+        smalldb:
+          disk: 4096
+          network: blacksmith
+          type: standalone
+      service:
+        description: A dedicated PostgreSQL instance, deployed on-demand
+        id: postgresql
+        limit: 0
+        name: postgresql
+        tags:
+        - blacksmith
+        - dedicated
+        - postgresql
+    release: postgresql-forge
   name: blacksmith
   networks:
   - name: blacksmith
     static_ips:
     - 10.168.17.0
   persistent_disk: 20480
-  stemcell: bionic
+  stemcell: jammy
   vm_type: blacksmith
 kit:
   features:
@@ -351,6 +371,7 @@ kit:
   - rabbitmq-dual-mode
   - rabbitmq-dashboard-registration
   - rabbitmq-autoscale
+  - postgresql
   name: dev
   version: latest
 meta:
@@ -395,6 +416,23 @@ meta:
     - blacksmith
     - dedicated
     - mariadb
+    postgresql_plans:
+      cluster:
+        description: A 3-node PostgreSQL replicated cluster, with PGPoolII front-end
+        limit: 4
+        name: cluster
+        type: cluster
+        vm_type: default
+      standalone:
+        description: A dedicated PostgreSQL server, with no redundancy or replication
+        limit: 7
+        name: standalone
+        type: standalone
+        vm_type: default
+    postgresql_tags:
+    - blacksmith
+    - dedicated
+    - postgresql
     rabbitmq_plans:
       standalone:
         description: A dedicated RabbitMQ server, with no redundancy or replication
@@ -790,19 +828,25 @@ params:
   ip: 10.168.17.0
   releases:
   - name: redis-forge
-    version: 0.8.18+dev.6
+    version: 1.0.0+dev.9
   - name: mariadb-forge
     sha1: e332545449e55df5cd28f9d78f83e6df62a4e4ae
     url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
     version: 0.5.0
   - name: rabbitmq-forge
-    version: 1.1.0+dev.4
+    version: 1.2.2+dev.2
+  - name: postgres
+    sha1: dea5cad517c62afaf97a1b31df41ad691928d960
+    url: https://github.com/cloudfoundry-community/postgres-boshrelease/releases/download/v2.0.0/postgres-2.0.0.tgz
+    version: 2.0.0
+  - name: postgres
+    sha1: 7699715ed0b7ec129f60958e2864958030333cea
+    url: https://github.com/cloudfoundry-community/postgres-boshrelease/releases/download/v3.2.2/postgres-3.2.2.tgz
+    version: 3.2.2
   stemcells: []
 releases:
 - name: blacksmith
-  sha1: 03711b925e4d9282ebe5e7d66e2b558d207eb457
-  url: https://github.com/blacksmith-community/blacksmith-boshrelease/releases/download/v1.6.11/blacksmith-1.6.11.tgz
-  version: 1.6.11
+  version: 1.7.0+dev.10
 - name: bosh
   sha1: ecb69fdc834e962cc66747f2a9f57470a57401f9
   url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=270.12.0
@@ -820,16 +864,20 @@ releases:
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-aliases-release?v=0.0.4
   version: 0.0.4
 - name: redis-forge
-  version: 0.8.18+dev.6
+  version: 1.0.0+dev.9
 - name: mariadb-forge
   sha1: e332545449e55df5cd28f9d78f83e6df62a4e4ae
   url: https://github.com/blacksmith-community/mariadb-forge-boshrelease/releases/download/v0.5.0/mariadb-forge-0.5.0.tgz
   version: 0.5.0
 - name: rabbitmq-forge
-  version: 1.1.0+dev.4
+  version: 1.2.2+dev.2
+- name: postgresql-forge
+  sha1: 81d5b2d0b864a02cf4f519d6029ad74503391bf5
+  url: https://github.com/blacksmith-community/postgresql-forge-boshrelease/releases/download/v0.4.0/postgresql-forge-0.4.0.tgz
+  version: 0.4.0
 stemcells:
-- alias: bionic
-  os: ubuntu-bionic
+- alias: jammy
+  os: ubuntu-jammy
   version: latest
 update:
   canaries: 1

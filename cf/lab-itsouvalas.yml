@@ -5,6 +5,7 @@ kit:
   features:
     - tls
     - haproxy
+    - haproxy-acme
     - self-signed
     - local-postgres-db
     - small-footprint
@@ -14,10 +15,12 @@ kit:
     - blacksmith-integration
     - app-scheduler-integration
     - trust-blacksmith-ca
+    - scs-integration
 
 meta:
   ocfp:
     certs:
+      instantpc_support: (( vault $GENESIS_EXODUS_MOUNT genesis.env "/acme/certs/instantpc.support_ecc:certificate" ))
       trusted:
         - (( append ))
         - (( vault $GENESIS_EXODUS_MOUNT genesis.env "/blacksmith:blacksmith_ca" ))
@@ -43,6 +46,7 @@ stemcells:
 
 instance_groups:
 - name: diego-cell
+  instances: 2
   jobs:
     - name: rep
       properties:
@@ -62,3 +66,12 @@ instance_groups:
           trusted_certs:
             - (( append ))
             - (( join "" meta.ocfp.certs.trusted ))
+- name: haproxy
+  jobs:
+    - name: haproxy
+      properties:
+        ha_proxy:
+          ssl_pem: 
+          - (( vault $GENESIS_EXODUS_MOUNT genesis.env "/acme/certs/instantpc.support_ecc:certificate_bundle" ))
+          - (( vault $GENESIS_EXODUS_MOUNT genesis.env "/acme/certs/cloudruntime.site_ecc:certificate_bundle" ))
+          - (( vault $GENESIS_EXODUS_MOUNT genesis.env "/acme/certs/cf-env.dev.cloudruntime.eu_ecc:certificate_bundle" ))

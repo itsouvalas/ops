@@ -456,17 +456,17 @@ exodus:
   apps_domain: run.it-lab.instantpc.support
   base_domain: it-lab.instantpc.support
   bosh: lab-itsouvalas
-  cf-deployment-date: 2023-Jun-06 00:28:49 UTC
+  cf-deployment-date: 2023-May-24 08:57:36 UTC
   cf-deployment-hotfixes: true
   cf-deployment-url: https://github.com/cloudfoundry/cf-deployment/releases/tag/v29.0.0
   cf-deployment-version: 29.0.0
   cf_exporter_secret: ((uaa_clients_cf_exporter_secret))
   core_network: cf-core
-  dated: 2023-06-20 14:47:22 +0000
+  dated: 2023-10-18 15:12:37 +0000
   db_network: cf-core
   deployer: itsouvalas
   edge_network: cf-edge
-  features: tls,haproxy,self-signed,local-postgres-db,small-footprint,nfs-volume-services,app-autoscaler-integration,prometheus-integration,blacksmith-integration,app-scheduler-integration,trust-blacksmith-ca
+  features: tls,haproxy,haproxy-acme,self-signed,local-postgres-db,small-footprint,nfs-volume-services,app-autoscaler-integration,prometheus-integration,blacksmith-integration,app-scheduler-integration,trust-blacksmith-ca,scs-integration
   firehose_exporter_secret: ((uaa_clients_firehose_exporter_secret))
   is_director: false
   kit_is_dev: true
@@ -483,6 +483,8 @@ exodus:
   nats_client_cert: ((nats_client_cert.certificate))
   nats_client_key: ((nats_client_cert.private_key))
   runtime_network: cf-runtime
+  scs_client: scs_client
+  scs_secret: ((uaa_clients_scs_secret))
   self-signed: true
   system_domain: system.it-lab.instantpc.support
   system_org: system
@@ -490,7 +492,7 @@ exodus:
   use_create_env: false
   vault_base: /secret/lab/itsouvalas/cf
   vaulted_uaa_clients: /secret/lab/itsouvalas/cf/uaa/client_secrets:firehose
-  version: 2.8.10
+  version: 2.8.9
 features:
   randomize_az_placement: true
 genesis:
@@ -835,6 +837,8 @@ instance_groups:
             - cloud_controller.global_auditor
             - perm.admin
             - clients.read
+            - credhub.read
+            - credhub.write
             secret: ""
           cf_exporter:
             authorities: cloud_controller.admin_read_only
@@ -899,6 +903,10 @@ instance_groups:
             authorities: routing.routes.write,routing.routes.read,routing.router_groups.read
             authorized-grant-types: client_credentials
             secret: ((uaa_clients_routing_api_client_secret))
+          scs_client:
+            authorities: uaa.admin,clients.admin,cloud_controller.read,cloud_controller.admin,uaa.resource,credhub.read,credhub.write
+            authorized-grant-types: client_credentials
+            secret: ((uaa_clients_scs_secret))
           ssh-proxy:
             authorized-grant-types: authorization_code
             autoapprove: true
@@ -1056,6 +1064,7 @@ instance_groups:
         host_key_fingerprint: ((diego_ssh_proxy_host_key.public_key_fingerprint))
       build: cf-genesis-kit vlatest
       cc:
+        broker_client_timeout_seconds: 300
         buildpacks:
           blobstore_type: webdav
           webdav_config:
@@ -1839,8 +1848,15 @@ instance_groups:
         backend_ssl: verify
         disable_tls_10: true
         disable_tls_11: true
+        frontend_config: |
+          acl is_acme_challenge path_beg /.well-known/acme-challenge/
+          http-request return status 200 content-type text/plain lf-string "%[path,field(-1,/)].%[env(ACCOUNT_THUMBPRINT)]\n" if is_acme_challenge
+        global_config: setenv ACCOUNT_THUMBPRINT 'REDACTED'
         internal_only_domains: []
-        ssl_pem: ((haproxy_ssl.certificate))((haproxy_ssl.private_key))
+        ssl_pem:
+        - REDACTED
+        - REDACTED
+        - REDACTED
         tcp_link_port: 2222
         trusted_domain_cidrs: null
     release: haproxy
@@ -2057,7 +2073,7 @@ instance_groups:
   vm_type: minimal
 - azs:
   - z1
-  instances: 1
+  instances: 2
   jobs:
   - name: bosh-dns-adapter
     properties:
@@ -2475,6 +2491,7 @@ kit:
   features:
   - tls
   - haproxy
+  - haproxy-acme
   - self-signed
   - local-postgres-db
   - small-footprint
@@ -2484,6 +2501,7 @@ kit:
   - blacksmith-integration
   - app-scheduler-integration
   - trust-blacksmith-ca
+  - scs-integration
   name: dev
   version: latest
 manifest_version: v29.0.0
@@ -2530,6 +2548,8 @@ meta:
   internal_app_domains: []
   ocfp:
     certs:
+      acme_thumbprint: REDACTED
+      instantpc_support: REDACTED
       trusted:
       - REDACTED
   vault: /secret/lab/itsouvalas/cf
@@ -2894,6 +2914,8 @@ params:
   internal_only_domains: []
   network: default
   skip_ssl_validation: true
+  stemcell_os: ubuntu-jammy
+  stemcell_version: latest
   system_domain: system.it-lab.instantpc.support
   trusted_domain_cidrs: null
 releases:
@@ -2986,9 +3008,9 @@ releases:
   url: https://bosh.io/d/github.com/cloudfoundry/python-buildpack-release?v=1.8.9
   version: 1.8.9
 - name: routing
-  sha1: d57ae8fe0d0d8a9b040cea254a782d1d5e8fa2e3
-  url: https://bosh.io/d/github.com/cloudfoundry/routing-release?v=0.266.0
-  version: 0.266.0
+  sha1: 6dd63d1653bf333ea64fca061a3a16d9be2e750f
+  url: https://bosh.io/d/github.com/cloudfoundry/routing-release?v=0.275.0
+  version: 0.275.0
 - name: ruby-buildpack
   sha1: b66d19f6160f4e9e4c786a2ef33f450c8eff848d
   url: https://bosh.io/d/github.com/cloudfoundry/ruby-buildpack-release?v=1.10.1
@@ -3966,6 +3988,8 @@ variables:
 - name: uaa_clients_cf_exporter_secret
   type: password
 - name: uaa_clients_app_scheduler_secret
+  type: password
+- name: uaa_clients_scs_secret
   type: password
 vm_extensions:
 - name: cf-elb
